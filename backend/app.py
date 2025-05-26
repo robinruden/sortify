@@ -5,10 +5,7 @@ import os
 import uuid
 
 app = Flask(__name__)
-CORS(app, resources={r"/analysera": {"origins": [
-    "http://localhost:5173",
-    "https://sortify2000.netlify.app"
-]}})
+CORS(app, supports_credentials=True, origins="*")
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
