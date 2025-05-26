@@ -5,7 +5,7 @@ import os
 import uuid
 
 app = Flask(__name__)
-CORS(app, origins="*", methods=["GET", "POST", "OPTIONS"], allow_headers="*")
+CORS(app, supports_credentials=True)
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
