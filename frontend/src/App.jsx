@@ -25,6 +25,9 @@ function App() {
       const res = await fetch('https://sortify-1-ho67.onrender.com/analysera', {
         method: 'POST',
         body: formData,
+
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' } 
       })
 
       if (!res.ok) throw new Error('Något gick fel vid uppladdning')
