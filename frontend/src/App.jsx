@@ -22,7 +22,7 @@ function App() {
 
     try {
       setLoading(true)
-      const res = await fetch('http://localhost:5000/analysera', {
+      const res = await fetch('https://sortify-1-ho67.onrender.com/analysera', {
         method: 'POST',
         body: formData,
       })
