@@ -3,10 +3,10 @@ import axios from 'axios'
 
 import './App.css'
 
-axios.defaults.withCredentials = true;
+/* axios.defaults.withCredentials = true; */
 
 function App() {
-   const [file, setFile] = useState(null)
+  const [file, setFile] = useState(null)
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -24,25 +24,24 @@ function App() {
     formData.append('file', file)
 
     try {
-      setLoading(true)
-      const res = await axios.post(
-        'https://sortify-1-ho67.onrender.com/analysera',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      )
+    setLoading(true);
+    
+    const res = await axios.post(
+      'https://sortify-1-ho67.onrender.com/analysera',
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      }
+    );
 
-      setResult(res.data)
-    } catch (err) {
-      console.error(err)
-      setError('Kunde inte analysera ljudfilen.')
-    } finally {
-      setLoading(false)
-    }
+    setResult(res.data);
+  } catch (err) {
+    console.error(err);
+    setError('Kunde inte analysera ljudfilen.');
+  } finally {
+    setLoading(false);
   }
+};
 
   return (
   <div style={{ maxWidth: 600, margin: '3rem auto', fontFamily: 'sans-serif' }}>
