@@ -1,11 +1,9 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Flask, request, jsonify, make_response
 import librosa
 import os
 import uuid
 
 app = Flask(__name__)
-CORS(app, resources={r"/analysera": {"origins": "https://sortify2000.netlify.app"}})
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -33,10 +31,24 @@ def analysera():
     finally:
         os.remove(filepath)  # Clean up the uploaded file
 
-    return jsonify({
-        'tempo': round(float(tempo), 2),
+    # ✅ This is your manual CORS response
+    response = make_response(jsonify({
+        'tempo': round(tempo, 2),
         'tonart': tonart
-    })
+    }))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Methods'] = 'POST'
+    return response
+
+# ✅ Optional: handle preflight request
+@app.route('/analysera', methods=['OPTIONS'])
+def analysera_options():
+    response = make_response()
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Methods'] = 'POST'
+    return response
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))  # default to 5000 locally
