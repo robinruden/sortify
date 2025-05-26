@@ -17,22 +17,16 @@ function App() {
     setError(null)
   }
 
-  const handleUpload = async () => {
-    if (!file) return
+ const handleUpload = async () => {
+  if (!file) return;
 
-    const formData = new FormData()
-    formData.append('file', file)
+  const formData = new FormData();
+  formData.append('file', file);
 
-    try {
+  try {
     setLoading(true);
-    
-    const res = await axios.post(
-      'https://sortify-1-ho67.onrender.com/analysera',
-      formData,
-      {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      }
-    );
+
+    const res = await axios.post('/analysera', formData);
 
     setResult(res.data);
   } catch (err) {
