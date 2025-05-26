@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import axios from 'axios'
 
 import './App.css'
+
+axios.defaults.withCredentials = true;
 
 function App() {
    const [file, setFile] = useState(null)
@@ -22,18 +25,17 @@ function App() {
 
     try {
       setLoading(true)
-      const res = await fetch('https://sortify-1-ho67.onrender.com/analysera', {
-        method: 'POST',
-        body: formData,
+      const res = await axios.post(
+        'https://sortify-1-ho67.onrender.com/analysera',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      )
 
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' } 
-      })
-
-      if (!res.ok) throw new Error('Något gick fel vid uppladdning')
-
-      const data = await res.json()
-      setResult(data)
+      setResult(res.data)
     } catch (err) {
       console.error(err)
       setError('Kunde inte analysera ljudfilen.')
