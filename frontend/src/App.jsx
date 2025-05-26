@@ -26,7 +26,7 @@ function App() {
   try {
     setLoading(true);
 
-    const res = await axios.post('/analysera', formData);
+    const res = await axios.post('https://sortify-1-ho67.onrender.com/analysera', formData);
 
     setResult(res.data);
   } catch (err) {
