@@ -1,34 +1,62 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+   const [file, setFile] = useState(null)
+  const [result, setResult] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0])
+    setResult(null)
+    setError(null)
+  }
+
+  const handleUpload = async () => {
+    if (!file) return
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      setLoading(true)
+      const res = await fetch('http://localhost:5000/analysera', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!res.ok) throw new Error('Något gick fel vid uppladdning')
+
+      const data = await res.json()
+      setResult(data)
+    } catch (err) {
+      console.error(err)
+      setError('Kunde inte analysera ljudfilen.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+  <div style={{ maxWidth: 600, margin: '3rem auto', fontFamily: 'sans-serif' }}>
+      <h1>Sortify 🎧</h1>
+
+      <input type="file" accept=".wav" onChange={handleFileChange} />
+      <button onClick={handleUpload} disabled={!file || loading}>
+        {loading ? 'Analyserar...' : 'Analysera'}
+      </button>
+
+      {result && (
+        <div style={{ marginTop: '2rem' }}>
+          <p><strong>Tempo:</strong> {result.tempo} BPM</p>
+          <p><strong>Tonart:</strong> {result.tonart}</p>
+        </div>
+      )}
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+    </div>
   )
 }
 

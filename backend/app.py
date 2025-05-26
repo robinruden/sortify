@@ -5,7 +5,7 @@ import os
 import uuid
 
 app = Flask(__name__)
-CORS(app)  # Allow requests from any origin (e.g., React on Netlify or localhost)
+CORS(app, origins=["http://localhost:5173"])
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -22,7 +22,8 @@ def analysera():
 
     try:
         y, sr = librosa.load(filepath)
-        tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
+        tempo_result = librosa.beat.beat_track(y=y, sr=sr)
+        tempo = float(tempo_result[0])  
         chroma = librosa.feature.chroma_cqt(y=y, sr=sr)
         chroma_avg = chroma.mean(axis=1)
         noter = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
@@ -33,9 +34,10 @@ def analysera():
         os.remove(filepath)  # Clean up the uploaded file
 
     return jsonify({
-        'tempo': round(tempo, 2),
+        'tempo': round(float(tempo), 2),
         'tonart': tonart
     })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # default to 5000 locally
+    app.run(host='0.0.0.0', port=port)
