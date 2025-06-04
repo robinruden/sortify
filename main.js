@@ -1,5 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+
+const mm = require('music-metadata'); // För att läsa metadata från ljudfiler
 const { analyzeAudio } = require('./analyzeAudio');
 
 function createWindow() {
@@ -15,7 +17,10 @@ function createWindow() {
   win.loadFile('index.html');
 
   ipcMain.handle('select-and-analyze', async () => {
+    
+  try {
     const result = await dialog.showOpenDialog(win, {
+      
       properties: ['openFile'],
       filters: [{ name: 'Ljudfiler', extensions: ['mp3', 'wav'] }]
     });
@@ -25,9 +30,15 @@ function createWindow() {
     }
 
     const filePath = result.filePaths[0];
+    console.log(`Vald fil: ${filePath}`);
     const data = await analyzeAudio(filePath);
     return data;
-  });
+  
+  } catch (error) {
+    console.error('Fel vid analys av ljudfil:', error);
+    return { error: 'Kunde inte analysera ljudfilen' };
+  }
+})
 }
 
 app.whenReady().then(createWindow);
