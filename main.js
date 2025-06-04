@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
-const mm = require('music-metadata'); // För att läsa metadata från ljudfiler
+/* const mm = require('music-metadata'); // För att läsa metadata från ljudfiler */
 const { analyzeAudio } = require('./analyzeAudio');
 
 function createWindow() {
