@@ -8,16 +8,39 @@ async function analyzeAudio(filePath) {
   const buffer = fs.readFileSync(filePath);
   const ext = filePath.split('.').pop();
   const metadata = await mm.parseBuffer(buffer, ext);
-
+  /* console.log('Metadata:', metadata); */
   const audioBuffer = await decode(buffer);
   const sampleRate = audioBuffer.sampleRate;
+  /* console.log('Sample rate:', sampleRate); */
   const channelData = audioBuffer.getChannelData(0);
+  /* console.log('channeldata:', channelData); */
+
+  // Check if audio is long enough for analysis (e.g., at least 1 second)
+  if (channelData.length < sampleRate) {
+    throw new Error('Audio file is too short for analysis. Please use a file at least 1 second long.');
+  }
 
   const essentia = new Essentia(EssentiaWASM);
   const audioVector = essentia.arrayToVector(Array.from(channelData));
+  /* console.log('audioVector:', audioVector); */
 
-  const { bpm } = essentia.RhythmExtractor2013(audioVector, sampleRate)
-  const { key: keyIndex, scale } = essentia.KeyExtractor(audioVector, sampleRate);
+  let bpm = null;
+  let keyIndex = null;
+  let scale = null;
+  try {
+    const rhythmResult = essentia.RhythmExtractor2013(audioVector, sampleRate);
+    bpm = rhythmResult.bpm;
+  } catch (err) {
+    console.warn('Could not extract BPM:', err);
+  }
+  try {
+    const keyResult = essentia.KeyExtractor(audioVector, sampleRate);
+    keyIndex = keyResult.key;
+    scale = keyResult.scale;
+    console.log('Key index:', keyIndex, 'Scale:', scale);
+  } catch (err) {
+    console.warn('Could not extract key:', err);
+  }
 
   return {
     format:  metadata.format.container,

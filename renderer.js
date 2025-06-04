@@ -1,5 +1,3 @@
-// renderer.js
-
 const { ipcRenderer } = require('electron');
 
 // Om du vill översätta nyckel‐index (0–11) till en not‐sträng:
@@ -28,24 +26,27 @@ window.pickAndAnalyze = async () => {
       return;
     }
 
-
-      const lines = [];
-      lines.push(`Format:         ${data.format}`);
-      lines.push(`Längd:          ${data.duration.toFixed(2)} s`);
-      lines.push(`Samplingsfrekvens: ${data.sampleRate} Hz`);
-      lines.push(`Bitrate:        ${(data.bitrate / 1000).toFixed(0)} kbps`);
-      lines.push(`BPM (tempo):    ${data.bpm.toFixed(2)}`);
-      // Om keyIndex finns:
-      if (data.key && typeof data.key.keyIndex === 'number') {
-        const idx = data.key.keyIndex;
-        const scale = data.key.scale || '';
-        const noteName = NOTE_NAMES[idx] || `(${idx})`;
-        lines.push(`Tonart:         ${noteName} ${scale}`);
-      }
-
-      output.textContent = lines.join('\n');
-    } catch (err) {
-      console.error(err);
-      output.textContent = `Ett oväntat fel inträffade: ${err.message}`;
+    const lines = [];
+    lines.push(`Format:         ${data.format}`);
+    lines.push(`Längd:          ${data.duration.toFixed(2)} s`);
+    lines.push(`Samplingsfrekvens: ${data.sampleRate} Hz`);
+    lines.push(`Bitrate:        ${(data.bitrate / 1000).toFixed(0)} kbps`);
+    lines.push(`BPM (tempo):    ${typeof data.bpm === 'number' ? data.bpm.toFixed(2) : 'Ej detekterat'}`);
+    // Om keyIndex finns:
+    if (data.key) {
+      const idx = data.key.keyIndex;
+      console.log('Rendered Key index:', idx);
+      const scale = data.key.scale || '';
+      console.log('Rendered Key scale:', scale);
+      const noteName = NOTE_NAMES[idx] || `(${idx})`;
+      lines.push(`Tonart:         ${noteName} ${scale}`);
+    } else {
+      lines.push('Tonart:         Ej detekterat');
     }
+
+    output.textContent = lines.join('\n');
+  } catch (err) {
+    console.error(err);
+    output.textContent = `Ett oväntat fel inträffade: ${err.message}`;
   }
+}
