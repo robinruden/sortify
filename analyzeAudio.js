@@ -1,6 +1,8 @@
 const mm = require('music-metadata-browser');
 const fs = require('fs');
 const { Essentia, EssentiaWASM } = require('essentia.js');
+
+
 async function analyzeAudio(filePath) {
   try {
   const { default: decode } = await import('audio-decode');
@@ -40,9 +42,8 @@ async function analyzeAudio(filePath) {
       monoData[i] /= max;
     }
   }
-/* if (audioVector.size() < sampleRate) {
-  throw new Error('Audio vector too short for rhythm analysis.');
-} */
+
+
   const essentia = new Essentia(EssentiaWASM);
   const analyzeLength = Math.min(monoData.length, 30 * sampleRate);
   const slicedData = monoData.slice(0, analyzeLength); // Limit to 30 seconds for analysis
@@ -53,14 +54,14 @@ async function analyzeAudio(filePath) {
     console.error('Failed to convert audio data to vector:', err);
     throw err;
   }
-  if (!essentia || !essentia.RhythmExtractor2013) {
+  if (!essentia.RhythmExtractor2013) {
   throw new Error('EssentiaWASM failed to load correctly.');
 }
-  /* console.log('audioVector:', audioVector); */
+
   let bpm = null;
-  /* console.log('BPM:', bpm); */
   let keyIndex = null;
   let scale = null;
+
   try {
     console.log('Running RhythmExtractor2013...');
     console.log("Audio vector: ", audioVector);
@@ -68,6 +69,7 @@ async function analyzeAudio(filePath) {
     const rhythmResult = essentia.RhythmExtractor2013(audioVector);
     console.log('RhythmExtractor2013 completed successfully.');
     console.log('Rhythm result:', rhythmResult);
+    console.log('BPM:', rhythmResult.bpm, 'beats_position:', rhythmResult.beats_position, 'beats_count:', rhythmResult.beats_count, "danceability: ", rhythmResult.danceability);  
     bpm = rhythmResult.bpm;
     console.log('BPM:', bpm);
   } catch (err) {
