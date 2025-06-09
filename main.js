@@ -1,5 +1,10 @@
+require('electron-reload')(__dirname, {
+  electron: require(`${__dirname}/node_modules/electron`)
+});
+
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+
 const { analyzeAudio } = require('./analyzeAudio');
 
 function createWindow() {
