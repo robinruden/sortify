@@ -1,7 +1,6 @@
 const mm = require('music-metadata-browser');
 const fs = require('fs');
 const { Essentia, EssentiaWASM } = require('essentia.js');
-
 async function analyzeAudio(filePath) {
   try {
   const { default: decode } = await import('audio-decode');
@@ -11,14 +10,11 @@ async function analyzeAudio(filePath) {
   /* console.log('Metadata:', metadata); */
   const audioBuffer = await decode(buffer);
   const sampleRate = audioBuffer.sampleRate;
-  
   const channelData = audioBuffer.getChannelData(0);
-  
   // Check if audio is long enough for analysis (e.g., at least 1 second)
   if (channelData.length < sampleRate) {
     throw new Error('Audio file is too short for analysis. Please use a file at least 1 second long.');
   }
-
   const channelCount = audioBuffer.numberOfChannels;
   let monoData;
   if (channelCount > 1) {
@@ -34,7 +30,6 @@ async function analyzeAudio(filePath) {
   } else {
     monoData = channelData;
   }
-
   // Normalize audio to [-1, 1]
   let max = 0;
   for (let i = 0; i < monoData.length; i++) {
@@ -48,26 +43,20 @@ async function analyzeAudio(filePath) {
 /* if (audioVector.size() < sampleRate) {
   throw new Error('Audio vector too short for rhythm analysis.');
 } */
-
-
-
   const essentia = new Essentia(EssentiaWASM);
   const analyzeLength = Math.min(monoData.length, 30 * sampleRate);
-  const slicedData = monoData.slice(0, analyzeLength) // Limit to 60 seconds for analysis
-  
-    let audioVector
+  const slicedData = monoData.slice(0, analyzeLength); // Limit to 30 seconds for analysis
+    let audioVector;
   try {
       audioVector = essentia.arrayToVector(Array.from(slicedData));
   } catch (err) {
     console.error('Failed to convert audio data to vector:', err);
-    throw err
+    throw err;
   }
-
   if (!essentia || !essentia.RhythmExtractor2013) {
   throw new Error('EssentiaWASM failed to load correctly.');
 }
   /* console.log('audioVector:', audioVector); */
-
   let bpm = null;
   /* console.log('BPM:', bpm); */
   let keyIndex = null;
@@ -76,10 +65,8 @@ async function analyzeAudio(filePath) {
     console.log('Running RhythmExtractor2013...');
     console.log("Audio vector: ", audioVector);
     console.log("Sample rate: ", sampleRate);
-    const rhythmResult = essentia.RhythmExtractor2013(audioVector, sampleRate);
-   
+    const rhythmResult = essentia.RhythmExtractor2013(audioVector);
     console.log('RhythmExtractor2013 completed successfully.');
-
     console.log('Rhythm result:', rhythmResult);
     bpm = rhythmResult.bpm;
     console.log('BPM:', bpm);
@@ -87,14 +74,13 @@ async function analyzeAudio(filePath) {
     console.warn('Could not extract BPM:', err);
   }
   try {
-    const keyResult = essentia.KeyExtractor(audioVector, sampleRate);
+    const keyResult = essentia.KeyExtractor(audioVector);
     keyIndex = keyResult.key;
     scale = keyResult.scale;
     console.log('Key index:', keyIndex, 'Scale:', scale);
   } catch (err) {
     console.warn('Could not extract key:', err);
   }
-
   return {
     format:  metadata.format.container,
     duration: metadata.format.duration,
@@ -102,18 +88,16 @@ async function analyzeAudio(filePath) {
     bitrate: metadata.format.bitrate,
     bpm,
     key: { keyIndex, scale }
-  }; 
+  };
 } catch (error) {
-    console.error('🛑 analyzeAudio failed:', error, 'typeof:', typeof error);
+    console.error(':octagonal_sign: analyzeAudio failed:', error, 'typeof:', typeof error);
    /*  throw new Error(typeof err === 'number' ? `Essentia error code ${error}` : error.message || error); */
-
     const msg =
       typeof error === 'number'
         ? `Essentia error code ${error}`
         : error instanceof Error
           ? error.message
           : String(error);
-
     throw new Error(msg);
 }
 }
