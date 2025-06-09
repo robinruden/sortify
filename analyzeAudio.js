@@ -45,6 +45,10 @@ async function analyzeAudio(filePath) {
 
 
   const essentia = new Essentia(EssentiaWASM);
+  console.log("Hela skiten :", Object.keys(essentia));
+  console.log(essentia.algorithmNames);
+
+  
   const analyzeLength = Math.min(monoData.length, 30 * sampleRate);
   const slicedData = monoData.slice(0, analyzeLength); // Limit to 30 seconds for analysis
     let audioVector;
