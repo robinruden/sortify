@@ -2,13 +2,16 @@ require('electron-reload')(__dirname, {
   electron: require(`${__dirname}/node_modules/electron`)
 });
 
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { globalShortcut, app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
 const analyzeAudio = require('./src/analyzeAudio.js');
 
+// Move the window reference into module scope
+let mainWindow;
+
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 600,
     height: 400,
     webPreferences: {
@@ -16,12 +19,23 @@ function createWindow() {
       contextIsolation: false
     }
   });
+  mainWindow.loadFile('index.html');
+}
 
-  win.loadFile('index.html');
+app.whenReady().then(() => {
+  createWindow();
+
+  // Register Cmd/Ctrl+R to pop up (or restore) & focus the window
+  globalShortcut.register('CommandOrControl+R', () => {
+    if (!mainWindow) return;
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.show();
+    mainWindow.focus();
+  });
 
   ipcMain.handle('select-and-analyze', async () => {
     try {
-      const result = await dialog.showOpenDialog(win, {  
+      const result = await dialog.showOpenDialog(mainWindow, {  
         properties: ['openFile'],
         filters: [{ name: 'Ljudfiler', extensions: ['mp3', 'wav'] }]
       });
@@ -39,6 +53,4 @@ function createWindow() {
       return { error: 'Kunde inte analysera ljudfilen' };
     }
   })
-}
-
-app.whenReady().then(createWindow);
+});

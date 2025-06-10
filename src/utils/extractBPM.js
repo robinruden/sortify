@@ -5,7 +5,7 @@ function extractBPM(audioVector, essentia, sampleRate) {
     }
 
     const result = essentia.RhythmExtractor2013(audioVector, sampleRate);
-    console.log('🪘 Raw rhythm output:', result);
+    /* console.log('🪘 Raw rhythm output:', result); */
     return {
       bpm: result.bpm,
       beats: result.beats_position || [],

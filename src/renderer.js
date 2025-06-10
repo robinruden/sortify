@@ -9,7 +9,7 @@ window.pickAndAnalyze = async () => {
   try {
     const data = await ipcRenderer.invoke('select-and-analyze');
     /* console.log('🔥 data from main:', data); */
-    
+    textContent = JSON.stringify(data, null, 2);
     if (data.error) {
       output.textContent = `Fel: ${data.error}`;
       return;
@@ -21,7 +21,9 @@ window.pickAndAnalyze = async () => {
     lines.push(`Samplingsfrekvens: ${data.sampleRate} Hz`);
     lines.push(`Bitrate:        ${(data.bitrate / 1000).toFixed(0)} kbps`);
     lines.push(`BPM (tempo):    ${typeof data.bpm === 'number' ? data.bpm.toFixed(2) : 'Ej detekterat'}`);
+    
     /* console.log('🔥 data.bpm is:', data.bpm); */
+    
 
   // Om keyIndex finns:
   if (data.key && typeof data.key.noteName === 'string') {
@@ -31,7 +33,8 @@ window.pickAndAnalyze = async () => {
       lines.push(`Tonart:         ${noteName} ${scale}`);
     } else {
       lines.push('Tonart:         Ej detekterat');
-    }
+      output.textContent = JSON.stringify(data, null, 2);
+    } 
 
     output.textContent = lines.join('\n');
   } catch (err) {

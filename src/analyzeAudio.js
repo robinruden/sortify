@@ -78,6 +78,18 @@ async function analyzeAudio(filePath) {
     result.features.flatness = null;
   }
 
+  // Tonalness
+try {
+  const melodia = essentia.PredominantPitchMelodia(audioVector);
+  const pitchConfidence = essentia.vectorToArray(melodia.pitchConfidence);
+
+  const avgConfidence = pitchConfidence.reduce((a, b) => a + b, 0) / pitchConfidence.length;
+  result.features.avgPitchConfidence = avgConfidence;
+} catch (e) {
+  const msg = typeof e === 'number' ? `Essentia error code ${e}` : e.message;
+  result.features.avgPitchConfidence = { error: msg };
+}
+
   console.log('🎧 Analysis Result:\n', JSON.stringify(result, null, 2));
 
   return result;
