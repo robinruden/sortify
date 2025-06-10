@@ -1,3 +1,5 @@
+//essentiaAlgorithms.js
+
 const essentiaAlgorithms = {
 
   "Pitch & Key Detection": ["PitchMelodia", "PitchYin", "Key", "KeyExtractor", "TuningFrequency", "PredominantPitchMelodia"],

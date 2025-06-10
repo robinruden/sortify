@@ -1,9 +1,9 @@
 const mm = require('music-metadata-browser');
 const fs = require('fs');
 const { Essentia, EssentiaWASM } = require('essentia.js');
-const essentiaAlgorithms = require('./src/data/essentiaAlgorithms.js');
-const extractBPM = require('./src/utils/extractBPM.js');
-const extractKey = require('./src/utils/extractKey.js');
+const essentiaAlgorithms = require('./data/essentiaAlgorithms.js');
+const extractBPM = require('./utils/extractBPM.js');
+const extractKey = require('./utils/extractKey.js');
 
 
 async function analyzeAudio(filePath) {

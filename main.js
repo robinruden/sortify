@@ -5,7 +5,7 @@ require('electron-reload')(__dirname, {
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 
-const analyzeAudio = require('./analyzeAudio');
+const analyzeAudio = require('./src/analyzeAudio.js');
 
 function createWindow() {
   const win = new BrowserWindow({
