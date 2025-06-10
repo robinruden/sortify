@@ -17,7 +17,7 @@ async function analyzeAudio(filePath) {
   const format = metadata.format.container;
   const duration = metadata.format.duration;
  
-  const bitrate = metadata.format.bitrate;
+  /* const bitrate = metadata.format.bitrate; */
 
   const { default: decode } = await import('audio-decode');
   const audioBuffer = await decode(buffer);
@@ -38,29 +38,25 @@ async function analyzeAudio(filePath) {
     format,
     duration,
     sampleRate,
-    bitrate,
     features: {}
   };
 
   // BPM
   try {
-    const { bpm, count} = extractBPM(audioVector, essentia);
+    const { bpm } = extractBPM(audioVector, essentia);
     result.features.bpm = bpm;
-    result.features.beatCount = count;
   } catch (err) {
     
   }
 
   // Key
   try {
-    const { keyIndex, noteName, scale } = extractKey(audioVector, essentia);
-    result.features.keyIndex = keyIndex;
+    const { noteName, scale } = extractKey(audioVector, essentia);
     result.features.key = noteName;
     result.features.scale = scale;
   } catch (e) {
     result.features.key = null;
     result.features.scale = null;
-    result.features.keyIndex = null;
   }
 
   // Energy
@@ -70,16 +66,43 @@ async function analyzeAudio(filePath) {
     result.features.energy = null;
   }
 
-  // Flatness
-   try {
-    const spectrum = essentia.Spectrum(vector);
-    result.features.flatness = essentia.Flatness(spectrum);
-  } catch (err) {
-    result.features.flatness = null;
+// 5.X Spectral Flatness
+/* try {
+  const frameCutter = essentia.FrameCutter(audioVector, {
+    frameSize: 1024,
+    hopSize: 512
+  });
+
+  const flatnessVals = [];
+
+  while (true) {
+    const frameOut = frameCutter.compute();
+    const frame = frameOut.frame;
+
+    if (frame.size() === 0) break;
+
+    const windowed = essentia.Windowing(frame, { type: 'hann' }).windowedFrame;
+    const spectrum = essentia.Spectrum(windowed).spectrum;
+    const flat = essentia.Flatness(spectrum).flatness;
+
+    flatnessVals.push(flat);
   }
 
+  const avgFlatness =
+    flatnessVals.length > 0
+      ? flatnessVals.reduce((sum, val) => sum + val, 0) / flatnessVals.length
+      : null;
+
+  result.features.flatness = avgFlatness;
+} catch (e) {
+  const msg = typeof e === 'number' ? `Essentia error code ${e}` : e.message;
+  result.features.flatness = { error: msg };
+}
+ */
+
+
   // Tonalness
-try {
+/* try {
   const melodia = essentia.PredominantPitchMelodia(audioVector);
   const pitchConfidence = essentia.vectorToArray(melodia.pitchConfidence);
 
@@ -88,7 +111,7 @@ try {
 } catch (e) {
   const msg = typeof e === 'number' ? `Essentia error code ${e}` : e.message;
   result.features.avgPitchConfidence = { error: msg };
-}
+} */
 
   console.log('🎧 Analysis Result:\n', JSON.stringify(result, null, 2));
 
