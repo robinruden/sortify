@@ -3,6 +3,7 @@ const fs = require('fs');
 const { Essentia, EssentiaWASM } = require('essentia.js');
 const essentiaAlgorithms = require('./src/data/essentiaAlgorithms.js');
 const extractBPM = require('./src/utils/extractBPM.js');
+const extractKey = require('./src/utils/extractKey.js');
 
 
 async function analyzeAudio(filePath) {
@@ -49,10 +50,9 @@ async function analyzeAudio(filePath) {
 
 
   const essentia = new Essentia(EssentiaWASM);
- 
   const analyzeLength = Math.min(monoData.length, 30 * sampleRate);
   const slicedData = monoData.slice(0, analyzeLength); // Limit to 30 seconds for analysis
-    
+
   let audioVector;
   try {
       audioVector = essentia.arrayToVector(Array.from(slicedData));
@@ -64,6 +64,10 @@ async function analyzeAudio(filePath) {
   if (!essentia.RhythmExtractor2013) {
   throw new Error('EssentiaWASM failed to load correctly.');
   }
+ 
+ 
+    
+  
 
   //BPM EXTRACTION
   const bpmData = extractBPM(audioVector, essentia);
@@ -73,17 +77,9 @@ async function analyzeAudio(filePath) {
   const danceability = bpmData?.danceability || null;
 
   // KEY EXTRACTION
-  let keyIndex = null;
-  let scale = null;
-
-  try {
-    const keyResult = essentia.KeyExtractor(audioVector);
-    keyIndex = keyResult.key;
-    scale = keyResult.scale;
-    /* console.log('Key index:', keyIndex, 'Scale:', scale); */
-  } catch (err) {
-    console.warn('Could not extract key:', err);
-  }
+ /*  const { keyIndex, scale } = extractKey(audioVector, essentia);   */
+   const keyResult = extractKey(audioVector, essentia);
+   console.log('🔑 extractKey result in main:', keyResult);
 
 
   return {
@@ -91,11 +87,13 @@ async function analyzeAudio(filePath) {
     duration: metadata.format.duration,
     sampleRate: metadata.format.sampleRate,
     bitrate: metadata.format.bitrate,
+    // FROM BPM EXTRACTION
     bpm,
     beats,
     beatCount,
     danceability,
-    key: { keyIndex, scale }
+    //FROM KEY EXTRACTION
+    key: keyResult
   };
   
 } catch (error) {
@@ -110,4 +108,4 @@ async function analyzeAudio(filePath) {
     throw new Error(msg);
 }
 }
-module.exports = { analyzeAudio };
+module.exports = analyzeAudio ;

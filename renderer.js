@@ -1,26 +1,15 @@
-const { ipcRenderer } = require('electron');
+console.log('🏗️ Renderer loaded');
 
-// Om du vill översätta nyckel‐index (0–11) till en not‐sträng:
-const NOTE_NAMES = [
-  'C',
-  'C♯/D♭',
-  'D',
-  'D♯/E♭',
-  'E',
-  'F',
-  'F♯/G♭',
-  'G',
-  'G♯/A♭',
-  'A',
-  'A♯/B♭',
-  'B'
-];
+const { ipcRenderer } = require('electron');
 
 window.pickAndAnalyze = async () => {
   const output = document.getElementById('output');
   output.textContent = 'Väljer fil…';
+
   try {
     const data = await ipcRenderer.invoke('select-and-analyze');
+    console.log('🔥 data from main:', data);
+    
     if (data.error) {
       output.textContent = `Fel: ${data.error}`;
       return;
@@ -32,13 +21,13 @@ window.pickAndAnalyze = async () => {
     lines.push(`Samplingsfrekvens: ${data.sampleRate} Hz`);
     lines.push(`Bitrate:        ${(data.bitrate / 1000).toFixed(0)} kbps`);
     lines.push(`BPM (tempo):    ${typeof data.bpm === 'number' ? data.bpm.toFixed(2) : 'Ej detekterat'}`);
-    // Om keyIndex finns:
-    if (data.key) {
-      const idx = data.key.keyIndex;
-      console.log('Rendered Key index:', idx);
-      const scale = data.key.scale || '';
-      console.log('Rendered Key scale:', scale);
-      const noteName = NOTE_NAMES[idx] || `(${idx})`;
+    console.log('🔥 data.bpm is:', data.bpm);
+
+  // Om keyIndex finns:
+  if (data.key && typeof data.key.noteName === 'string') {
+    console.log('🔥 data.key.noteName is:', data.key.noteName);
+      const noteName = data.key.noteName;
+      const scale    = data.key.scale || '';
       lines.push(`Tonart:         ${noteName} ${scale}`);
     } else {
       lines.push('Tonart:         Ej detekterat');
@@ -49,4 +38,4 @@ window.pickAndAnalyze = async () => {
     console.error(err);
     output.textContent = `Ett oväntat fel inträffade: ${err.message}`;
   }
-}
+};
