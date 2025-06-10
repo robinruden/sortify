@@ -19,7 +19,7 @@ function extractKey(audioVector, essentia) {
   try {
     // Run Essentia key extraction
     const result = essentia.KeyExtractor(audioVector);
-    console.log('🔍 KeyExtractor raw result:', result);
+    /* console.log('🔍 KeyExtractor raw result:', result); */
 
     // Prepare outputs
     let keyIndex = null;
@@ -44,7 +44,7 @@ function extractKey(audioVector, essentia) {
       } else if (rawKey.data && Array.isArray(rawKey.data)) {
         keyArray = rawKey.data;
       }
-      console.log('🔢 Converted keyArray length:', keyArray.length);
+      /* console.log('🔢 Converted keyArray length:', keyArray.length); */
       if (keyArray.length === 12) {
         const maxVal = Math.max(...keyArray);
         keyIndex = keyArray.indexOf(maxVal);
