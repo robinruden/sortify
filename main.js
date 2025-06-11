@@ -3,6 +3,7 @@ require('electron-reload')(__dirname, {
 });
 
 const { globalShortcut, app, BrowserWindow, ipcMain, dialog } = require('electron');
+const fs = require('fs');
 const path = require('path');
 
 const analyzeAudio = require('./src/analyzeAudio.js');
@@ -22,6 +23,21 @@ function createWindow() {
   mainWindow.loadFile('index.html');
 }
 
+// recursive directory walker
+async function walkDir(dir) {
+  const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...await walkDir(fullPath));
+    } else {
+      files.push(fullPath);
+    }
+  }
+  return files;
+}
+
 app.whenReady().then(() => {
   createWindow();
 
@@ -33,7 +49,7 @@ app.whenReady().then(() => {
     mainWindow.focus();
   });
 
-  ipcMain.handle('select-and-analyze', async () => {
+/*   ipcMain.handle('select-and-analyze', async () => {
     try {
       const result = await dialog.showOpenDialog(mainWindow, {  
         properties: ['openFile'],
@@ -52,5 +68,18 @@ app.whenReady().then(() => {
       console.error('Fel vid analys av ljudfil:', error);
       return { error: 'Kunde inte analysera ljudfilen' };
     }
-  })
+  }) */
+   ipcMain.handle('select-and-index-folders', async () => {
+    const result = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openDirectory', 'multiSelections']
+    });
+    if (result.canceled) {
+      return { error: 'Ingen mapp vald' };
+    }
+    const allFiles = [];
+    for (const folder of result.filePaths) {
+      allFiles.push(...await walkDir(folder));
+    }
+    return { files: allFiles };
+  });
 });

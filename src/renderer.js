@@ -2,6 +2,20 @@
 
 const { ipcRenderer } = require('electron');
 
+async function pickAndIndex() {
+  const res = await ipcRenderer.invoke('select-and-index-folders');
+  if (res.error) {
+    console.error(res.error);
+    return;
+  }
+  // res.files is an array of full file paths
+  console.log('Indexed files:', res.files);
+  // e.g. render into your UI:
+  document.getElementById('output').textContent = res.files.join('\n');
+}
+
+window.pickAndIndex = pickAndIndex;
+
 window.pickAndAnalyze = async () => {
   const output = document.getElementById('output');
   output.textContent = 'Väljer fil…';
