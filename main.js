@@ -15,7 +15,12 @@ const { getTracksByBPM } = require('./src/db/query.js');
 
 const os = require('os');
 
+const { shell } = require('electron');
 
+ipcMain.on('drag-start', (event, filePath) => {
+  // Öppnar filens plats i Finder när man drar ut
+  shell.showItemInFolder(filePath);
+});
 
 // Move the window reference into module scope
 let mainWindow;
@@ -58,7 +63,7 @@ app.whenReady().then(() => {
 
   // ANALYZE SINGLE FILE
 ipcMain.handle('drop-and-analyze-folders-with-progress', async (_, folderPaths) => {
-  const allAnalyzed = [];
+  const analyzed = [];
 
   for (const folder of folderPaths) {
     const files = await walkDir(folder);
@@ -90,7 +95,7 @@ ipcMain.handle('drop-and-analyze-folders-with-progress', async (_, folderPaths) 
         };
 
         saveTrack(entry);
-        allAnalyzed.push(file);
+        analyzed.push(entry);
       } catch (err) {
         console.warn(`❌ Skippade ${file}: ${err.message}`);
       }
@@ -103,7 +108,7 @@ ipcMain.handle('drop-and-analyze-folders-with-progress', async (_, folderPaths) 
     }
   }
 
-  return { analyzed: allAnalyzed };
+  return { analyzed };
 });
 
 

@@ -2,6 +2,62 @@
 
 const { ipcRenderer } = require('electron');
 
+let allAnalyzedFiles = [];
+
+/* const result = await ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folderPaths);
+allAnalyzedFiles = result.analyzed;
+
+renderFileList(allAnalyzedFiles); */
+
+function renderFileList(files) {
+  const output = document.getElementById('output');
+  output.innerHTML = '';
+
+  files.forEach(file => {
+    const el = document.createElement('div');
+    const name = file.path.split(/[/\\]/).pop();
+
+    el.textContent = `${name} — BPM: ${file.bpm?.toFixed(1) ?? '–'}, ${file.key ?? '–'} ${file.scale ?? ''}, Energy: ${file.energy?.toFixed(2) ?? '–'}`;
+    el.className = 'file-item';
+    el.setAttribute('draggable', 'true');
+    el.setAttribute('data-path', file.path);
+
+    el.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+      ipcRenderer.send('drag-start', file.path);
+    });
+
+    output.appendChild(el);
+  });
+}
+
+function applyFilter() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const key = document.getElementById('key').value.toLowerCase();
+  const scale = document.getElementById('scale').value.toLowerCase();
+  const bpmMin = parseFloat(document.getElementById('bpmMin').value) || 0;
+  const bpmMax = parseFloat(document.getElementById('bpmMax').value) || 999;
+  const energyMin = parseFloat(document.getElementById('energyMin').value) || 0;
+  const energyMax = parseFloat(document.getElementById('energyMax').value) || 1;
+
+  const filtered = allAnalyzedFiles.filter(file => {
+    const name = file.path.toLowerCase();
+
+    return (
+      name.includes(search) &&
+      (!key || file.key?.toLowerCase() === key) &&
+      (!scale || file.scale?.toLowerCase() === scale) &&
+      (!file.bpm || (file.bpm >= bpmMin && file.bpm <= bpmMax)) &&
+      (!file.energy || (file.energy >= energyMin && file.energy <= energyMax))
+    );
+  });
+
+  renderFileList(filtered);
+}
+
+window.applyFilter = applyFilter;
+
+
 async function pickAndIndex() {
   const res = await ipcRenderer.invoke('select-and-index-folders');
   if (res.error) {
@@ -15,6 +71,7 @@ async function pickAndIndex() {
 }
 
 window.pickAndIndex = pickAndIndex;
+
 
 
 window.pickAndAnalyze = async () => {
@@ -51,6 +108,8 @@ window.pickAndAnalyze = async () => {
     output.textContent = `Ett oväntat fel inträffade: ${err.message}`;
   }
 };
+
+
 
 window.filterByBPM = async (min, max) => {
   try {
@@ -113,6 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
     progressText.textContent = 'Analyserar…';
 
     const result = await ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folderPaths);
+allAnalyzedFiles = result.analyzed; // <-- Spara för filter
+renderFileList(allAnalyzedFiles);   // <-- Visa direkt
+
 
     progressBar.value = 100;
     progressText.textContent = `✅ Klar! Analyserade ${result.analyzed.length} filer`;
@@ -140,4 +202,7 @@ ipcRenderer.on('progress-update', (_, data) => {
   const fileName = data.current.split(/[/\\]/).pop(); // Kompatibel för Mac & Windows
   progressText.textContent = `Analyserar: ${fileName} (${data.percent}%)`;
 });
+
+
+
 

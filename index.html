@@ -5,6 +5,14 @@
   <title>Sortify Audio Analyzer</title>
 </head>
 <body>
+  <input id="search" placeholder="Sök filnamn">
+<input id="key" placeholder="Key (C)">
+<input id="scale" placeholder="Scale (minor)">
+<input id="bpmMin" type="number" placeholder="Min BPM">
+<input id="bpmMax" type="number" placeholder="Max BPM">
+<input id="energyMin" type="number" placeholder="Min Energy">
+<input id="energyMax" type="number" placeholder="Max Energy">
+<button onclick="applyFilter()">Filtrera</button>
   <div id="progress-container" style="display:none; margin-top: 20px;">
   <progress id="progress-bar" value="0" max="100" style="width: 100%;"></progress>
   <div id="progress-text">Analyserar…</div>
