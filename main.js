@@ -13,6 +13,8 @@ const analyzeAudio = require('./src/analyzeAudio.js');
 const { saveTrack, isAlreadyIndexed } = require('./src/db/insert.js');
 const { getTracksByBPM } = require('./src/db/query.js');
 
+const os = require('os');
+
 
 
 // Move the window reference into module scope
@@ -55,64 +57,69 @@ app.whenReady().then(() => {
   });
 
   // ANALYZE SINGLE FILE
-  ipcMain.handle('select-and-analyze', async () => {
-    try {
-      const result = await dialog.showOpenDialog(mainWindow, {
-        properties: ['openFile'],
-        filters: [{ name: 'Ljudfiler', extensions: ['mp3', 'wav'] }]
-      });
+ipcMain.handle('drop-and-analyze-folders-with-progress', async (_, folderPaths) => {
+  const allAnalyzed = [];
 
-      if (result.canceled || result.filePaths.length === 0) {
-        return { error: 'Ingen fil vald' };
+  for (const folder of folderPaths) {
+    const files = await walkDir(folder);
+    const audioFiles = files.filter(f => /\.(mp3|wav)$/i.test(f));
+    const total = audioFiles.length;
+    let done = 0;
+
+    for (const file of audioFiles) {
+      if (isAlreadyIndexed(file)) {
+        done++;
+        mainWindow.webContents.send('progress-update', {
+          percent: Math.round((done / total) * 100),
+          current: file,
+        });
+        continue;
       }
 
-      const filePath = result.filePaths[0];
-      const data = await analyzeAudio(filePath);
-
-      // Save to DB if not already there
-      if (!isAlreadyIndexed(filePath)) {
+      try {
+        const analysis = await analyzeAudio(file);
         const entry = {
-          path: filePath,
-          format: data.format,
-          duration: data.duration,
-          sampleRate: data.sampleRate,
-          bpm: data.features?.bpm || null,
-          key: data.features?.key || null,
-          scale: data.features?.scale || null,
-          energy: data.features?.energy || null
+          path: file,
+          format: analysis.format,
+          duration: analysis.duration,
+          sampleRate: analysis.sampleRate,
+          bpm: analysis.features?.bpm || null,
+          key: analysis.features?.key || null,
+          scale: analysis.features?.scale || null,
+          energy: analysis.features?.energy || null
         };
+
         saveTrack(entry);
+        allAnalyzed.push(file);
+      } catch (err) {
+        console.warn(`❌ Skippade ${file}: ${err.message}`);
       }
 
-      return data;
-    } catch (error) {
-      console.error('Fel vid analys av ljudfil:', error);
-      return { error: 'Kunde inte analysera ljudfilen' };
+      done++;
+      mainWindow.webContents.send('progress-update', {
+        percent: Math.round((done / total) * 100),
+        current: file,
+      });
     }
-  });
+  }
 
-  // INDEX FOLDERS
-  ipcMain.handle('select-and-index-folders', async () => {
-    const result = await dialog.showOpenDialog(mainWindow, {
-      properties: ['openDirectory', 'multiSelections']
-    });
-
-    if (result.canceled) {
-      return { error: 'Ingen mapp vald' };
-    }
-
-    const allFiles = [];
-    for (const folder of result.filePaths) {
-      allFiles.push(...await walkDir(folder));
-    }
-
-    return { files: allFiles };
-  });
-
-  // FILTERING HANDLER
-  ipcMain.handle('filter-by-bpm', (_, min, max) => {
-    return getTracksByBPM(min, max);
-  });
+  return { analyzed: allAnalyzed };
 });
 
+
+});
+
+ipcMain.handle('export-analyzed-to-json', async (_, filePaths) => {
+  try {
+    const exportData = filePaths.map(p => ({
+      path: p
+    }));
+
+    const exportPath = path.join(os.homedir(), 'Desktop', 'analyzed_export.json');
+    fs.writeFileSync(exportPath, JSON.stringify(exportData, null, 2));
+    return { path: exportPath };
+  } catch (err) {
+    return { error: err.message };
+  }
+});
 

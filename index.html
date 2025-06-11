@@ -5,17 +5,14 @@
   <title>Sortify Audio Analyzer</title>
 </head>
 <body>
-  <h1>Sortify Audio Analyzer</h1>
-  <button onclick="pickAndAnalyze()">Välj ljudfil</button>
-  <button onclick="pickAndIndex()">Indexera mappar</button>
-  <!-- <pre id="output">Ingen fil analyserad än</pre> -->
-   <input id="bpmMin" type="number" value="80" placeholder="Min BPM">
-<input id="bpmMax" type="number" value="120" placeholder="Max BPM">
-  <button onclick="filterByBPM(
-    parseFloat(document.getElementById('bpmMin').value),
-    parseFloat(document.getElementById('bpmMax').value)
-  )">Filtrera BPM</button>
-  
+  <div id="progress-container" style="display:none; margin-top: 20px;">
+  <progress id="progress-bar" value="0" max="100" style="width: 100%;"></progress>
+  <div id="progress-text">Analyserar…</div>
+</div>
+  <h2>Dra in en mapp här 👇</h2>
+  <div id="drop-area" style="width:100%;height:200px;border:2px dashed #ccc;text-align:center;padding:20px;">
+    Släpp mappen här
+  </div>
   <pre id="output"></pre>
   <script src="./src/renderer.js"></script>
 </body>

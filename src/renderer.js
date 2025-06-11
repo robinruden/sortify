@@ -70,3 +70,74 @@ window.filterByBPM = async (min, max) => {
     document.getElementById('output').textContent = `Fel vid filtrering: ${err.message}`;
   }
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+  const dropArea = document.getElementById('drop-area');
+  const progressContainer = document.getElementById('progress-container');
+  const progressBar = document.getElementById('progress-bar');
+  const progressText = document.getElementById('progress-text');
+
+  dropArea.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    dropArea.style.borderColor = '#007bff';
+  });
+
+  dropArea.addEventListener('dragleave', () => {
+    dropArea.style.borderColor = '#ccc';
+  });
+
+  dropArea.addEventListener('drop', async (event) => {
+    event.preventDefault();
+    dropArea.style.borderColor = '#ccc';
+
+    const items = event.dataTransfer.items;
+    const folderPaths = [];
+
+    for (const item of items) {
+      const entry = item.webkitGetAsEntry?.();
+      if (entry?.isDirectory) {
+        const file = item.getAsFile();
+        if (file?.path) {
+          folderPaths.push(file.path);
+        }
+      }
+    }
+
+    if (folderPaths.length === 0) {
+      document.getElementById('output').textContent = 'Ingen mapp hittades.';
+      return;
+    }
+
+    progressContainer.style.display = 'block';
+    progressBar.value = 0;
+    progressText.textContent = 'Analyserar…';
+
+    const result = await ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folderPaths);
+
+    progressBar.value = 100;
+    progressText.textContent = `✅ Klar! Analyserade ${result.analyzed.length} filer`;
+
+    document.getElementById('output').textContent = result.analyzed.map(p => {
+      const name = p.split(/[/\\]/).pop(); // både Mac och Windows
+      return `🎧 ${name}`;
+    }).join('\n');
+
+    // Export to JSON
+    const exportRes = await ipcRenderer.invoke('export-analyzed-to-json', result.analyzed);
+    if (exportRes.error) {
+      console.error('Export error:', exportRes.error);
+    } else {
+      console.log('Exported to:', exportRes.path);
+    }
+  });
+});
+
+ipcRenderer.on('progress-update', (_, data) => {
+  const progressBar = document.getElementById('progress-bar');
+  const progressText = document.getElementById('progress-text');
+
+  progressBar.value = data.percent;
+  const fileName = data.current.split(/[/\\]/).pop(); // Kompatibel för Mac & Windows
+  progressText.textContent = `Analyserar: ${fileName} (${data.percent}%)`;
+});
+
