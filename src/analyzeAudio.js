@@ -1,5 +1,5 @@
 // analyzeAudio.js
-// Extracts: BPM, Key, Energy, Length, Spectral Contrast
+// Extracts: BPM, Key, Energy, Length
 
 const mm = require('music-metadata-browser');
 const fs = require('fs');

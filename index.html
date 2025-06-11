@@ -6,9 +6,16 @@
 </head>
 <body>
   <h1>Sortify Audio Analyzer</h1>
-  <!-- <button onclick="pickAndAnalyze()">Välj ljudfil</button> -->
+  <button onclick="pickAndAnalyze()">Välj ljudfil</button>
   <button onclick="pickAndIndex()">Indexera mappar</button>
   <!-- <pre id="output">Ingen fil analyserad än</pre> -->
+   <input id="bpmMin" type="number" value="80" placeholder="Min BPM">
+<input id="bpmMax" type="number" value="120" placeholder="Max BPM">
+  <button onclick="filterByBPM(
+    parseFloat(document.getElementById('bpmMin').value),
+    parseFloat(document.getElementById('bpmMax').value)
+  )">Filtrera BPM</button>
+  
   <pre id="output"></pre>
   <script src="./src/renderer.js"></script>
 </body>

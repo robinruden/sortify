@@ -1,4 +1,4 @@
-/* console.log('🏗️ Renderer loaded'); */
+//renderer.js
 
 const { ipcRenderer } = require('electron');
 
@@ -15,6 +15,7 @@ async function pickAndIndex() {
 }
 
 window.pickAndIndex = pickAndIndex;
+
 
 window.pickAndAnalyze = async () => {
   const output = document.getElementById('output');
@@ -48,5 +49,24 @@ window.pickAndAnalyze = async () => {
   } catch (err) {
     console.error(err);
     output.textContent = `Ett oväntat fel inträffade: ${err.message}`;
+  }
+};
+
+window.filterByBPM = async (min, max) => {
+  try {
+    const res = await ipcRenderer.invoke('filter-by-bpm', min, max);
+    const output = document.getElementById('output');
+
+    if (res.length === 0) {
+      output.textContent = `Inga spår hittades mellan ${min} och ${max} BPM.`;
+      return;
+    }
+
+    output.textContent = res.map(track =>
+      `${track.path} — ${track.bpm.toFixed(2)} BPM`
+    ).join('\n');
+  } catch (err) {
+    console.error('Filter error:', err);
+    document.getElementById('output').textContent = `Fel vid filtrering: ${err.message}`;
   }
 };
