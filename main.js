@@ -12,6 +12,7 @@ const analyzeAudio = require('./src/analyzeAudio.js');
 
 const { saveTrack, isAlreadyIndexed } = require('./src/db/insert.js');
 const { getTracksByBPM } = require('./src/db/query.js');
+const { searchTracks } = require('./src/db/search.js');
 
 const os = require('os');
 
@@ -22,6 +23,10 @@ ipcMain.on('drag-start', (event, filePath) => {
   shell.showItemInFolder(filePath);
 });
 
+
+ipcMain.handle('search-tracks', async (_, filters) => {
+  return searchTracks(filters);
+});
 // Move the window reference into module scope
 let mainWindow;
 
