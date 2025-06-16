@@ -1,16 +1,10 @@
-
-
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  
   <meta charset="UTF-8">
   <title>Sortify Audio Analyzer</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css"
-    rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/wnumb@1.2.0/wNumb.min.js"></script>
+  <!-- noUiSlider CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
   <style>
     body {
       font-family: sans-serif;
@@ -19,13 +13,23 @@
     #filters {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 12px;
       margin-bottom: 16px;
     }
-    #filters input, #filters > div {
+    #filters input[type="text"],
+    #filters input[type="number"],
+    #filters .filter-section {
       padding: 8px;
       flex: 1 1 120px;
       box-sizing: border-box;
+    }
+    #bpm-range-controls,
+    #bpm-exact-controls {
+      flex: 1 1 100%;
+      margin-top: 6px;
+    }
+    #bpm-slider {
+      margin: 8px 0;
     }
     #drop-area {
       width: 100%;
@@ -39,93 +43,62 @@
       padding: 4px 0;
       border-bottom: 1px solid #eee;
     }
-    #length-slider {
-      width: 100%;
+    #progress-container {
+      margin-bottom: 16px;
     }
-
-    .range-container {
-  position: relative;
-  height: 24px;
-}
-.range-container input[type=range] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: transparent;       /* hide the default track */
-  pointer-events: none;          /* only thumbs get events */
-}
-/* enable dragging on the thumb itself */
-.range-container input[type=range]::-webkit-slider-thumb {
-  pointer-events: all;
-  position: relative;
-  z-index: 2;
-}
-.range-container input[type=range]::-moz-range-thumb {
-  pointer-events: all;
-  position: relative;
-  z-index: 2;
-}
-/* draw your “track” yourself, e.g. on the container background */
-.range-container {
-  background: linear-gradient(
-    to right,
-    #ddd 0%,
-    #ddd 100%
-  );
-}
-/* then overlay a colored segment between the two values: */
-.range-container::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: calc((var(--min)/600)*100%);
-  right: calc(100% - (var(--max)/600)*100%);
-  height: 4px;
-  background: #007bff;
-  transform: translateY(-50%);
-  z-index: 1;
-}
+    #processed-list {
+      max-height: 150px;
+      overflow: auto;
+      margin-top: 8px;
+      padding-left: 16px;
+    }
   </style>
 </head>
 <body>
   <div id="filters">
     <input id="search" type="text" placeholder="🔍 Sök filnamn…">
-    <input id="key" type="text" placeholder="Tonart (C)">
-    <input id="scale" type="text" placeholder="Skala (minor)">
-    <input id="bpmMin" type="number" placeholder="Min BPM">
-    <input id="bpmMax" type="number" placeholder="Max BPM">
-    <input id="energyMin" type="number" placeholder="Min Energi">
-    <input id="energyMax" type="number" placeholder="Max Energi">
+    <input id="key"    type="text" placeholder="Tonart (C)">
+    <input id="scale"  type="text" placeholder="Skala (minor)">
 
-<div style="flex:1 1 100%;">
-  <label for="max-length-slider">
-    Max Längd (s): <span id="length-max-val">∞</span>
-  </label><br>
-  <input
-    id="max-length-slider"
-    type="range"
-    min="0"
-    max="600"
-    step="0.1"
-    value="600"
-    style="width:100%; margin-top:4px;"
-  >
-</div>
+    <div class="filter-section">
+      <strong>BPM:</strong><br>
+      <label><input type="radio" name="bpm-mode" value="range" checked> Range</label>
+      <label style="margin-left:12px;"><input type="radio" name="bpm-mode" value="exact"> Exact</label>
+      <!-- Range slider -->
+      <div id="bpm-range-controls">
+        <div id="bpm-slider"></div>
+        <label>Min: <span id="bpm-min-val">0</span></label>
+        <label style="margin-left:12px;">Max: <span id="bpm-max-val">300</span></label>
+      </div>
+      <!-- Exact input -->
+      <div id="bpm-exact-controls" style="display:none;">
+        <label>Exact BPM:</label>
+        <input id="bpmExact" type="number" min="0" max="300" step="1" placeholder="e.g. 128">
+      </div>
+    </div>
 
-  <div id="progress-container" style="display:none; margin-bottom:16px;">
-    <progress id="progress-bar" value="0" max="100" style="width: 100%;"></progress>
+    <div class="filter-section">
+      <label for="energy-slider">Min Energi: <span id="energy-val">0.00</span></label><br>
+      <input id="energy-slider" type="range" min="0" max="1" step="0.01" value="0" style="width:100%;">
+    </div>
+
+    <div class="filter-section">
+      <label for="max-length-slider">Max Längd (s): <span id="length-max-val">∞</span></label><br>
+      <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" style="width:100%;">
+    </div>
+  </div>
+
+  <div id="progress-container" style="display:none;">
+    <progress id="progress-bar" value="0" max="100" style="width:100%;"></progress>
     <div id="progress-text">Analyserar…</div>
-    <ul id="processed-list" style="max-height:150px; overflow:auto; margin-top:8px; padding-left:16px;"></ul>
+    <ul id="processed-list"></ul>
   </div>
 
-  <div id="drop-area">
-    Släpp mappen här
-  </div>
-
+  <div id="drop-area">Dra in en mapp här 👇</div>
   <div id="output"></div>
 
- 
+  <!-- noUiSlider JS -->
+  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
   <script src="./src/renderer.js"></script>
 </body>
 </html>

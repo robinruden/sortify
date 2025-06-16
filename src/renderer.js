@@ -1,7 +1,11 @@
 // src/renderer.js
 const { ipcRenderer } = require('electron');
+const { pathToFileURL } = require('url');
 
 let allAnalyzedFiles = [];
+let currentPlayer = null;
+let currentPlayerPath = null;
+let currentPlayerElement = null;
 
 // Render a list of files
 function renderFileList(files) {
@@ -21,61 +25,102 @@ function renderFileList(files) {
       `${file.key ?? '–'} ${file.scale ?? ''}, Energi: ${file.energy?.toFixed(2) ?? '–'}`;
     el.draggable = true;
     el.dataset.path = file.path;
+
+    // Drag to reveal in Finder/Explorer
     el.addEventListener('dragstart', e => {
       e.preventDefault();
       ipcRenderer.invoke('ondragstart', file.path);
     });
+
+    // Right-click to preview or stop
+    el.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      // Stop if same file clicked
+      if (currentPlayer && currentPlayerPath === file.path) {
+        currentPlayer.pause();
+        currentPlayer.currentTime = 0;
+        currentPlayer = null;
+        currentPlayerPath = null;
+        if (currentPlayerElement) {
+          // remove icon
+          const icon = currentPlayerElement.querySelector('.preview-icon');
+          if (icon) icon.remove();
+          currentPlayerElement = null;
+        }
+        return;
+      }
+      // Stop existing playback
+      if (currentPlayer) {
+        currentPlayer.pause();
+        currentPlayer.currentTime = 0;
+        if (currentPlayerElement) {
+          const icon = currentPlayerElement.querySelector('.preview-icon');
+          if (icon) icon.remove();
+        }
+      }
+      // Start new playback
+      const src = pathToFileURL(file.path).href;
+      currentPlayer = new Audio(src);
+      currentPlayer.volume = 0.8;
+      currentPlayerPath = file.path;
+      currentPlayerElement = el;
+      // add icon indicator
+      const iconEl = document.createElement('span');
+      iconEl.textContent = '🔊 ';
+      iconEl.className = 'preview-icon';
+      el.prepend(iconEl);
+      currentPlayer.play().catch(err => console.error('Preview failed:', err));
+    });
+
     output.appendChild(el);
   });
 }
 
-// Fetch all tracks and apply display logic
+// Fetch and filter
 async function loadAllTracks() {
   allAnalyzedFiles = await ipcRenderer.invoke('get-all-tracks');
   applyFilter();
 }
 
-// Filter in-memory array, hide or show results
+// Apply filters and render list
 function applyFilter() {
-  // Read text/number filters
   const searchTerm = document.getElementById('search').value.toLowerCase();
   const keyTerm    = document.getElementById('key').value.toLowerCase();
   const scaleTerm  = document.getElementById('scale').value.toLowerCase();
-  const bpmMin     = parseFloat(document.getElementById('bpmMin').value)   || 0;
-  const bpmMax     = parseFloat(document.getElementById('bpmMax').value)   || Infinity;
-  const energyMin  = parseFloat(document.getElementById('energyMin').value) || 0;
-  const energyMax  = parseFloat(document.getElementById('energyMax').value) || Infinity;
 
-  // Read max length from single slider
-  const maxSlider  = document.getElementById('max-length-slider');
-  const lengthMax  = parseFloat(maxSlider.value) || Infinity;
+  // Read BPM range
+  const [bpmMin, bpmMax] = document
+    .getElementById('bpm-slider')
+    .noUiSlider.get()
+    .map(v => parseInt(v, 10));
+
+  const bpmMode    = document.querySelector('input[name="bpm-mode"]:checked').value;
+  const exactInput = parseInt(document.getElementById('bpmExact').value, 10);
+
+  const energyThreshold = parseFloat(document.getElementById('energy-slider').value) || 0;
+  const lengthMax = parseFloat(document.getElementById('max-length-slider').value) || Infinity;
 
   const output = document.getElementById('output');
-
-  // Determine if any filter is active (including length slider not at max)
-  const anyFilter =
-    searchTerm || keyTerm || scaleTerm ||
-    document.getElementById('bpmMin').value || document.getElementById('bpmMax').value ||
-    document.getElementById('energyMin').value || document.getElementById('energyMax').value ||
-    (lengthMax !== parseFloat(maxSlider.max));
-
-  if (!anyFilter && allAnalyzedFiles.length === 0) {
-    output.style.display = 'none';
-    return;
-  }
-
-  output.style.display = 'block';
+  output.style.display = allAnalyzedFiles.length > 0 ? 'block' : 'none';
 
   const filtered = allAnalyzedFiles.filter(file => {
     const name = file.path.split(/[/\\]/).pop().toLowerCase();
     const dur  = file.duration;
 
-    const okName   = !searchTerm || name.includes(searchTerm);
-    const okKey    = !keyTerm   || (file.key?.toLowerCase()   === keyTerm);
-    const okScale  = !scaleTerm || (file.scale?.toLowerCase() === scaleTerm);
-    const okBpm    = file.bpm   == null || (file.bpm   >= bpmMin   && file.bpm   <= bpmMax);
-    const okEnergy = file.energy== null || (file.energy>= energyMin&& file.energy<= energyMax);
-    const okLength = dur        == null || (dur        <= lengthMax);
+    const okName  = !searchTerm || name.includes(searchTerm);
+    const okKey   = !keyTerm   || file.key?.toLowerCase() === keyTerm;
+    const okScale = !scaleTerm || file.scale?.toLowerCase() === scaleTerm;
+
+    let okBpm = true;
+    if (bpmMode === 'range') {
+      okBpm = file.bpm == null || (file.bpm >= bpmMin && file.bpm <= bpmMax);
+    } else {
+      if (isNaN(exactInput)) okBpm = true;
+      else okBpm = file.bpm == null || Math.round(file.bpm) === exactInput;
+    }
+
+    const okEnergy = file.energy == null || file.energy >= energyThreshold;
+    const okLength = dur           == null || dur <= lengthMax;
 
     return okName && okKey && okScale && okBpm && okEnergy && okLength;
   });
@@ -85,53 +130,76 @@ function applyFilter() {
 
 window.applyFilter = applyFilter;
 
-// Set up UI and events on DOM load
 document.addEventListener('DOMContentLoaded', () => {
-  const output          = document.getElementById('output');
-  const progressBar     = document.getElementById('progress-bar');
-  const progressText    = document.getElementById('progress-text');
-  const processedList   = document.getElementById('processed-list');
+  const progressBar   = document.getElementById('progress-bar');
+  const progressText  = document.getElementById('progress-text');
+  const processedList = document.getElementById('processed-list');
 
-  // Single max-length slider setup
-  const maxSlider = document.getElementById('max-length-slider');
-  const maxLabel  = document.getElementById('length-max-val');
-
-  function updateMaxLabel(val) {
-    const num = parseFloat(val);
-    maxLabel.textContent = (num === parseFloat(maxSlider.max))
-      ? '∞'
-      : num.toFixed(1);
-  }
-
-  maxSlider.addEventListener('input', e => {
-    updateMaxLabel(e.target.value);
+  // BPM slider
+  const bpmSlider = document.getElementById('bpm-slider');
+  noUiSlider.create(bpmSlider, {
+    start: [0, 300], connect: true,
+    range: { min: 0, max: 300 }, step: 1,
+    tooltips: [true, true],
+    format: { to: v => parseInt(v, 10), from: v => parseInt(v, 10) }
+  });
+  const bpmMinLabel = document.getElementById('bpm-min-val');
+  const bpmMaxLabel = document.getElementById('bpm-max-val');
+  bpmSlider.noUiSlider.on('update', ([min, max]) => {
+    bpmMinLabel.textContent = min;
+    bpmMaxLabel.textContent = max;
     applyFilter();
   });
-  updateMaxLabel(maxSlider.value);
 
-  // Wire up text/number inputs for live filtering
-  ['search','key','scale','bpmMin','bpmMax','energyMin','energyMax']
-    .map(id => document.getElementById(id))
-    .forEach(el => el.addEventListener('input', applyFilter));
+  // Toggle range vs exact BPM
+  document.querySelectorAll('input[name="bpm-mode"]').forEach(radio =>
+    radio.addEventListener('change', () => {
+      const isRange = radio.value === 'range';
+      document.getElementById('bpm-range-controls').style.display = isRange ? 'block' : 'none';
+      document.getElementById('bpm-exact-controls').style.display = isRange ? 'none' : 'block';
+      applyFilter();
+    })
+  );
+  document.getElementById('bpmExact').addEventListener('input', applyFilter);
 
-  // Progress update for analysis
+  // Energy slider setup
+  const energySlider = document.getElementById('energy-slider');
+  const energyLabel  = document.getElementById('energy-val');
+  energySlider.addEventListener('input', e => {
+    energyLabel.textContent = parseFloat(e.target.value).toFixed(2);
+    applyFilter();
+  });
+
+  // Length slider setup
+  const lengthSlider = document.getElementById('max-length-slider');
+  const lengthLabel  = document.getElementById('length-max-val');
+  lengthSlider.addEventListener('input', e => {
+    const num = parseFloat(e.target.value);
+    lengthLabel.textContent = (num === parseFloat(lengthSlider.max)) ? '∞' : num.toFixed(1);
+    applyFilter();
+  });
+
+  // Text filters
+  ['search','key','scale'].forEach(id =>
+    document.getElementById(id).addEventListener('input', applyFilter)
+  );
+
+  // Progress updates
   ipcRenderer.on('progress-update', (_, { percent, current }) => {
     progressBar.value = percent;
-    const fileName = current.split(/[/\\]/).pop();
-    progressText.textContent = `Analyserar: ${fileName} (${percent}%)`;
+    const name = current.split(/[/\\]/).pop();
+    progressText.textContent = `Analyserar: ${name} (${percent}%)`;
     if (percent === 0) processedList.innerHTML = '';
     const li = document.createElement('li');
-    li.textContent = fileName;
+    li.textContent = name;
     processedList.appendChild(li);
   });
 
-  // Drag-and-drop for indexing
-  const dropArea         = document.getElementById('drop-area');
-  const progressContainer= document.getElementById('progress-container');
-
+  // Drag-and-drop for analysis
+  const dropArea = document.getElementById('drop-area');
+  const progressContainer = document.getElementById('progress-container');
   dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.style.borderColor = '#007bff'; });
   dropArea.addEventListener('dragleave', () => { dropArea.style.borderColor = '#ccc'; });
-
   dropArea.addEventListener('drop', async e => {
     e.preventDefault();
     dropArea.style.borderColor = '#ccc';
@@ -140,13 +208,13 @@ document.addEventListener('DOMContentLoaded', () => {
     progressBar.value = 0;
     progressText.textContent = 'Analyserar…';
 
-    const folderPaths = Array.from(e.dataTransfer.items)
+    const items = Array.from(e.dataTransfer.items);
+    const folders = items
       .map(item => item.webkitGetAsEntry?.())
       .filter(entry => entry?.isDirectory)
-      .map(entry => entry && entry.isDirectory && item.getAsFile().path);
+      .map((entry, idx) => items[idx].getAsFile().path);
 
-    const result = await ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folderPaths);
-
+    const result = await ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folders);
     await loadAllTracks();
 
     progressBar.value = 100;
