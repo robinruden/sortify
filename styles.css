@@ -494,7 +494,7 @@ progress::-moz-progress-bar {
   border: 1px solid rgba(70,130,180,0.2);
   border-radius: 16px;
   padding: 8px;
-  max-height: 300px;
+  max-height: 20rem;
   overflow: auto;
   backdrop-filter: blur(15px);
 }
