@@ -7,95 +7,432 @@
   <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
   <style>
     body {
-      font-family: sans-serif;
-      margin: 20px;
-    }
-    #filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    #filters input[type="text"],
-    #filters input[type="number"],
-    #filters .filter-section {
-      padding: 8px;
-      flex: 1 1 120px;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 12px;
+      background: linear-gradient(180deg, #0054e3 0%, #3a6cf0 30%, #ffffff 100%);
+      color: #000;
+      min-height: 100vh;
       box-sizing: border-box;
     }
-    #bpm-range-controls,
-    #bpm-exact-controls {
-      flex: 1 1 100%;
-      margin-top: 6px;
+
+    /* Windows XP Window Frame */
+    .window-frame {
+      background: linear-gradient(180deg, #ffffff 0%, #ece9d8 100%);
+      border: 1px solid #0054e3;
+      border-radius: 8px 8px 0 0;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+      padding: 0;
+      margin-bottom: 12px;
+      overflow: hidden;
     }
-    #bpm-slider {
-      margin: 8px 0;
+
+    .title-bar {
+      background: linear-gradient(180deg, #0054e3 0%, #0040a8 50%, #003d96 100%);
+      color: white;
+      padding: 6px 8px;
+      font-weight: bold;
+      font-size: 11px;
+      border-bottom: 1px solid #316ac5;
+      position: relative;
     }
-    #drop-area {
+
+    .title-bar::before {
+      content: '';
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      right: 1px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+    }
+
+    /* Window content area */
+    .window-content {
+      padding: 8px;
+      background: #ece9d8;
+    }
+
+    /* XP Button Style */
+    .button-xp {
+      background: linear-gradient(180deg, #ffffff 0%, #ece9d8 100%);
+      border: 1px solid #aca899;
+      border-radius: 3px;
+      padding: 4px 12px;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-size: 11px;
+      cursor: pointer;
+      color: #000;
+      box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+    }
+
+    .button-xp:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #ddd9c4 100%);
+      border-color: #316ac5;
+    }
+
+    .button-xp:active {
+      background: linear-gradient(180deg, #ddd9c4 0%, #ece9d8 100%);
+      box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* Input Fields */
+    #filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    #filters input[type="text"],
+    #filters input[type="number"] {
+      background: white;
+      border: 2px inset #ece9d8;
+      padding: 3px 6px;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      font-size: 11px;
+      color: #000;
+      border-radius: 1px;
+    }
+
+    #filters input[type="text"]:focus,
+    #filters input[type="number"]:focus {
+      border: 2px inset #316ac5;
+      outline: none;
+    }
+
+    .filter-section {
+      background: linear-gradient(180deg, #f7f6f1 0%, #ece9d8 100%);
+      border: 1px solid #aca899;
+      border-radius: 4px;
+      padding: 8px;
+      font-size: 11px;
+      font-weight: bold;
+      box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .filter-section strong {
+      color: #003d96;
+      font-size: 11px;
+    }
+
+    /* Radio buttons */
+    input[type="radio"] {
+      margin-right: 4px;
+      accent-color: #0054e3;
+    }
+
+    /* Range sliders */
+    input[type="range"] {
+      background: linear-gradient(180deg, #ffffff 0%, #ece9d8 100%);
+      border: 1px inset #aca899;
+      height: 18px;
       width: 100%;
-      height: 200px;
-      border: 2px dashed #ccc;
+      -webkit-appearance: none;
+      border-radius: 2px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #ece9d8 100%);
+      border: 1px solid #aca899;
+      border-radius: 2px;
+      cursor: pointer;
+      box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #ddd9c4 100%);
+    }
+
+    /* noUiSlider customization */
+    .noUi-target {
+      background: linear-gradient(180deg, #ffffff 0%, #ece9d8 100%);
+      border: 1px inset #aca899;
+      box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+      border-radius: 2px;
+    }
+
+    .noUi-connect {
+      background: linear-gradient(180deg, #0054e3 0%, #316ac5 100%);
+    }
+
+    .noUi-handle {
+      background: linear-gradient(180deg, #ffffff 0%, #ece9d8 100%);
+      border: 1px solid #aca899;
+      border-radius: 2px;
+      box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      width: 18px;
+      height: 18px;
+    }
+
+    .noUi-handle:before,
+    .noUi-handle:after {
+      display: none;
+    }
+
+    .noUi-handle:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #ddd9c4 100%);
+    }
+
+    /* Drop area */
+    #drop-area {
+      background: linear-gradient(180deg, #ffffff 0%, #f7f6f1 100%);
+      border: 2px dashed #aca899;
       text-align: center;
-      padding: 20px;
-      margin-bottom: 16px;
+      padding: 40px 20px;
+      font-size: 12px;
+      color: #666;
+      font-style: italic;
+      border-radius: 4px;
     }
-    .file-item {
-      padding: 4px 0;
-      border-bottom: 1px solid #eee;
+
+    #drop-area.drag-over {
+      background: linear-gradient(180deg, #fff7d6 0%, #ffe89a 100%);
+      border: 2px dashed #ffb347;
+      color: #8b4513;
     }
+
+    /* Progress bar */
     #progress-container {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
+
+    progress {
+      width: 100%;
+      height: 18px;
+      border: 1px inset #aca899;
+      background: white;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      border-radius: 1px;
+    }
+
+    progress::-webkit-progress-bar {
+      background: linear-gradient(180deg, #ffffff 0%, #ece9d8 100%);
+      border-radius: 1px;
+    }
+
+    progress::-webkit-progress-value {
+      background: linear-gradient(180deg, #00d000 0%, #00a000 100%);
+      border-radius: 1px;
+    }
+
+    progress::-moz-progress-bar {
+      background: linear-gradient(180deg, #00d000 0%, #00a000 100%);
+      border-radius: 1px;
+    }
+
+    #progress-text {
+      font-size: 11px;
+      margin-top: 4px;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      color: #333;
+    }
+
     #processed-list {
-      max-height: 150px;
+      max-height: 120px;
       overflow: auto;
       margin-top: 8px;
-      padding-left: 16px;
+      font-size: 10px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7f6f1 100%);
+      border: 1px inset #aca899;
+      padding: 4px;
+      border-radius: 2px;
+    }
+
+    #processed-list li {
+      padding: 2px 0;
+      border-bottom: 1px dotted #ccc;
+    }
+
+    /* File list */
+    .file-item {
+      padding: 3px 6px;
+      font-size: 11px;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(180deg, #ffffff 0%, #f7f6f1 100%);
+      margin-bottom: 1px;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 2px;
+    }
+
+    .file-item:hover {
+      background: linear-gradient(180deg, #3366ff 0%, #0040a8 100%);
+      color: white;
+      border-color: #0040a8;
+    }
+
+    .file-item:active {
+      background: linear-gradient(180deg, #0040a8 0%, #003d96 100%);
+    }
+
+    #output {
+      background: linear-gradient(180deg, #ffffff 0%, #f7f6f1 100%);
+      border: 1px inset #aca899;
+      padding: 4px;
+      max-height: 300px;
+      overflow: auto;
+      border-radius: 2px;
+    }
+
+    /* Labels */
+    label {
+      font-size: 11px;
+      font-weight: normal;
+      color: #333;
+    }
+
+    strong {
+      font-size: 11px;
+      color: #003d96;
+    }
+
+    /* XP-style scrollbars */
+    ::-webkit-scrollbar {
+      width: 16px;
+      height: 16px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: linear-gradient(180deg, #ffffff 0%, #ece9d8 100%);
+      border: 1px inset #aca899;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #d6d6d6 0%, #b8b8b8 100%);
+      border: 1px outset #aca899;
+      border-radius: 2px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #e0e0e0 0%, #c2c2c2 100%);
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: #ece9d8;
+    }
+
+    /* XP-style buttons for window controls */
+    .window-controls {
+      position: absolute;
+      right: 4px;
+      top: 3px;
+    }
+
+    .control-btn {
+      width: 16px;
+      height: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #ece9d8 100%);
+      border: 1px outset #aca899;
+      font-size: 9px;
+      margin-left: 2px;
+      cursor: pointer;
+      display: inline-block;
+      text-align: center;
+      line-height: 12px;
+    }
+
+    .control-btn:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #ddd9c4 100%);
+    }
+
+    .control-btn:active {
+      border: 1px inset #aca899;
+    }
+
+    /* Preview icon */
+    .preview-icon {
+      color: #ff6600;
+      font-weight: bold;
+    }
+
+    /* Tooltip styling */
+    .tooltip {
+      position: relative;
+      background: #ffffe1;
+      border: 1px solid #000;
+      padding: 2px 4px;
+      font-size: 11px;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
-  <div id="filters">
-    <input id="search" type="text" placeholder="🔍 Sök filnamn…">
-    <input id="key"    type="text" placeholder="Tonart (C)">
-    <input id="scale"  type="text" placeholder="Skala (minor)">
-
-    <div class="filter-section">
-      <strong>BPM:</strong><br>
-      <label><input type="radio" name="bpm-mode" value="range" checked> Range</label>
-      <label style="margin-left:12px;"><input type="radio" name="bpm-mode" value="exact"> Exact</label>
-      <!-- Range slider -->
-      <div id="bpm-range-controls">
-        <div id="bpm-slider"></div>
-        <label>Min: <span id="bpm-min-val">0</span></label>
-        <label style="margin-left:12px;">Max: <span id="bpm-max-val">300</span></label>
-      </div>
-      <!-- Exact input -->
-      <div id="bpm-exact-controls" style="display:none;">
-        <label>Exact BPM:</label>
-        <input id="bpmExact" type="number" min="0" max="300" step="1" placeholder="e.g. 128">
+  <div class="window-frame">
+    <div class="title-bar">
+      🎵 Sortify Audio Analyzer v1.0
+      <div class="window-controls">
+        <span class="control-btn">_</span>
+        <span class="control-btn">□</span>
+        <span class="control-btn">×</span>
       </div>
     </div>
+    <div class="window-content">
+      <div id="filters">
+        <input id="search" type="text" placeholder="🔍 Sök filnamn…">
+        <input id="key"    type="text" placeholder="Tonart (C)">
+        <input id="scale"  type="text" placeholder="Skala (minor)">
 
-    <div class="filter-section">
-      <label for="energy-slider">Min Energi: <span id="energy-val">0.00</span></label><br>
-      <input id="energy-slider" type="range" min="0" max="1" step="0.01" value="0" style="width:100%;">
-    </div>
+        <div class="filter-section">
+          <strong>🎵 BPM KONTROLLER</strong><br>
+          <label><input type="radio" name="bpm-mode" value="range" checked> Range</label>
+          <label style="margin-left:12px;"><input type="radio" name="bpm-mode" value="exact"> Exact</label>
+          <!-- Range slider -->
+          <div id="bpm-range-controls">
+            <div id="bpm-slider"></div>
+            <label>Min: <span id="bpm-min-val">0</span></label>
+            <label style="margin-left:12px;">Max: <span id="bpm-max-val">300</span></label>
+          </div>
+          <!-- Exact input -->
+          <div id="bpm-exact-controls" style="display:none;">
+            <label>Exact BPM:</label>
+            <input id="bpmExact" type="number" min="0" max="300" step="1" placeholder="128">
+          </div>
+        </div>
 
-    <div class="filter-section">
-      <label for="max-length-slider">Max Längd (s): <span id="length-max-val">∞</span></label><br>
-      <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" style="width:100%;">
+        <div class="filter-section">
+          <strong>⚡ ENERGI</strong><br>
+          <label for="energy-slider">Min: <span id="energy-val">0.00</span></label><br>
+          <input id="energy-slider" type="range" min="0" max="1" step="0.01" value="0" style="width:100%;">
+        </div>
+
+        <div class="filter-section">
+          <strong>⏱️ LÄNGD</strong><br>
+          <label for="max-length-slider">Max (s): <span id="length-max-val">∞</span></label><br>
+          <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" style="width:100%;">
+        </div>
+      </div>
     </div>
   </div>
 
-  <div id="progress-container" style="display:none;">
-    <progress id="progress-bar" value="0" max="100" style="width:100%;"></progress>
-    <div id="progress-text">Analyserar…</div>
-    <ul id="processed-list"></ul>
+  <div class="window-frame" id="progress-container" style="display:none;">
+    <div class="title-bar">📊 Bearbetning pågår...</div>
+    <div class="window-content">
+      <progress id="progress-bar" value="0" max="100"></progress>
+      <div id="progress-text">Analyserar…</div>
+      <ul id="processed-list"></ul>
+    </div>
   </div>
 
-  <div id="drop-area">Dra in en mapp här 👇</div>
-  <div id="output"></div>
+  <div class="window-frame">
+    <div class="title-bar">📂 Dra och släpp</div>
+    <div class="window-content">
+      <div id="drop-area">📁 Dra in en mapp här för att analysera ljudfiler</div>
+    </div>
+  </div>
+
+  <div class="window-frame">
+    <div class="title-bar">📋 Sökresultat</div>
+    <div class="window-content">
+      <div id="output"></div>
+    </div>
+  </div>
 
   <!-- noUiSlider JS -->
   <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
