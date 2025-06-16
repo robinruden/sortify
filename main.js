@@ -1,46 +1,28 @@
-//main.js
-require('electron-reload')(__dirname, {
-  electron: require(`${__dirname}/node_modules/electron`)
-});
-
-
-const { globalShortcut, app, BrowserWindow, ipcMain, dialog } = require('electron');
-const fs = require('fs');
+// main.js
 const path = require('path');
+const fs   = require('fs');
+const os   = require('os');
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  globalShortcut,
+  shell,
+  dialog
+} = require('electron');
 
-const analyzeAudio = require('./src/analyzeAudio.js');
-
-const { saveTrack, isAlreadyIndexed } = require('./src/db/insert.js');
-const { getTracksByBPM } = require('./src/db/query.js');
-const { searchTracks } = require('./src/db/search.js');
-const { getAllTracks } = require('./src/db/query.js');
-
-const os = require('os');
-
-const { shell } = require('electron');
-
-ipcMain.handle('ondragstart', (_, filePath) => {
-  const iconPath = path.join(__dirname, 'assets', 'cd_audio_cd-1.png');
-  mainWindow.webContents.startDrag({
-    file: filePath,
-    icon: iconPath  // or an app-specific icon path
+// Only reload in dev
+if (!app.isPackaged) {
+  require('electron-reload')(__dirname, {
+    electron: path.join(__dirname, 'node_modules', 'electron')
   });
-});
+}
 
-ipcMain.on('drag-start', (event, filePath) => {
-  // Öppnar filens plats i Finder när man drar ut
-  shell.showItemInFolder(filePath);
-});
+const analyzeAudio        = require('./src/analyzeAudio.js');
+const { saveTrack, isAlreadyIndexed } = require('./src/db/insert.js');
+const { getTracksByBPM, getAllTracks } = require('./src/db/query.js');
+const { searchTracks }    = require('./src/db/search.js');
 
-ipcMain.handle('get-all-tracks', async () => {
-  return getAllTracks();
-});
-
-
-ipcMain.handle('search-tracks', async (_, filters) => {
-  return searchTracks(filters);
-});
-// Move the window reference into module scope
 let mainWindow;
 
 function createWindow() {
@@ -52,7 +34,17 @@ function createWindow() {
       contextIsolation: false
     }
   });
-  mainWindow.loadFile('index.html');
+
+  // Open DevTools so you can see any errors in packaged mode
+  mainWindow.webContents.openDevTools({ mode: 'detach' });
+
+  // Load your UI
+  mainWindow.loadFile(path.join(__dirname, 'index.html'))
+    .then(() => console.log('✅ index.html loaded'))
+    .catch(err => {
+      console.error('❌ Failed to load index.html:', err);
+      dialog.showErrorBox('Load Error', err.message);
+    });
 }
 
 async function walkDir(dir) {
@@ -70,6 +62,7 @@ async function walkDir(dir) {
 }
 
 app.whenReady().then(() => {
+  console.log('App is packaged?', app.isPackaged);
   createWindow();
 
   globalShortcut.register('CommandOrControl+R', () => {
@@ -79,65 +72,57 @@ app.whenReady().then(() => {
     mainWindow.focus();
   });
 
-  // ANALYZE SINGLE FILE
-ipcMain.handle('drop-and-analyze-folders-with-progress', async (_, folderPaths) => {
-  const analyzed = [];
+  // IPC handlers
+  ipcMain.handle('ondragstart', (_, filePath) => {
+    const iconPath = path.join(__dirname, 'assets', 'cd_audio_cd-1.png');
+    mainWindow.webContents.startDrag({ file: filePath, icon: iconPath });
+  });
 
-  for (const folder of folderPaths) {
-    const files = await walkDir(folder);
-    const audioFiles = files.filter(f => /\.(mp3|wav)$/i.test(f));
-    const total = audioFiles.length;
-    let done = 0;
+  ipcMain.on('drag-start', (_, filePath) => shell.showItemInFolder(filePath));
+  ipcMain.handle('get-all-tracks',    () => getAllTracks());
+  ipcMain.handle('search-tracks', (_, f) => searchTracks(f));
 
-    for (const file of audioFiles) {
-      if (isAlreadyIndexed(file)) {
+  ipcMain.handle('drop-and-analyze-folders-with-progress', async (_, folderPaths) => {
+    const analyzed = [];
+    for (const folder of folderPaths) {
+      const files = await walkDir(folder);
+      const audioFiles = files.filter(f => /\.(mp3|wav)$/i.test(f));
+      let done = 0, total = audioFiles.length;
+      for (const file of audioFiles) {
+        if (!isAlreadyIndexed(file)) {
+          try {
+            const a = await analyzeAudio(file);
+            const entry = {
+              path: file,
+              format: a.format,
+              duration: a.duration,
+              sampleRate: a.sampleRate,
+              bpm: a.features?.bpm ?? null,
+              key: a.features?.key ?? null,
+              scale: a.features?.scale ?? null,
+              energy: a.features?.energy ?? null
+            };
+            saveTrack(entry);
+            analyzed.push(entry);
+          } catch (err) {
+            console.warn(`❌ Skipped ${file}: ${err.message}`);
+          }
+        }
         done++;
         mainWindow.webContents.send('progress-update', {
-          percent: Math.round((done / total) * 100),
-          current: file,
+          percent: Math.round((done/total)*100),
+          current: file
         });
-        continue;
       }
-
-      try {
-        const analysis = await analyzeAudio(file);
-        const entry = {
-          path: file,
-          format: analysis.format,
-          duration: analysis.duration,
-          sampleRate: analysis.sampleRate,
-          bpm: analysis.features?.bpm || null,
-          key: analysis.features?.key || null,
-          scale: analysis.features?.scale || null,
-          energy: analysis.features?.energy || null
-        };
-
-        saveTrack(entry);
-        analyzed.push(entry);
-      } catch (err) {
-        console.warn(`❌ Skippade ${file}: ${err.message}`);
-      }
-
-      done++;
-      mainWindow.webContents.send('progress-update', {
-        percent: Math.round((done / total) * 100),
-        current: file,
-      });
     }
-  }
-
-  return { analyzed };
+    return { analyzed };
+  });
 });
 
-
-});
-
+// JSON export handler
 ipcMain.handle('export-analyzed-to-json', async (_, filePaths) => {
   try {
-    const exportData = filePaths.map(p => ({
-      path: p
-    }));
-
+    const exportData = filePaths.map(p => ({ path: p }));
     const exportPath = path.join(os.homedir(), 'Desktop', 'analyzed_export.json');
     fs.writeFileSync(exportPath, JSON.stringify(exportData, null, 2));
     return { path: exportPath };
@@ -146,3 +131,10 @@ ipcMain.handle('export-analyzed-to-json', async (_, filePaths) => {
   }
 });
 
+// macOS quit & activate
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
