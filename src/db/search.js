@@ -1,3 +1,5 @@
+//search.js
+
 const db = require('./init'); // or wherever your DB connection is
 
 function searchTracks({ bpmMin, bpmMax, key, format, tags }) {

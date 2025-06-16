@@ -13,14 +13,27 @@ const analyzeAudio = require('./src/analyzeAudio.js');
 const { saveTrack, isAlreadyIndexed } = require('./src/db/insert.js');
 const { getTracksByBPM } = require('./src/db/query.js');
 const { searchTracks } = require('./src/db/search.js');
+const { getAllTracks } = require('./src/db/query.js');
 
 const os = require('os');
 
 const { shell } = require('electron');
 
+ipcMain.handle('ondragstart', (_, filePath) => {
+  const iconPath = path.join(__dirname, 'assets', 'cd_audio_cd-1.png');
+  mainWindow.webContents.startDrag({
+    file: filePath,
+    icon: iconPath  // or an app-specific icon path
+  });
+});
+
 ipcMain.on('drag-start', (event, filePath) => {
   // Öppnar filens plats i Finder när man drar ut
   shell.showItemInFolder(filePath);
+});
+
+ipcMain.handle('get-all-tracks', async () => {
+  return getAllTracks();
 });
 
 

@@ -3,25 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <title>Sortify Audio Analyzer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    #filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    #filters input {
+      padding: 8px;
+      flex: 1 1 120px;
+      box-sizing: border-box;
+    }
+    #drop-area {
+      width:100%;
+      height:200px;
+      border:2px dashed #ccc;
+      text-align:center;
+      padding:20px;
+      margin-bottom: 16px;
+    }
+    .file-item {
+      padding: 4px 0;
+      border-bottom: 1px solid #eee;
+    }
+    pre#output {
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-  <input id="search" placeholder="Sök filnamn">
-<input id="key" placeholder="Key (C)">
-<input id="scale" placeholder="Scale (minor)">
-<input id="bpmMin" type="number" placeholder="Min BPM">
-<input id="bpmMax" type="number" placeholder="Max BPM">
-<input id="energyMin" type="number" placeholder="Min Energy">
-<input id="energyMax" type="number" placeholder="Max Energy">
-<button onclick="applyFilter()">Filtrera</button>
-  <div id="progress-container" style="display:none; margin-top: 20px;">
-  <progress id="progress-bar" value="0" max="100" style="width: 100%;"></progress>
-  <div id="progress-text">Analyserar…</div>
-</div>
-  <h2>Dra in en mapp här 👇</h2>
-  <div id="drop-area" style="width:100%;height:200px;border:2px dashed #ccc;text-align:center;padding:20px;">
+  <div id="filters">
+    <input id="search" type="text" placeholder="🔍 Sök filnamn…">
+    <input id="key" type="text" placeholder="Tonart (C)">
+    <input id="scale" type="text" placeholder="Skala (minor)">
+    <input id="bpmMin" type="number" placeholder="Min BPM">
+    <input id="bpmMax" type="number" placeholder="Max BPM">
+    <input id="energyMin" type="number" placeholder="Min Energi">
+    <input id="energyMax" type="number" placeholder="Max Energi">
+    <input id="lengthMin" type="number" placeholder="Min Längd (s)">
+    <input id="lengthMax" type="number" placeholder="Max Längd (s)">
+  </div>
+
+  <div id="progress-container" style="display:none; margin-bottom:16px;">
+    <progress id="progress-bar" value="0" max="100" style="width: 100%;"></progress>
+    <div id="progress-text">Analyserar…</div>
+    <ul id="processed-list" style="max-height:150px; overflow:auto; margin-top:8px; padding-left:16px;"></ul>
+  </div>
+
+
+  <div id="drop-area">
     Släpp mappen här
   </div>
-  <pre id="output"></pre>
+
+  <div id="output"></div>
+
   <script src="./src/renderer.js"></script>
 </body>
 </html>

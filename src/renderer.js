@@ -1,54 +1,76 @@
-//renderer.js
-
+// src/renderer.js
 const { ipcRenderer } = require('electron');
 
 let allAnalyzedFiles = [];
 
-/* const result = await ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folderPaths);
-allAnalyzedFiles = result.analyzed;
-
-renderFileList(allAnalyzedFiles); */
-
+// Render a list of files
 function renderFileList(files) {
   const output = document.getElementById('output');
   output.innerHTML = '';
 
   files.forEach(file => {
+    const filename = file.path.split(/[/\\]/).pop();
     const el = document.createElement('div');
-    const name = file.path.split(/[/\\]/).pop();
-
-    el.textContent = `${name} — BPM: ${file.bpm?.toFixed(1) ?? '–'}, ${file.key ?? '–'} ${file.scale ?? ''}, Energy: ${file.energy?.toFixed(2) ?? '–'}`;
     el.className = 'file-item';
-    el.setAttribute('draggable', 'true');
-    el.setAttribute('data-path', file.path);
-
-    el.addEventListener('dragstart', (e) => {
+    el.textContent = `${filename} — BPM: ${file.bpm?.toFixed(1) ?? '–'}, ${file.key ?? '–'} ${file.scale ?? ''}, Energy: ${file.energy?.toFixed(2) ?? '–'}`;
+    el.draggable = true;
+    el.dataset.path = file.path;
+    el.addEventListener('dragstart', e => {
       e.preventDefault();
-      ipcRenderer.send('drag-start', file.path);
+      ipcRenderer.invoke('ondragstart', file.path);
     });
-
     output.appendChild(el);
   });
 }
 
+// Fetch all tracks from main and apply display logic
+async function loadAllTracks() {
+  allAnalyzedFiles = await ipcRenderer.invoke('get-all-tracks');
+  applyFilter();
+}
+
+// Filter in-memory array, hide or show results
 function applyFilter() {
-  const search = document.getElementById('search').value.toLowerCase();
-  const key = document.getElementById('key').value.toLowerCase();
-  const scale = document.getElementById('scale').value.toLowerCase();
-  const bpmMin = parseFloat(document.getElementById('bpmMin').value) || 0;
-  const bpmMax = parseFloat(document.getElementById('bpmMax').value) || 999;
-  const energyMin = parseFloat(document.getElementById('energyMin').value) || 0;
-  const energyMax = parseFloat(document.getElementById('energyMax').value) || 1;
+  const searchRaw    = document.getElementById('search').value;
+  const keyRaw       = document.getElementById('key').value;
+  const scaleRaw     = document.getElementById('scale').value;
+  const bpmMinRaw    = document.getElementById('bpmMin').value;
+  const bpmMaxRaw    = document.getElementById('bpmMax').value;
+  const energyMinRaw = document.getElementById('energyMin').value;
+  const energyMaxRaw = document.getElementById('energyMax').value;
+
+  const output = document.getElementById('output');
+
+  const anyFilter = [searchRaw, keyRaw, scaleRaw, bpmMinRaw, bpmMaxRaw, energyMinRaw, energyMaxRaw]
+    .some(val => val !== null && val !== '');
+
+  if (!anyFilter) {
+    if (allAnalyzedFiles.length === 0) {
+      output.style.display = 'none';
+      return;
+    }
+    output.style.display = 'block';
+    renderFileList(allAnalyzedFiles);
+    return;
+  }
+
+  output.style.display = 'block';
+  const searchTerm = searchRaw.toLowerCase();
+  const keyTerm    = keyRaw.toLowerCase();
+  const scaleTerm  = scaleRaw.toLowerCase();
+  const bpmMin     = parseFloat(bpmMinRaw)   || 0;
+  const bpmMax     = parseFloat(bpmMaxRaw)   || Infinity;
+  const energyMin  = parseFloat(energyMinRaw) || 0;
+  const energyMax  = parseFloat(energyMaxRaw) || Infinity;
 
   const filtered = allAnalyzedFiles.filter(file => {
-    const name = file.path.toLowerCase();
-
+    const name = file.path.split(/[/\\]/).pop().toLowerCase();
     return (
-      name.includes(search) &&
-      (!key || file.key?.toLowerCase() === key) &&
-      (!scale || file.scale?.toLowerCase() === scale) &&
-      (!file.bpm || (file.bpm >= bpmMin && file.bpm <= bpmMax)) &&
-      (!file.energy || (file.energy >= energyMin && file.energy <= energyMax))
+      name.includes(searchTerm) &&
+      (!keyTerm   || file.key?.toLowerCase()   === keyTerm) &&
+      (!scaleTerm || file.scale?.toLowerCase() === scaleTerm) &&
+      (file.bpm   == null || (file.bpm   >= bpmMin   && file.bpm   <= bpmMax)) &&
+      (file.energy== null || (file.energy>= energyMin && file.energy<= energyMax))
     );
   });
 
@@ -57,152 +79,80 @@ function applyFilter() {
 
 window.applyFilter = applyFilter;
 
-
-async function pickAndIndex() {
-  const res = await ipcRenderer.invoke('select-and-index-folders');
-  if (res.error) {
-    console.error(res.error);
-    return;
-  }
-  // res.files is an array of full file paths
-  console.log('Indexed files:', res.files);
-  // e.g. render into your UI:
-  document.getElementById('output').textContent = res.files.join('\n');
-}
-
-window.pickAndIndex = pickAndIndex;
-
-
-
-window.pickAndAnalyze = async () => {
-  const output = document.getElementById('output');
-  output.textContent = 'Väljer fil…';
-
-  try {
-    const data = await ipcRenderer.invoke('select-and-analyze');
-    /* console.log('🔥 data from main:', data); */
-    textContent = JSON.stringify(data, null, 2);
-    if (data.error) {
-      output.textContent = `Fel: ${data.error}`;
-      return;
-    }
-
-    const lines = [];
-    lines.push(`Format:         ${data.format}`);
-    lines.push(`Längd:          ${data.duration.toFixed(2)} s`);
-    lines.push(`Samplingsfrekvens:  ${data.sampleRate} Hz`);
-   
-    const bpm = data.features?.bpm || data.bpm;
-    lines.push(`BPM:           ${bpm ? bpm.toFixed(2) : 'Ej detekterat'}`);
-    
-    const key = data.features?.key || 'Ej detekterat';
-    const scale = data.features?.scale || '';
-    lines.push(`Tonart:             ${key} ${scale}`.trim());
-
-    const energy = data.features?.energy;
-    lines.push(`Energi:             ${typeof energy === 'number' ? energy.toFixed(2) : 'Ej detekterat'}`);
-
-    output.textContent = lines.join('\n');
-  } catch (err) {
-    console.error(err);
-    output.textContent = `Ett oväntat fel inträffade: ${err.message}`;
-  }
-};
-
-
-
-window.filterByBPM = async (min, max) => {
-  try {
-    const res = await ipcRenderer.invoke('filter-by-bpm', min, max);
-    const output = document.getElementById('output');
-
-    if (res.length === 0) {
-      output.textContent = `Inga spår hittades mellan ${min} och ${max} BPM.`;
-      return;
-    }
-
-    output.textContent = res.map(track =>
-      `${track.path} — ${track.bpm.toFixed(2)} BPM`
-    ).join('\n');
-  } catch (err) {
-    console.error('Filter error:', err);
-    document.getElementById('output').textContent = `Fel vid filtrering: ${err.message}`;
-  }
-};
-
+// Set up on DOM load
 document.addEventListener('DOMContentLoaded', () => {
-  const dropArea = document.getElementById('drop-area');
-  const progressContainer = document.getElementById('progress-container');
-  const progressBar = document.getElementById('progress-bar');
-  const progressText = document.getElementById('progress-text');
+  const output          = document.getElementById('output');
+  const progressBar     = document.getElementById('progress-bar');
+  const progressText    = document.getElementById('progress-text');
+  const processedList   = document.getElementById('processed-list');
 
-  dropArea.addEventListener('dragover', (event) => {
-    event.preventDefault();
-    dropArea.style.borderColor = '#007bff';
+  // Initially hide output until data arrives
+  output.style.display = 'none';
+
+  // Live filter inputs
+  ['search','key','scale','bpmMin','bpmMax','energyMin','energyMax']
+    .map(id => document.getElementById(id))
+    .forEach(el => el.addEventListener('input', applyFilter));
+
+  // Listen for progress updates during analysis
+  ipcRenderer.on('progress-update', (_, { percent, current }) => {
+    // Update bar + text
+    progressBar.value = percent;
+    const fileName = current.split(/[/\\]/).pop();
+    progressText.textContent = `Analyserar: ${fileName} (${percent}%)`;
+
+    // Clear list on first update
+    if (percent === 0) processedList.innerHTML = '';
+
+    // Append current file to list
+    const li = document.createElement('li');
+    li.textContent = fileName;
+    processedList.appendChild(li);
   });
 
-  dropArea.addEventListener('dragleave', () => {
-    dropArea.style.borderColor = '#ccc';
-  });
+  // Drag-and-drop handling for folders
+  const dropArea         = document.getElementById('drop-area');
+  const progressContainer= document.getElementById('progress-container');
 
-  dropArea.addEventListener('drop', async (event) => {
-    event.preventDefault();
+  dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.style.borderColor = '#007bff'; });
+  dropArea.addEventListener('dragleave', () => { dropArea.style.borderColor = '#ccc'; });
+
+  dropArea.addEventListener('drop', async e => {
+    e.preventDefault();
     dropArea.style.borderColor = '#ccc';
 
-    const items = event.dataTransfer.items;
     const folderPaths = [];
-
-    for (const item of items) {
+    for (const item of e.dataTransfer.items) {
       const entry = item.webkitGetAsEntry?.();
       if (entry?.isDirectory) {
         const file = item.getAsFile();
-        if (file?.path) {
-          folderPaths.push(file.path);
-        }
+        if (file?.path) folderPaths.push(file.path);
       }
     }
+    if (!folderPaths.length) return;
 
-    if (folderPaths.length === 0) {
-      document.getElementById('output').textContent = 'Ingen mapp hittades.';
-      return;
-    }
-
+    // Show progress UI and clear processed list
     progressContainer.style.display = 'block';
     progressBar.value = 0;
     progressText.textContent = 'Analyserar…';
+    processedList.innerHTML = '';
 
+    // Run analysis
     const result = await ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folderPaths);
-allAnalyzedFiles = result.analyzed; // <-- Spara för filter
-renderFileList(allAnalyzedFiles);   // <-- Visa direkt
 
+    // Reload full list
+    await loadAllTracks();
 
+    // Finalize progress UI
     progressBar.value = 100;
     progressText.textContent = `✅ Klar! Analyserade ${result.analyzed.length} filer`;
+    setTimeout(() => progressContainer.style.display = 'none', 1500);
 
-    document.getElementById('output').textContent = result.analyzed.map(p => {
-      const name = p.split(/[/\\]/).pop(); // både Mac och Windows
-      return `🎧 ${name}`;
-    }).join('\n');
-
-    // Export to JSON
+    // Optionally export JSON
     const exportRes = await ipcRenderer.invoke('export-analyzed-to-json', result.analyzed);
-    if (exportRes.error) {
-      console.error('Export error:', exportRes.error);
-    } else {
-      console.log('Exported to:', exportRes.path);
-    }
+    if (exportRes.error) console.error('Export error:', exportRes.error);
   });
+
+  // Initial data load
+  loadAllTracks();
 });
-
-ipcRenderer.on('progress-update', (_, data) => {
-  const progressBar = document.getElementById('progress-bar');
-  const progressText = document.getElementById('progress-text');
-
-  progressBar.value = data.percent;
-  const fileName = data.current.split(/[/\\]/).pop(); // Kompatibel för Mac & Windows
-  progressText.textContent = `Analyserar: ${fileName} (${data.percent}%)`;
-});
-
-
-
-
