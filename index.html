@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Sortify Audio Analyzer</title>
@@ -20,12 +20,16 @@
     </div>
     <div class="window-content">
       <div id="filters">
-        <input id="search" type="text" placeholder="🔍 Sök filnamn…">
-        <input id="key"    type="text" placeholder="Tonart (C)">
-        <input id="scale"  type="text" placeholder="Skala (minor)">
+        <input id="search" type="text" placeholder="🔍 Search filename…">
+        
+        <!-- Key and Scale in a container to place them side by side -->
+        <div class="key-scale-container">
+          <input class="key" id="key" type="text" placeholder="Key (C)">
+          <input class="scale" id="scale" type="text" placeholder="Scale (minor)">
+        </div>
 
         <div class="filter-section">
-          <strong>🎵 BPM KONTROLLER</strong><br>
+          <strong>🎵 BPM CONTROLS</strong><br>
           <label><input type="radio" name="bpm-mode" value="range" checked> Range</label>
           <label style="margin-left:12px;"><input type="radio" name="bpm-mode" value="exact"> Exact</label>
           <!-- Range slider -->
@@ -42,13 +46,13 @@
         </div>
 
         <div class="filter-section">
-          <strong>⚡ ENERGI</strong><br>
+          <strong>⚡ ENERGY</strong><br>
           <label for="energy-slider">Min: <span id="energy-val">0.00</span></label><br>
           <input id="energy-slider" type="range" min="0" max="1" step="0.01" value="0" style="width:100%;">
         </div>
 
         <div class="filter-section">
-          <strong>⏱️ LÄNGD</strong><br>
+          <strong>⏱️ LENGTH</strong><br>
           <label for="max-length-slider">Max (s): <span id="length-max-val">∞</span></label><br>
           <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" style="width:100%;">
         </div>
@@ -57,23 +61,23 @@
   </div>
 
   <div class="window-frame" id="progress-container" style="display:none;">
-    <div class="title-bar">📊 Bearbetning pågår...</div>
+    <div class="title-bar">📊 Processing...</div>
     <div class="window-content">
       <progress id="progress-bar" value="0" max="100"></progress>
-      <div id="progress-text">Analyserar…</div>
+      <div id="progress-text">Analyzing…</div>
       <ul id="processed-list"></ul>
     </div>
   </div>
 
   <div class="window-frame">
-    <div class="title-bar">📂 Dra och släpp</div>
+    <div class="title-bar">📂 Drop Zone</div>
     <div class="window-content">
-      <div id="drop-area">📁 Dra in en mapp här för att analysera ljudfiler</div>
+      <div id="drop-area">📁 Drag a folder here to analyze audio files</div>
     </div>
   </div>
 
   <div class="window-frame">
-    <div class="title-bar">📋 Sökresultat</div>
+    <div class="title-bar">📋 Search Results</div>
     <div class="window-content">
       <div id="output"></div>
     </div>
