@@ -1,8 +1,16 @@
+
+
 <!DOCTYPE html>
 <html lang="sv">
 <head>
+  
   <meta charset="UTF-8">
   <title>Sortify Audio Analyzer</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css"
+    rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/wnumb@1.2.0/wNumb.min.js"></script>
   <style>
     body {
       font-family: sans-serif;
@@ -14,26 +22,70 @@
       gap: 8px;
       margin-bottom: 16px;
     }
-    #filters input {
+    #filters input, #filters > div {
       padding: 8px;
       flex: 1 1 120px;
       box-sizing: border-box;
     }
     #drop-area {
-      width:100%;
-      height:200px;
-      border:2px dashed #ccc;
-      text-align:center;
-      padding:20px;
+      width: 100%;
+      height: 200px;
+      border: 2px dashed #ccc;
+      text-align: center;
+      padding: 20px;
       margin-bottom: 16px;
     }
     .file-item {
       padding: 4px 0;
       border-bottom: 1px solid #eee;
     }
-    pre#output {
-      white-space: pre-wrap;
+    #length-slider {
+      width: 100%;
     }
+
+    .range-container {
+  position: relative;
+  height: 24px;
+}
+.range-container input[type=range] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: transparent;       /* hide the default track */
+  pointer-events: none;          /* only thumbs get events */
+}
+/* enable dragging on the thumb itself */
+.range-container input[type=range]::-webkit-slider-thumb {
+  pointer-events: all;
+  position: relative;
+  z-index: 2;
+}
+.range-container input[type=range]::-moz-range-thumb {
+  pointer-events: all;
+  position: relative;
+  z-index: 2;
+}
+/* draw your “track” yourself, e.g. on the container background */
+.range-container {
+  background: linear-gradient(
+    to right,
+    #ddd 0%,
+    #ddd 100%
+  );
+}
+/* then overlay a colored segment between the two values: */
+.range-container::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc((var(--min)/600)*100%);
+  right: calc(100% - (var(--max)/600)*100%);
+  height: 4px;
+  background: #007bff;
+  transform: translateY(-50%);
+  z-index: 1;
+}
   </style>
 </head>
 <body>
@@ -45,9 +97,21 @@
     <input id="bpmMax" type="number" placeholder="Max BPM">
     <input id="energyMin" type="number" placeholder="Min Energi">
     <input id="energyMax" type="number" placeholder="Max Energi">
-    <input id="lengthMin" type="number" placeholder="Min Längd (s)">
-    <input id="lengthMax" type="number" placeholder="Max Längd (s)">
-  </div>
+
+<div style="flex:1 1 100%;">
+  <label for="max-length-slider">
+    Max Längd (s): <span id="length-max-val">∞</span>
+  </label><br>
+  <input
+    id="max-length-slider"
+    type="range"
+    min="0"
+    max="600"
+    step="0.1"
+    value="600"
+    style="width:100%; margin-top:4px;"
+  >
+</div>
 
   <div id="progress-container" style="display:none; margin-bottom:16px;">
     <progress id="progress-bar" value="0" max="100" style="width: 100%;"></progress>
@@ -55,13 +119,13 @@
     <ul id="processed-list" style="max-height:150px; overflow:auto; margin-top:8px; padding-left:16px;"></ul>
   </div>
 
-
   <div id="drop-area">
     Släpp mappen här
   </div>
 
   <div id="output"></div>
 
+ 
   <script src="./src/renderer.js"></script>
 </body>
 </html>

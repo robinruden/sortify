@@ -25,8 +25,8 @@ async function analyzeAudio(filePath) {
   const sampleRate = audioBuffer.sampleRate;
   
 
-  if (length < 0.2 * sampleRate) {
-    throw new Error('Audio too short for analysis (min 0.2s)');
+  if (length < 0.1 * sampleRate) {
+    throw new Error('Audio too short for analysis (min 0.1s)');
   }
 
   const monoData = audioBuffer.getChannelData(0);

@@ -10,9 +10,15 @@ function renderFileList(files) {
 
   files.forEach(file => {
     const filename = file.path.split(/[/\\]/).pop();
+    const durText = file.duration != null
+      ? `${file.duration.toFixed(1)} s`
+      : '–';
+
     const el = document.createElement('div');
     el.className = 'file-item';
-    el.textContent = `${filename} — BPM: ${file.bpm?.toFixed(1) ?? '–'}, ${file.key ?? '–'} ${file.scale ?? ''}, Energy: ${file.energy?.toFixed(2) ?? '–'}`;
+    el.textContent =
+      `${filename} — Längd: ${durText}, BPM: ${file.bpm?.toFixed(1) ?? '–'}, ` +
+      `${file.key ?? '–'} ${file.scale ?? ''}, Energi: ${file.energy?.toFixed(2) ?? '–'}`;
     el.draggable = true;
     el.dataset.path = file.path;
     el.addEventListener('dragstart', e => {
@@ -23,7 +29,7 @@ function renderFileList(files) {
   });
 }
 
-// Fetch all tracks from main and apply display logic
+// Fetch all tracks and apply display logic
 async function loadAllTracks() {
   allAnalyzedFiles = await ipcRenderer.invoke('get-all-tracks');
   applyFilter();
@@ -31,47 +37,47 @@ async function loadAllTracks() {
 
 // Filter in-memory array, hide or show results
 function applyFilter() {
-  const searchRaw    = document.getElementById('search').value;
-  const keyRaw       = document.getElementById('key').value;
-  const scaleRaw     = document.getElementById('scale').value;
-  const bpmMinRaw    = document.getElementById('bpmMin').value;
-  const bpmMaxRaw    = document.getElementById('bpmMax').value;
-  const energyMinRaw = document.getElementById('energyMin').value;
-  const energyMaxRaw = document.getElementById('energyMax').value;
+  // Read text/number filters
+  const searchTerm = document.getElementById('search').value.toLowerCase();
+  const keyTerm    = document.getElementById('key').value.toLowerCase();
+  const scaleTerm  = document.getElementById('scale').value.toLowerCase();
+  const bpmMin     = parseFloat(document.getElementById('bpmMin').value)   || 0;
+  const bpmMax     = parseFloat(document.getElementById('bpmMax').value)   || Infinity;
+  const energyMin  = parseFloat(document.getElementById('energyMin').value) || 0;
+  const energyMax  = parseFloat(document.getElementById('energyMax').value) || Infinity;
+
+  // Read max length from single slider
+  const maxSlider  = document.getElementById('max-length-slider');
+  const lengthMax  = parseFloat(maxSlider.value) || Infinity;
 
   const output = document.getElementById('output');
 
-  const anyFilter = [searchRaw, keyRaw, scaleRaw, bpmMinRaw, bpmMaxRaw, energyMinRaw, energyMaxRaw]
-    .some(val => val !== null && val !== '');
+  // Determine if any filter is active (including length slider not at max)
+  const anyFilter =
+    searchTerm || keyTerm || scaleTerm ||
+    document.getElementById('bpmMin').value || document.getElementById('bpmMax').value ||
+    document.getElementById('energyMin').value || document.getElementById('energyMax').value ||
+    (lengthMax !== parseFloat(maxSlider.max));
 
-  if (!anyFilter) {
-    if (allAnalyzedFiles.length === 0) {
-      output.style.display = 'none';
-      return;
-    }
-    output.style.display = 'block';
-    renderFileList(allAnalyzedFiles);
+  if (!anyFilter && allAnalyzedFiles.length === 0) {
+    output.style.display = 'none';
     return;
   }
 
   output.style.display = 'block';
-  const searchTerm = searchRaw.toLowerCase();
-  const keyTerm    = keyRaw.toLowerCase();
-  const scaleTerm  = scaleRaw.toLowerCase();
-  const bpmMin     = parseFloat(bpmMinRaw)   || 0;
-  const bpmMax     = parseFloat(bpmMaxRaw)   || Infinity;
-  const energyMin  = parseFloat(energyMinRaw) || 0;
-  const energyMax  = parseFloat(energyMaxRaw) || Infinity;
 
   const filtered = allAnalyzedFiles.filter(file => {
     const name = file.path.split(/[/\\]/).pop().toLowerCase();
-    return (
-      name.includes(searchTerm) &&
-      (!keyTerm   || file.key?.toLowerCase()   === keyTerm) &&
-      (!scaleTerm || file.scale?.toLowerCase() === scaleTerm) &&
-      (file.bpm   == null || (file.bpm   >= bpmMin   && file.bpm   <= bpmMax)) &&
-      (file.energy== null || (file.energy>= energyMin && file.energy<= energyMax))
-    );
+    const dur  = file.duration;
+
+    const okName   = !searchTerm || name.includes(searchTerm);
+    const okKey    = !keyTerm   || (file.key?.toLowerCase()   === keyTerm);
+    const okScale  = !scaleTerm || (file.scale?.toLowerCase() === scaleTerm);
+    const okBpm    = file.bpm   == null || (file.bpm   >= bpmMin   && file.bpm   <= bpmMax);
+    const okEnergy = file.energy== null || (file.energy>= energyMin&& file.energy<= energyMax);
+    const okLength = dur        == null || (dur        <= lengthMax);
+
+    return okName && okKey && okScale && okBpm && okEnergy && okLength;
   });
 
   renderFileList(filtered);
@@ -79,38 +85,47 @@ function applyFilter() {
 
 window.applyFilter = applyFilter;
 
-// Set up on DOM load
+// Set up UI and events on DOM load
 document.addEventListener('DOMContentLoaded', () => {
   const output          = document.getElementById('output');
   const progressBar     = document.getElementById('progress-bar');
   const progressText    = document.getElementById('progress-text');
   const processedList   = document.getElementById('processed-list');
 
-  // Initially hide output until data arrives
-  output.style.display = 'none';
+  // Single max-length slider setup
+  const maxSlider = document.getElementById('max-length-slider');
+  const maxLabel  = document.getElementById('length-max-val');
 
-  // Live filter inputs
+  function updateMaxLabel(val) {
+    const num = parseFloat(val);
+    maxLabel.textContent = (num === parseFloat(maxSlider.max))
+      ? '∞'
+      : num.toFixed(1);
+  }
+
+  maxSlider.addEventListener('input', e => {
+    updateMaxLabel(e.target.value);
+    applyFilter();
+  });
+  updateMaxLabel(maxSlider.value);
+
+  // Wire up text/number inputs for live filtering
   ['search','key','scale','bpmMin','bpmMax','energyMin','energyMax']
     .map(id => document.getElementById(id))
     .forEach(el => el.addEventListener('input', applyFilter));
 
-  // Listen for progress updates during analysis
+  // Progress update for analysis
   ipcRenderer.on('progress-update', (_, { percent, current }) => {
-    // Update bar + text
     progressBar.value = percent;
     const fileName = current.split(/[/\\]/).pop();
     progressText.textContent = `Analyserar: ${fileName} (${percent}%)`;
-
-    // Clear list on first update
     if (percent === 0) processedList.innerHTML = '';
-
-    // Append current file to list
     const li = document.createElement('li');
     li.textContent = fileName;
     processedList.appendChild(li);
   });
 
-  // Drag-and-drop handling for folders
+  // Drag-and-drop for indexing
   const dropArea         = document.getElementById('drop-area');
   const progressContainer= document.getElementById('progress-container');
 
@@ -120,39 +135,28 @@ document.addEventListener('DOMContentLoaded', () => {
   dropArea.addEventListener('drop', async e => {
     e.preventDefault();
     dropArea.style.borderColor = '#ccc';
-
-    const folderPaths = [];
-    for (const item of e.dataTransfer.items) {
-      const entry = item.webkitGetAsEntry?.();
-      if (entry?.isDirectory) {
-        const file = item.getAsFile();
-        if (file?.path) folderPaths.push(file.path);
-      }
-    }
-    if (!folderPaths.length) return;
-
-    // Show progress UI and clear processed list
+    processedList.innerHTML = '';
     progressContainer.style.display = 'block';
     progressBar.value = 0;
     progressText.textContent = 'Analyserar…';
-    processedList.innerHTML = '';
 
-    // Run analysis
+    const folderPaths = Array.from(e.dataTransfer.items)
+      .map(item => item.webkitGetAsEntry?.())
+      .filter(entry => entry?.isDirectory)
+      .map(entry => entry && entry.isDirectory && item.getAsFile().path);
+
     const result = await ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folderPaths);
 
-    // Reload full list
     await loadAllTracks();
 
-    // Finalize progress UI
     progressBar.value = 100;
     progressText.textContent = `✅ Klar! Analyserade ${result.analyzed.length} filer`;
     setTimeout(() => progressContainer.style.display = 'none', 1500);
 
-    // Optionally export JSON
     const exportRes = await ipcRenderer.invoke('export-analyzed-to-json', result.analyzed);
     if (exportRes.error) console.error('Export error:', exportRes.error);
   });
 
-  // Initial data load
+  // Initial load
   loadAllTracks();
 });
