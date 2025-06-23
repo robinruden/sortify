@@ -134,6 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBar   = document.getElementById('progress-bar');
   const progressText  = document.getElementById('progress-text');
   const processedList = document.getElementById('processed-list');
+  const dropArea = document.getElementById('drop-area');
+  const progressContainer = document.getElementById('progress-container');
 
   // BPM slider
   const bpmSlider = document.getElementById('bpm-slider');
@@ -151,13 +153,17 @@ document.addEventListener('DOMContentLoaded', () => {
     applyFilter();
   });
 
+  const rangeControls = document.getElementById('bpm-range-controls');
+  const exactControls = document.getElementById('bpm-exact-controls');
+
   // Toggle range vs exact BPM
   document.querySelectorAll('input[name="bpm-mode"]').forEach(radio =>
     radio.addEventListener('change', () => {
       const isRange = radio.value === 'range';
-      document.getElementById('bpm-range-controls').style.display = isRange ? 'block' : 'none';
-      document.getElementById('bpm-exact-controls').style.display = isRange ? 'none' : 'block';
-      applyFilter();
+      // flip the CSS class instead of style.display
+    rangeControls.classList.toggle('hidden', !isRange);
+    exactControls.classList.toggle('hidden',  isRange);
+    applyFilter();
     })
   );
   document.getElementById('bpmExact').addEventListener('input', applyFilter);
@@ -185,29 +191,46 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
   // Progress updates
-  ipcRenderer.on('progress-update', (_, { percent, current }) => {
+ ipcRenderer.on('progress-update', (_, { percent, current }) => {
+    // when we start (0%), show the panel and clear the list
+    if (percent === 0) {
+      progressContainer.classList.remove('hidden');
+      processedList.innerHTML = '';
+    }
+
     progressBar.value = percent;
     const name = current.split(/[/\\]/).pop();
     progressText.textContent = `Analyserar: ${name} (${percent}%)`;
-    if (percent === 0) processedList.innerHTML = '';
-    const li = document.createElement('li');
-    li.textContent = name;
-    processedList.appendChild(li);
+
+    // when done (100%), hide it after a short delay
+    if (percent === 100) {
+      setTimeout(() => {
+        progressContainer.classList.add('hidden');
+      }, 1500);
+    }
   });
 
-  // Drag-and-drop for analysis
-  const dropArea = document.getElementById('drop-area');
-  const progressContainer = document.getElementById('progress-container');
-  dropArea.addEventListener('dragover', e => { e.preventDefault(); dropArea.style.borderColor = '#007bff'; });
-  dropArea.addEventListener('dragleave', () => { dropArea.style.borderColor = '#ccc'; });
+  // Drag-and-drop styling
+  dropArea.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropArea.classList.add('dragover');
+  });
+  dropArea.addEventListener('dragleave', () => {
+    dropArea.classList.remove('dragover');
+  });
+
+  // Handle the drop
   dropArea.addEventListener('drop', async e => {
     e.preventDefault();
-    dropArea.style.borderColor = '#ccc';
+    dropArea.classList.remove('dragover');
+
+    // show progress panel
     processedList.innerHTML = '';
-    progressContainer.style.display = 'block';
+    progressContainer.classList.remove('hidden');
     progressBar.value = 0;
     progressText.textContent = 'Analyserar…';
 
+    // do your folder analysis…
     const items = Array.from(e.dataTransfer.items);
     const folders = items
       .map(item => item.webkitGetAsEntry?.())
@@ -219,7 +242,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     progressBar.value = 100;
     progressText.textContent = `✅ Klar! Analyserade ${result.analyzed.length} filer`;
-    setTimeout(() => progressContainer.style.display = 'none', 1500);
+
+    // hide panel again
+    setTimeout(() => {
+      progressContainer.classList.add('hidden');
+    }, 1500);
 
     const exportRes = await ipcRenderer.invoke('export-analyzed-to-json', result.analyzed);
     if (exportRes.error) console.error('Export error:', exportRes.error);

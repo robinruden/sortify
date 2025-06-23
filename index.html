@@ -39,7 +39,7 @@
             <label >Max: <span id="bpm-max-val">300</span></label>
           </div>
           <!-- Exact input -->
-          <div id="bpm-exact-controls" >
+          <div id="bpm-exact-controls" class="hidden">
             <label>Exact BPM:</label>
             <input id="bpmExact" type="number" min="0" max="300" step="1" placeholder="128">
           </div>
@@ -48,19 +48,19 @@
         <div class="filter-section">
           <strong>⚡ ENERGY</strong><br>
           <label for="energy-slider">Min: <span id="energy-val">0.00</span></label><br>
-          <input id="energy-slider" type="range" min="0" max="1" step="0.01" value="0">
+          <input id="energy-slider" type="range" min="0" max="1" step="0.01" value="0" class="full-width">
         </div>
 
         <div class="filter-section">
           <strong>⏱️ LENGTH</strong><br>
           <label for="max-length-slider">Max (s): <span id="length-max-val">∞</span></label><br>
-          <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600">
+          <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" class="full-width">
         </div>
       </div>
     </div>
   </div>
 
-  <div class="window-frame" id="progress-container">
+  <div id="progress-container" class="window-frame hidden">
     <div class="title-bar">📊 Processing...</div>
     <div class="window-content">
       <progress id="progress-bar" value="0" max="100"></progress>
