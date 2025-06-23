@@ -187,9 +187,7 @@ input[type="radio"] {
   transform: scale(0.9);
 }
 
-.bpm-exact-button{
-  margin-left: 12px
-}
+
 
 .filter-section label {
   font-size: 10px;
@@ -321,9 +319,18 @@ input[type="range"]::-webkit-slider-thumb:hover {
     0 4px 12px rgba(70,130,180,0.15);
 }
 
+.bpm-exact-button{
+  margin-left: 12px
+}
+
+#bpm-exact-controls{
+  display: none;
+}
+
 /* Specific BPM slider styling */
 #bpm-slider .noUi-target {
   height: 10px;
+  margin-left:12px;
 }
 
 #bmp-slider .noUi-handle {
@@ -348,6 +355,14 @@ input[type="range"]::-webkit-slider-thumb:hover {
   display: inline-block;
   color: #2c3e50;
   font-weight: 500;
+}
+
+#energy-slider {
+  width: 100%;
+}
+
+#max-lengtgh-slider {
+  width: 100%;
 }
 
 /* Tooltips */
@@ -396,6 +411,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 /* Progress bar */
 #progress-container {
   margin-bottom: 20px;
+  display: none; /* Hidden by default */
 }
 
 progress {
