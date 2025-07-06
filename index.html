@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="window-frame">
+  <div class="window-frame-1">
     <div class="title-bar">
       🎵 Sortify Audio Analyzer v1.0
       <div class="window-controls">
@@ -28,7 +28,7 @@
           <input class="scale" id="scale" type="text" placeholder="Scale (minor)">
         </div>
 
-        <div class="filter-section">
+        <div class="filter-section-1">
           <strong>🎵 BPM CONTROLS</strong><br>
           <label><input type="radio" name="bpm-mode" value="range" checked> Range</label>
           <label class="bpm-exact-button"><input type="radio" name="bpm-mode" value="exact"> Exact</label>
@@ -45,13 +45,13 @@
           </div>
         </div>
 
-        <div class="filter-section">
+        <div class="filter-section-2">
           <strong>⚡ ENERGY</strong><br>
           <label for="energy-slider">Min: <span id="energy-val">0.00</span></label><br>
           <input id="energy-slider" type="range" min="0" max="1" step="0.01" value="0" class="full-width">
         </div>
 
-        <div class="filter-section">
+        <div class="filter-section-3">
           <strong>⏱️ LENGTH</strong><br>
           <label for="max-length-slider">Max (s): <span id="length-max-val">∞</span></label><br>
           <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" class="full-width">
@@ -60,7 +60,7 @@
     </div>
   </div>
 
-  <div id="progress-container" class="window-frame hidden">
+  <div id="progress-container" class="window-frame-2 hidden">
     <div class="title-bar">📊 Processing...</div>
     <div class="window-content">
       <progress id="progress-bar" value="0" max="100"></progress>
@@ -69,14 +69,14 @@
     </div>
   </div>
 
-  <div class="window-frame">
+  <div class="window-frame-3">
     <div class="title-bar">📂 Drop Zone</div>
     <div class="window-content">
       <div id="drop-area">📁 Drag a folder here to analyze audio files</div>
     </div>
   </div>
 
-  <div class="window-frame">
+  <div class="window-frame-4">
     <div class="title-bar">📋 Search Results</div>
     <div class="window-content">
       <div id="output"></div>
