@@ -101,7 +101,8 @@ function applyFilter() {
   const lengthMax = parseFloat(document.getElementById('max-length-slider').value) || Infinity;
 
   const output = document.getElementById('output');
-  output.style.display = allAnalyzedFiles.length > 0 ? 'block' : 'none';
+ /*  output.style.display = allAnalyzedFiles.length > 0 ? 'block' : 'none'; */
+  output.classList.toggle('hidden', allAnalyzedFiles.length === 0);
 
   const filtered = allAnalyzedFiles.filter(file => {
     const name = file.path.split(/[/\\]/).pop().toLowerCase();
