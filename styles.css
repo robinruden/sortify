@@ -443,15 +443,18 @@ input[type="range"]::-webkit-slider-thumb:hover {
   margin-left:12px;
 }
 
-#bmp-slider .noUi-handle {
-  width: 14px !important;
-  height: 14px !important;
+#bpm-slider .noUi-handle {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin-top: 0.2rem;
 }
 
 /* BPM controls spacing */
 #bpm-range-controls {
   margin-top: 8px;
   margin-bottom: 8px;
+  width: 100%;
 }
 
 #bpm-slider {
@@ -465,6 +468,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   display: inline-block;
   color: #2c3e50;
   font-weight: 500;
+  
 }
 
 #energy-slider {
