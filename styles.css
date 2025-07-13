@@ -511,6 +511,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   font-weight: 500;
   backdrop-filter: blur(15px);
   transition: all 0.3s ease;
+  height: 0.1rem;
 }
 
 #drop-area.dragover {
