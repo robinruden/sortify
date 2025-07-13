@@ -191,6 +191,42 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById(id).addEventListener('input', applyFilter)
   );
 
+  // Reset filters button
+  const resetBtn = document.getElementById('reset-filters');
+  resetBtn.addEventListener('click', () => {
+    // Clear text inputs
+    document.getElementById('search').value = '';
+    document.getElementById('key').value = '';
+    document.getElementById('scale').value = '';
+    // Reset BPM controls
+    bpmSlider.noUiSlider.set([0, 300]);
+    document.getElementById('bpmExact').value = '';
+    document.querySelector('input[name="bpm-mode"][value="range"]').checked = true;
+    rangeControls.classList.remove('hidden');
+    exactControls.classList.add('hidden');
+    // Reset energy slider
+    energySlider.value = 0;
+    energyLabel.textContent = '0.00';
+    // Reset length slider
+    lengthSlider.value = lengthSlider.max;
+    lengthLabel.textContent = '∞';
+    console.log('Filters reset');
+    loadAllTracks();
+  });
+
+  // Clear database button
+  const clearDbBtn = document.getElementById('clear-db');
+  clearDbBtn.addEventListener('click', async () => {
+    const res = await ipcRenderer.invoke('clear-database');
+    if (res.error) {
+      console.error('Error clearing database:', res.error);
+      return;
+    }
+    console.log('Database cleared');
+    // Reload full list
+    await loadAllTracks();
+  });
+
   // Progress updates
  ipcRenderer.on('progress-update', (_, { percent, current }) => {
     // when we start (0%), show the panel and clear the list

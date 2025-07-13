@@ -21,6 +21,8 @@
     <div class="window-content">
       <div id="filters">
         <input id="search" type="text" placeholder="🔍 Search filename…">
+        <button id="reset-filters" type="button" title="Reset all filters">Återställ</button>
+        <button id="clear-db" type="button" title="Clear database">Rensa DB</button>
         
         <!-- Key and Scale in a container to place them side by side -->
         <div class="key-scale-container">
@@ -48,7 +50,7 @@
         <div class="filter-section-2">
           <strong>⚡ ENERGY</strong><br>
           <label for="energy-slider">Min: <span id="energy-val">0.00</span></label><br>
-          <input id="energy-slider" type="range" min="0" max="1" step="0.01" value="0" class="full-width">
+          <input id="energy-slider" class="energy-slider" type="range" min="0" max="1" step="0.01" value="0">
         </div>
 
         <div class="filter-section-3">

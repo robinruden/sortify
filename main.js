@@ -117,7 +117,20 @@ app.whenReady().then(() => {
     }
     return { analyzed };
   });
-});
+
+  // Add handler to clear the tracks database
+  const db = require('./src/db/init.js');
+  ipcMain.handle('clear-database', async () => {
+    try {
+      db.exec('DELETE FROM tracks');
+      return { success: true };
+    } catch (err) {
+      console.error('Error clearing database:', err);
+      return { error: err.message };
+    }
+  });
+
+}); // end app.whenReady
 
 // JSON export handler
 ipcMain.handle('export-analyzed-to-json', async (_, filePaths) => {
