@@ -35,6 +35,7 @@
           <label><input type="radio" name="bpm-mode" value="range" checked> Range</label>
           <label class="bpm-exact-button"><input type="radio" name="bpm-mode" value="exact"> Exact</label>
           <!-- Range slider -->
+         
           <div id="bpm-range-controls">
             <div id="bpm-slider"></div>
             <label>Min: <span id="bpm-min-val">0</span></label>
@@ -84,6 +85,9 @@
       <div id="output"></div>
     </div>
   </div>
+   <strong>🔊 PREVIEW VOLUME</strong><br>
+          <label for="volume-slider">Volume: <span id="volume-val">80%</span></label><br>
+          <input id="volume-slider" type="range" min="0" max="100" step="1" value="80" style="width:100%;">
 
   <!-- noUiSlider JS -->
   <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>

@@ -61,7 +61,11 @@ function renderFileList(files) {
       // Start new playback
       const src = pathToFileURL(file.path).href;
       currentPlayer = new Audio(src);
-      currentPlayer.volume = 0.8;
+      
+      // Get current volume from slider
+      const currentVolume = parseInt(document.getElementById('volume-slider').value) / 100;
+      currentPlayer.volume = currentVolume; // Use slider value instead of hardcoded 0.8
+    
       currentPlayerPath = file.path;
       currentPlayerElement = el;
       // add icon indicator
@@ -287,6 +291,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const exportRes = await ipcRenderer.invoke('export-analyzed-to-json', result.analyzed);
     if (exportRes.error) console.error('Export error:', exportRes.error);
+  });
+
+  // Volume slider setup
+  const volumeSlider = document.getElementById('volume-slider');
+  const volumeLabel = document.getElementById('volume-val');
+  volumeSlider.addEventListener('input', e => {
+    const volume = parseInt(e.target.value);
+    volumeLabel.textContent = `${volume}%`;
+    
+    // Update current player volume if playing
+    if (currentPlayer) {
+      currentPlayer.volume = volume / 100;
+    }
   });
 
   // Initial load
