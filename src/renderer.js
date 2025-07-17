@@ -42,7 +42,6 @@ function renderFileList(files) {
         currentPlayer = null;
         currentPlayerPath = null;
         if (currentPlayerElement) {
-          // remove icon
           const icon = currentPlayerElement.querySelector('.preview-icon');
           if (icon) icon.remove();
           currentPlayerElement = null;
@@ -61,11 +60,14 @@ function renderFileList(files) {
       // Start new playback
       const src = pathToFileURL(file.path).href;
       currentPlayer = new Audio(src);
-      
+
       // Get current volume from slider
-      const currentVolume = parseInt(document.getElementById('volume-slider').value) / 100;
-      currentPlayer.volume = currentVolume; // Use slider value instead of hardcoded 0.8
-    
+      const currentVolume = parseInt(
+        document.getElementById('volume-slider').value,
+        10
+      ) / 100;
+      currentPlayer.volume = currentVolume;
+
       currentPlayerPath = file.path;
       currentPlayerElement = el;
       // add icon indicator
@@ -101,11 +103,10 @@ function applyFilter() {
   const bpmMode    = document.querySelector('input[name="bpm-mode"]:checked').value;
   const exactInput = parseInt(document.getElementById('bpmExact').value, 10);
 
-  const energyThreshold = parseFloat(document.getElementById('energy-slider').value) || 0;
+  const energyThreshold = parseFloat(document.getElementById('energy-slider')?.value) || 0;
   const lengthMax = parseFloat(document.getElementById('max-length-slider').value) || Infinity;
 
   const output = document.getElementById('output');
- /*  output.style.display = allAnalyzedFiles.length > 0 ? 'block' : 'none'; */
   output.classList.toggle('hidden', allAnalyzedFiles.length === 0);
 
   const filtered = allAnalyzedFiles.filter(file => {
@@ -136,11 +137,12 @@ function applyFilter() {
 window.applyFilter = applyFilter;
 
 document.addEventListener('DOMContentLoaded', () => {
+  // ————— Your existing UI‑init code —————
+
+  // Progress elements
   const progressBar   = document.getElementById('progress-bar');
   const progressText  = document.getElementById('progress-text');
   const processedList = document.getElementById('processed-list');
-  const dropArea = document.getElementById('drop-area');
-  const progressContainer = document.getElementById('progress-container');
 
   // BPM slider
   const bpmSlider = document.getElementById('bpm-slider');
@@ -158,30 +160,30 @@ document.addEventListener('DOMContentLoaded', () => {
     applyFilter();
   });
 
+  // Toggle BPM mode
   const rangeControls = document.getElementById('bpm-range-controls');
   const exactControls = document.getElementById('bpm-exact-controls');
-
-  // Toggle range vs exact BPM
   document.querySelectorAll('input[name="bpm-mode"]').forEach(radio =>
     radio.addEventListener('change', () => {
       const isRange = radio.value === 'range';
-      // flip the CSS class instead of style.display
-    rangeControls.classList.toggle('hidden', !isRange);
-    exactControls.classList.toggle('hidden',  isRange);
-    applyFilter();
+      rangeControls.classList.toggle('hidden', !isRange);
+      exactControls.classList.toggle('hidden',  isRange);
+      applyFilter();
     })
   );
   document.getElementById('bpmExact').addEventListener('input', applyFilter);
 
-  // Energy slider setup
+  // Energy slider (guarded)
   const energySlider = document.getElementById('energy-slider');
   const energyLabel  = document.getElementById('energy-val');
-  energySlider.addEventListener('input', e => {
-    energyLabel.textContent = parseFloat(e.target.value).toFixed(2);
-    applyFilter();
-  });
+  if (energySlider && energyLabel) {
+    energySlider.addEventListener('input', e => {
+      energyLabel.textContent = parseFloat(e.target.value).toFixed(2);
+      applyFilter();
+    });
+  }
 
-  // Length slider setup
+  // Length slider
   const lengthSlider = document.getElementById('max-length-slider');
   const lengthLabel  = document.getElementById('length-max-val');
   lengthSlider.addEventListener('input', e => {
@@ -195,116 +197,135 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById(id).addEventListener('input', applyFilter)
   );
 
-  // Reset filters button
-  const resetBtn = document.getElementById('reset-filters');
-  resetBtn.addEventListener('click', () => {
-    // Clear text inputs
+  // Reset & clear DB
+  document.getElementById('reset-filters').addEventListener('click', () => {
     document.getElementById('search').value = '';
     document.getElementById('key').value = '';
     document.getElementById('scale').value = '';
-    // Reset BPM controls
     bpmSlider.noUiSlider.set([0, 300]);
     document.getElementById('bpmExact').value = '';
     document.querySelector('input[name="bpm-mode"][value="range"]').checked = true;
     rangeControls.classList.remove('hidden');
     exactControls.classList.add('hidden');
-    // Reset energy slider
-    energySlider.value = 0;
-    energyLabel.textContent = '0.00';
-    // Reset length slider
+    if (energySlider) energySlider.value = 0;
+    if (energyLabel) energyLabel.textContent = '0.00';
     lengthSlider.value = lengthSlider.max;
     lengthLabel.textContent = '∞';
-    console.log('Filters reset');
     loadAllTracks();
   });
 
-  // Clear database button
-  const clearDbBtn = document.getElementById('clear-db');
-  clearDbBtn.addEventListener('click', async () => {
+  document.getElementById('clear-db').addEventListener('click', async () => {
     const res = await ipcRenderer.invoke('clear-database');
     if (res.error) {
       console.error('Error clearing database:', res.error);
       return;
     }
-    console.log('Database cleared');
-    // Reload full list
-    await loadAllTracks();
+    loadAllTracks();
   });
 
-  // Progress updates
- ipcRenderer.on('progress-update', (_, { percent, current }) => {
-    // when we start (0%), show the panel and clear the list
+  // Progress-update handler
+  ipcRenderer.on('progress-update', (_, { percent, current }) => {
     if (percent === 0) {
-      progressContainer.classList.remove('hidden');
+      // show the progress panel
+      document.getElementById('progress-container').classList.remove('hidden');
       processedList.innerHTML = '';
     }
-
     progressBar.value = percent;
-    const name = current.split(/[/\\]/).pop();
-    progressText.textContent = `Analyserar: ${name} (${percent}%)`;
-
-    // when done (100%), hide it after a short delay
+    progressText.textContent = `Analyserar: ${current.split(/[/\\]/).pop()} (${percent}%)`;
     if (percent === 100) {
       setTimeout(() => {
-        progressContainer.classList.add('hidden');
+        document.getElementById('progress-container').classList.add('hidden');
       }, 1500);
     }
   });
 
-  // Drag-and-drop styling
-  dropArea.addEventListener('dragover', e => {
-    e.preventDefault();
-    dropArea.classList.add('dragover');
+  // ————— Global drag‑and‑drop (full‑window) —————
+
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'drop-overlay';
+  Object.assign(overlay.style, {
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    background: 'rgba(0,0,0,0.2)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#fff',
+    fontSize: '2rem',
+    pointerEvents: 'none',
+    opacity: '0',
+    transition: 'opacity 0.2s',
+    zIndex: '9999'
   });
-  dropArea.addEventListener('dragleave', () => {
-    dropArea.classList.remove('dragover');
-  });
+  overlay.textContent = '📂 Drop a folder anywhere to analyze…';
+  document.body.appendChild(overlay);
 
-  // Handle the drop
-  dropArea.addEventListener('drop', async e => {
+  function showOverlay() {
+    overlay.style.pointerEvents = 'auto';
+    overlay.style.opacity = '1';
+  }
+  function hideOverlay() {
+    overlay.style.pointerEvents = 'none';
+    overlay.style.opacity = '0';
+  }
+
+  // Drag events (only for files)
+  ['dragenter', 'dragover'].forEach(evt =>
+    window.addEventListener(evt, e => {
+      if (e.dataTransfer.types.includes('Files')) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        showOverlay();
+      }
+    })
+  );
+
+  ['dragleave', 'drop'].forEach(evt =>
+    window.addEventListener(evt, e => {
+      e.preventDefault();
+      hideOverlay();
+    })
+  );
+
+  window.addEventListener('drop', async e => {
     e.preventDefault();
-    dropArea.classList.remove('dragover');
+    const items = Array.from(e.dataTransfer.items || [])
+      .filter(item => item.kind === 'file');
+    if (!items.length) return;
 
-    // show progress panel
-    processedList.innerHTML = '';
-    progressContainer.classList.remove('hidden');
-    progressBar.value = 0;
-    progressText.textContent = 'Analyserar…';
-
-    // do your folder analysis…
-    const items = Array.from(e.dataTransfer.items);
+    // Extract folder paths
     const folders = items
       .map(item => item.webkitGetAsEntry?.())
       .filter(entry => entry?.isDirectory)
-      .map((entry, idx) => items[idx].getAsFile().path);
+      .map((entry, i) => items[i].getAsFile().path);
 
-    const result = await ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folders);
+    overlay.textContent = '🔄 Analyzing…';
+    const result = await ipcRenderer.invoke(
+      'drop-and-analyze-folders-with-progress',
+      folders
+    );
     await loadAllTracks();
+    overlay.textContent = `✅ Analyzed ${result.analyzed.length} files`;
+    setTimeout(hideOverlay, 1500);
 
-    progressBar.value = 100;
-    progressText.textContent = `✅ Klar! Analyserade ${result.analyzed.length} filer`;
-
-    // hide panel again
-    setTimeout(() => {
-      progressContainer.classList.add('hidden');
-    }, 1500);
-
-    const exportRes = await ipcRenderer.invoke('export-analyzed-to-json', result.analyzed);
+    const exportRes = await ipcRenderer.invoke(
+      'export-analyzed-to-json',
+      result.analyzed
+    );
     if (exportRes.error) console.error('Export error:', exportRes.error);
   });
 
-  // Volume slider setup
+  // Volume slider
   const volumeSlider = document.getElementById('volume-slider');
-  const volumeLabel = document.getElementById('volume-val');
-  volumeSlider.addEventListener('input', e => {
-    const volume = parseInt(e.target.value);
-    volumeLabel.textContent = `${volume}%`;
-    
-    // Update current player volume if playing
-    if (currentPlayer) {
-      currentPlayer.volume = volume / 100;
-    }
-  });
+  const volumeLabel  = document.getElementById('volume-val');
+  if (volumeSlider && volumeLabel) {
+    volumeSlider.addEventListener('input', e => {
+      const v = parseInt(e.target.value, 10);
+      volumeLabel.textContent = `${v}%`;
+      if (currentPlayer) currentPlayer.volume = v / 100;
+    });
+  }
 
   // Initial load
   loadAllTracks();
