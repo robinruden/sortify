@@ -1,11 +1,11 @@
 // src/renderer.js
 const { ipcRenderer } = require('electron');
-const { pathToFileURL } = require('url');
+const PreviewPlayer = require('./src/previewPlayer.js');
+/* const { pathToFileURL } = require('url'); */
 
 let allAnalyzedFiles = [];
-let currentPlayer = null;
-let currentPlayerPath = null;
-let currentPlayerElement = null;
+
+const player = new PreviewPlayer();
 
 // Render a list of files
 function renderFileList(files) {
@@ -14,7 +14,7 @@ function renderFileList(files) {
 
   files.forEach(file => {
     const filename = file.path.split(/[/\\]/).pop();
-    const durText = file.duration != null
+    const durText  = file.duration != null
       ? `${file.duration.toFixed(1)} s`
       : '–';
 
@@ -32,45 +32,20 @@ function renderFileList(files) {
       ipcRenderer.invoke('ondragstart', file.path);
     });
 
-    // Right-click to preview or stop
+    // Right-click to toggle preview
     el.addEventListener('contextmenu', e => {
       e.preventDefault();
-      if (currentPlayer && currentPlayerPath === file.path) {
-        currentPlayer.pause();
-        currentPlayer.currentTime = 0;
-        currentPlayer = null;
-        currentPlayerPath = null;
-        if (currentPlayerElement) {
-          const icon = currentPlayerElement.querySelector('.preview-icon');
-          if (icon) icon.remove();
-          currentPlayerElement = null;
-        }
-        return;
-      }
-      if (currentPlayer) {
-        currentPlayer.pause();
-        currentPlayer.currentTime = 0;
-        if (currentPlayerElement) {
-          const icon = currentPlayerElement.querySelector('.preview-icon');
-          if (icon) icon.remove();
-        }
-      }
-      const src = pathToFileURL(file.path).href;
-      currentPlayer = new Audio(src);
-      const currentVolume = parseInt(document.getElementById('volume-slider').value, 10) / 100;
-      currentPlayer.volume = currentVolume;
-      currentPlayerPath = file.path;
-      currentPlayerElement = el;
-      const iconEl = document.createElement('span');
-      iconEl.textContent = '🔊 ';
-      iconEl.className = 'preview-icon';
-      el.prepend(iconEl);
-      currentPlayer.play().catch(err => console.error('Preview failed:', err));
+      const volume = parseInt(
+        document.getElementById('volume-slider').value,
+        10
+      ) / 100;
+      player.toggle(file.path, el, volume);
     });
 
     output.appendChild(el);
   });
 }
+
 
 // Fetch and filter
 async function loadAllTracks() {
@@ -200,13 +175,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----- Spinner CSS -----
   const style = document.createElement('style');
   style.textContent = `
-    @keyframes spin { from {transform:rotate(0deg);} to {transform:rotate(360deg);} }
-    #drop-overlay .spinner {
-      display: inline-block; width: 24px; height: 24px;
-      border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff;
-      border-radius: 50%; animation: spin 1s linear infinite;
-      margin-right: 8px; vertical-align: middle;
-    }
+      #drop-overlay .spinner {
+    display: inline-block;
+    width: 24px; height: 24px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  #drop-overlay .percent {
+    font-weight: bold;
+    margin-left: 4px;
+  }
   `;
   document.head.appendChild(style);
 
@@ -265,19 +247,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const li=document.createElement('li'); li.textContent=current.split(/[/\\]/).pop(); processedList.appendChild(li);
     }
     if (percent===100) setTimeout(()=>progressContainer.classList.add('hidden'),1500);
-  });
+  }); 
 
   // Volume slider
-  const volumeSlider = document.getElementById('volume-slider');
-  const volumeLabel  = document.getElementById('volume-val');
-  if (volumeSlider && volumeLabel) {
-    volumeSlider.addEventListener('input', e => {
-      const v = parseInt(e.target.value,10);
-      volumeLabel.textContent = `${v}%`;
-      if (currentPlayer) currentPlayer.volume = v/100;
-    });
-  }
+const volumeSlider = document.getElementById('volume-slider');
+const volumeLabel  = document.getElementById('volume-val');
+if (volumeSlider && volumeLabel) {
+  volumeSlider.addEventListener('input', e => {
+    const v = parseInt(e.target.value, 10);
+    volumeLabel.textContent = `${v}%`;
+    // Tell our PreviewPlayer to update its volume
+    player.setVolume(v / 100);
+  });
+}
 
   // Initial load
   loadAllTracks();
 });
+
