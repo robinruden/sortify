@@ -175,25 +175,40 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   );
   window.addEventListener('dragleave', e => { e.preventDefault(); hideOverlay(); });
-  window.addEventListener('drop', async e => {
-    e.preventDefault();
-    showSpinnerOverlay(0);
-    const items = Array.from(e.dataTransfer.items||[]).filter(i => i.kind==='file');
-    if (!items.length) return hideOverlay();
-    const folders = items
-      .map(i=>i.webkitGetAsEntry?.())
-      .filter(en=>en?.isDirectory)
-      .map((en,i)=>items[i].getAsFile().path);
+  window.addEventListener('drop', e => {
+  e.preventDefault();
+
+  // Immediately show the spinner (and let it paint)
+  showSpinnerOverlay(0);
+
+  // Collect folder paths
+  const items = Array.from(e.dataTransfer.items || [])
+    .filter(i => i.kind === 'file');
+  if (!items.length) {
+    hideOverlay();
+    return;
+  }
+  const folders = items
+    .map(i => i.webkitGetAsEntry?.())
+    .filter(en => en?.isDirectory)
+    .map((en, i) => items[i].getAsFile().path);
+
+  // Defer the heavy lifting until after the browser repaints
+  setTimeout(async () => {
     try {
       const { analyzed } = await ipcRenderer.invoke(
-        'drop-and-analyze-folders-with-progress', folders
+        'drop-and-analyze-folders-with-progress',
+        folders
       );
-      await loadAllTracks();
-      showDoneOverlay(analyzed.length);
-    } catch {
+      await loadAllTracks();           // re‑render your list
+      showDoneOverlay(analyzed.length); // ✅ finish
+    } catch (err) {
+      console.error('Analysis failed', err);
       hideOverlay();
     }
-  });
+  }, 0);
+});
+
   ipcRenderer.on('progress-update', (_, { percent, current }) => {
     // update native progress bar/list
     if (percent === 0) {
