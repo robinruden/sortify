@@ -1,6 +1,7 @@
-/* Modern hamburger styling */
+
 .hamburger-menu {
   position: relative;
+  z-index: 99999;
 }
 
 .hamburger-toggle {
@@ -15,6 +16,9 @@
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  position: relative;
+  z-index: 10000;
+
 }
 
 .menu-dropdown {
@@ -31,6 +35,7 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
+  z-index: 10001;
 }
 
 .menu-dropdown:not(.hidden) {

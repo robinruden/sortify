@@ -10,7 +10,6 @@ function getFilters(DOM) {
     scale:    DOM.scale.value.toLowerCase(),
     bpmRange: DOM.bpmSlider.noUiSlider.get().map(v => parseInt(v, 10)),
     exactBpm: parseInt(DOM.bpmExact.value, 10),
-    energyMin: parseFloat(DOM.energySlider.value),
     lengthMax: parseFloat(DOM.lengthSlider.value),
   };
 }

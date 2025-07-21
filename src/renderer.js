@@ -62,7 +62,6 @@ function applyFilter() {
     scale:        document.getElementById('scale'),
     bpmSlider:    document.getElementById('bpm-slider'),
     bpmExact:     document.getElementById('bpmExact'),
-    energySlider: document.getElementById('energy-slider'),
     lengthSlider: document.getElementById('max-length-slider'),
   });
   const filtered = allAnalyzedFiles.filter(f => matches(f, filters));
@@ -77,8 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const bpmMinLabel   = document.getElementById('bpm-min-val');
   const bpmMaxLabel   = document.getElementById('bpm-max-val');
   const bpmExact      = document.getElementById('bpmExact');
-  const energySlider  = document.getElementById('energy-slider');
-  const energyLabel   = document.getElementById('energy-val');
   const lengthSlider  = document.getElementById('max-length-slider');
   const lengthLabel   = document.getElementById('length-max-val');
   const resetFilters  = document.getElementById('reset-filters');
@@ -89,14 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const processedList = document.getElementById('processed-list');
   const volumeSlider  = document.getElementById('volume-slider');
   const volumeLabel   = document.getElementById('volume-val');
-  /* const hamburgerToggle = document.getElementById('myFunction'); */
-  /* const filtersContainer = document.getElementById('filters'); */
-
-  // Toggle filter panel on hamburger click
-  /* hamburgerToggle.addEventListener('click', () => {
-    filtersContainer.classList.toggle('hidden');
-  }); */
-
  
   // 1) Slider & filter UI hookups
   noUiSlider.create(bpmSlider, {
@@ -120,10 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   bpmExact.addEventListener('input', applyFilter);
 
-  energySlider?.addEventListener('input', e => {
-    energyLabel.textContent = parseFloat(e.target.value).toFixed(2);
-    applyFilter();
-  });
   lengthSlider.addEventListener('input', e => {
     const v = parseFloat(e.target.value);
     lengthLabel.textContent = (v === parseFloat(lengthSlider.max)) ? '∞' : v.toFixed(1);
@@ -141,8 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('input[name="bpm-mode"][value="range"]').checked = true;
     document.getElementById('bpm-range-controls').classList.remove('hidden');
     document.getElementById('bpm-exact-controls').classList.add('hidden');
-    energySlider.value = 0; energyLabel.textContent = '0.00';
-    lengthSlider.value = lengthSlider.max; lengthLabel.textContent = '∞';
+    lengthSlider.value = lengthSlider.max; 
+    lengthLabel.textContent = '∞';
     loadAllTracks();
   });
   clearDb.addEventListener('click', async () => {
