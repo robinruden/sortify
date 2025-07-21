@@ -755,15 +755,3 @@ strong {
  
 }
 
-.hamburger-menu { position: relative; }
-.hamburger-menu .menu-items {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 100%;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-.hamburger-menu.open .menu-items { display: block; }

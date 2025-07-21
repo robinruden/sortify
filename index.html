@@ -16,30 +16,18 @@
     <div class="title-bar">
       🎵 Sortify Audio Analyzer v1.0
       <div class="window-controls">
-       <!--  <span class="control-btn">_</span> -->
-        <!-- <span class="control-btn">□</span> -->
-         <!-- Top Navigation Menu -->
-        <div class="topnav">
-          <a href="#home" class="active"></a>
-          <!-- Navigation links (hidden by default) -->
-            <div id="myLinks">
-             <!--  <a href="#news">News</a> -->
-              <!-- <a href="#contact">Contact</a> -->
-              <!-- <a href="#about">About</a> -->
-
+        <div class="hamburger-menu">
+          <button class="hamburger-toggle" id="hamburger-toggle">☰</button>
+            <div class="menu-dropdown" id="myLinks">
               <button id="reset-filters" type="button" title="Reset all filters">Återställ</button>
               <button id="clear-db" type="button" title="Clear database">Rensa DB</button>
-        
-              
             </div>
-            <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
-            <a href="#" class="icon" id="hamburger-toggle">
-            <a href="#" class="control-btn" id="hamburger-toggle">☰
-              <i class="fa fa-bars"></i>
-            </a>
-        </div> 
+        </div>
       </div>
     </div>
+            
+            
+     
     <div class="window-content">
       <div id="filters">
         <input id="search" type="text" placeholder="🔍 Search filename…">
@@ -83,7 +71,7 @@
         </div>
       </div>
     </div>
-  </div>
+  
 
   <div id="progress-container" class="window-frame-2 hidden">
     <div class="title-bar">📊 Processing...</div>
