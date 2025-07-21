@@ -3,6 +3,19 @@ const { ipcRenderer } = require('electron');
 const PreviewPlayer   = require('./src/previewPlayer.js');
 const { getFilters, matches } = require('./src/filters.js');
 
+
+// Toggle hamburger menu on click
+  document.addEventListener('DOMContentLoaded', () => {
+    const links = document.getElementById('myLinks');
+    function toggleMenu() {
+      links.style.display = links.style.display === 'block' ? 'none' : 'block';
+    }
+    document.querySelectorAll('.icon, #hamburger-toggle').forEach(btn =>
+      btn.addEventListener('click', toggleMenu)
+    );
+  });
+
+
 let allAnalyzedFiles = [];
 const player = new PreviewPlayer();
 
@@ -76,14 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const processedList = document.getElementById('processed-list');
   const volumeSlider  = document.getElementById('volume-slider');
   const volumeLabel   = document.getElementById('volume-val');
-  const hamburgerToggle = document.getElementById('hamburger-toggle');
-  const filtersContainer = document.getElementById('filters');
+  /* const hamburgerToggle = document.getElementById('myFunction'); */
+  /* const filtersContainer = document.getElementById('filters'); */
 
   // Toggle filter panel on hamburger click
-  hamburgerToggle.addEventListener('click', () => {
+  /* hamburgerToggle.addEventListener('click', () => {
     filtersContainer.classList.toggle('hidden');
-  });
+  }); */
 
+ 
   // 1) Slider & filter UI hookups
   noUiSlider.create(bpmSlider, {
     start: [0,300], connect: true,
@@ -254,9 +268,5 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial load
   loadAllTracks();
 
-  const ctrlBtn = document.querySelector('.control-btn');
-  const menu    = document.querySelector('.hamburger-menu');
-  ctrlBtn.addEventListener('click', () => {
-    menu.classList.toggle('open');
-  });
+
 });

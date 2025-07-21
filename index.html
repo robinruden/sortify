@@ -9,6 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
   <!-- Import your custom styles -->
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="hamburger.css">
 </head>
 <body>
   <div class="window-frame-1">
@@ -17,7 +18,21 @@
       <div class="window-controls">
        <!--  <span class="control-btn">_</span> -->
         <!-- <span class="control-btn">□</span> -->
-        <span class="control-btn" id="hamburger-toggle">☰</span>
+         <!-- Top Navigation Menu -->
+        <div class="topnav">
+          <a href="#home" class="active"></a>
+          <!-- Navigation links (hidden by default) -->
+            <div id="myLinks">
+              <a href="#news">News</a>
+              <a href="#contact">Contact</a>
+              <a href="#about">About</a>
+            </div>
+            <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+            <a href="#" class="icon" id="hamburger-toggle">
+            <a href="#" class="control-btn" id="hamburger-toggle">☰
+              <i class="fa fa-bars"></i>
+            </a>
+        </div> 
       </div>
     </div>
     <div class="window-content">
@@ -97,7 +112,7 @@
     </div>
   </div>
 
-  <!-- noUiSlider JS -->
+
   <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
   <script src="./src/renderer.js"></script>
 </body>
