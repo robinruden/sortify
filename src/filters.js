@@ -17,7 +17,7 @@ function getFilters(DOM) {
 /**
  * Return true if `file` passes all of the given filters.
  */
-function matches(file, { name, key, scale, bpmRange, exactBpm, energyMin, lengthMax }) {
+function matches(file, { name, key, scale, bpmRange, exactBpm, lengthMax }) {
   const filename = file.path.split(/[/\\]/).pop().toLowerCase();
   if (name && !filename.includes(name)) return false;
   if (key && (file.key?.toLowerCase() !== key)) return false;
@@ -30,7 +30,6 @@ function matches(file, { name, key, scale, bpmRange, exactBpm, energyMin, length
     if (file.bpm != null && (file.bpm < bpmMin || file.bpm > bpmMax)) return false;
   }
 
-  if (file.energy != null && file.energy < energyMin) return false;
   if (file.duration != null && file.duration > lengthMax) return false;
 
   return true;
