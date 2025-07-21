@@ -76,6 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const processedList = document.getElementById('processed-list');
   const volumeSlider  = document.getElementById('volume-slider');
   const volumeLabel   = document.getElementById('volume-val');
+  const hamburgerToggle = document.getElementById('hamburger-toggle');
+  const filtersContainer = document.getElementById('filters');
+
+  // Toggle filter panel on hamburger click
+  hamburgerToggle.addEventListener('click', () => {
+    filtersContainer.classList.toggle('hidden');
+  });
 
   // 1) Slider & filter UI hookups
   noUiSlider.create(bpmSlider, {
@@ -246,4 +253,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial load
   loadAllTracks();
+
+  const ctrlBtn = document.querySelector('.control-btn');
+  const menu    = document.querySelector('.hamburger-menu');
+  ctrlBtn.addEventListener('click', () => {
+    menu.classList.toggle('open');
+  });
 });
