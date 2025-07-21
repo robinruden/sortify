@@ -35,7 +35,7 @@ function renderFileList(files) {
     el.dataset.path = file.path;
     el.textContent  =
       `${filename} — Längd: ${durText}, BPM: ${file.bpm?.toFixed(1) ?? '–'}, ` +
-      `${file.key ?? '–'} ${file.scale ?? ''}, Energi: ${file.energy?.toFixed(2) ?? '–'}`;
+      `${file.key ?? '–'} ${file.scale ?? ''}`;
     el.draggable = true;
 
     // Drag to reveal in Finder/Explorer

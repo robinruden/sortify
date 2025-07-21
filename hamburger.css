@@ -1,6 +1,7 @@
 
 .hamburger-menu {
   position: relative;
+  overflow: visible !important;
   z-index: 99999;
 }
 
@@ -35,7 +36,7 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  z-index: 10001;
+  z-index: 10001 !important;
 }
 
 .menu-dropdown:not(.hidden) {
@@ -43,3 +44,4 @@
   opacity: 1;
   visibility: visible;
 }
+

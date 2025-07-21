@@ -60,11 +60,11 @@ async function analyzeAudio(filePath) {
   }
 
   // Energy
-  try {
+  /* try {
     result.features.energy = essentia.Energy(audioVector).energy;
   } catch (e) {
     result.features.energy = null;
-  }
+  } */
 
 // 5.X Spectral Flatness
 /* try {
