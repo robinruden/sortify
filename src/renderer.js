@@ -138,6 +138,13 @@ document.addEventListener('DOMContentLoaded', () => {
     player.toggle(item.dataset.path, item, vol);
   });
 
+  // Volume toggle at bottom: show/hide fader
+  const volumeToggle = document.getElementById('volume-toggle');
+  const volumeContainer = document.getElementById('volume-container');
+  volumeToggle.addEventListener('click', () => {
+    volumeContainer.classList.toggle('hidden');
+  });
+
   // 3) Overlay spinner & progress
   const overlay = document.createElement('div');
   overlay.id = 'drop-overlay';

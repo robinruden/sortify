@@ -87,9 +87,15 @@
       <div id="output"></div>
     </div>
   </div>
-   <strong>🔊</strong><br>
-          <label for="volume-slider">Volume: <span id="volume-val">80%</span></label><br>
-          <input id="volume-slider" type="range" min="0" max="100" step="1" value="80" style="width:100%;">
+  </div>
+  <!-- Volume toggle and slider -->
+  <div id="volume-wrapper">
+    <span id="volume-toggle" style="cursor:pointer; font-size:1.2rem;">🔊</span>
+    <div id="volume-container" class="hidden">
+      <label for="volume-slider"><span id="volume-val"></span></label><br>
+      <input id="volume-slider" type="range" min="0" max="100" step="1" value="80" style="width:60%;">
+    </div>
+  </div>
 
   <!-- noUiSlider JS -->
   <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
