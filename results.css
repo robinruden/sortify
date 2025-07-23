@@ -1,0 +1,67 @@
+.results-container {
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.9) 0%, 
+    rgba(240,248,255,0.8) 30%, 
+    rgba(220,240,255,0.7) 100%);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 16px;
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.15),
+    0 0 0 1px rgba(255,255,255,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 0;
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  height: 18rem;
+ 
+}
+
+.results-header {
+  background: linear-gradient(135deg, 
+    rgba(135,206,235,0.9) 0%, 
+    rgba(70,130,180,0.8) 50%, 
+    rgba(30,60,114,0.9) 100%);
+  color: white;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 16px 16px 0 0;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.results-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+  border-radius: 16px 16px 0 0;
+}
+
+.results-content {
+  padding: 16px;
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.1) 0%, 
+    rgba(240,248,255,0.05) 100%);
+    max-height: 20rem;
+}
+
+#output {
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.8) 0%, 
+    rgba(240,248,255,0.6) 100%);
+  border: 1px solid rgba(70,130,180,0.2);
+  border-radius: 16px;
+  padding: 8px;
+  max-height: 14rem;
+  height: auto;
+  overflow: auto;
+  backdrop-filter: blur(15px);
+}
