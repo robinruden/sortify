@@ -54,7 +54,7 @@ body {
   padding: 0;
   /* margin-bottom: 20px; */
   overflow: hidden;
-  height: 100%;
+  height: auto
   width: 23rem;
   width: 100%;
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
