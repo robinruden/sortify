@@ -1,10 +1,10 @@
 .hidden {
-  display: none !important;
+  display: none;
 }
 
 
 .full-width {
-  width: 100% !important;
+  width: 100%;
 }
 
 
@@ -13,7 +13,7 @@
 body {
   font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
   margin: 0;
-  padding: 20px;
+  padding: 0.8rem;
   background: radial-gradient(ellipse at center, #87ceeb 0%, #4682b4 30%, #1e3c72 100%);
   min-height: 100vh;
   box-sizing: border-box;
@@ -37,107 +37,12 @@ body {
   padding: 0;
   margin-bottom: 20px;
   overflow: hidden;
-  height: 27rem;
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
- 
-}
-
-.title-bar {
-  background: linear-gradient(135deg, 
-    rgba(135,206,235,0.9) 0%, 
-    rgba(70,130,180,0.8) 50%, 
-    rgba(30,60,114,0.9) 100%);
-  color: white;
-  padding: 12px 16px;
-  font-weight: 600;
-  font-size: 13px;
-  border-radius: 16px 16px 0 0;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-  position: relative;
-  backdrop-filter: blur(10px);
-}
-
-.title-bar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
-  border-radius: 16px 16px 0 0;
-}
-
-/* Frutiger Aero window controls */
-.window-controls {
-  position: absolute;
-  right: 0.5rem;
-  top: 0.3rem
-}
-
-/* .window-frame-2 {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.9) 0%, 
-    rgba(240,248,255,0.8) 30%, 
-    rgba(220,240,255,0.7) 100%);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 16px;
-  box-shadow: 
-    0 8px 32px rgba(0,0,0,0.15),
-    0 0 0 1px rgba(255,255,255,0.2),
-    inset 0 1px 0 rgba(255,255,255,0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 0;
-  margin-bottom: 20px;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
- 
-} */
-
-.window-frame-3 {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.9) 0%, 
-    rgba(240,248,255,0.8) 30%, 
-    rgba(220,240,255,0.7) 100%);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 16px;
-  box-shadow: 
-    0 8px 32px rgba(0,0,0,0.15),
-    0 0 0 1px rgba(255,255,255,0.2),
-    inset 0 1px 0 rgba(255,255,255,0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 0;
-  margin-bottom: 20px;
-  overflow: hidden;
+  height: 100%;
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
  
 }
 
 
-/* .window-frame:hover {
-  transform: translateY(-0px);
-  box-shadow: 
-    0 12px 40px rgba(0,0,0,0.2),
-    0 0 0 1px rgba(255,255,255,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.9);
-} */
-.window-content {
-  padding: 16px;
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.1) 0%, 
-    rgba(240,248,255,0.05) 100%);
-  max-height: 100%;
-  border: 2px solid pink;
- 
-}
-
-
-/* Window content area */
-
-
-/* Frutiger Aero Button Style */
 .button-xp {
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.9) 0%, 
@@ -188,13 +93,7 @@ input[type="radio"] {
 
 
 
-.filter-section label {
-  font-size: 10px;
-  margin-right: 12px;
-  line-height: 1.4;
-  color: #2c3e50;
-  font-weight: 500;
-}
+
 
 /* Range sliders - General styling */
 input[type="range"] {
@@ -210,174 +109,11 @@ input[type="range"] {
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,1) 0%, 
-    rgba(135,206,235,0.8) 100%);
-  border: 2px solid rgba(70,130,180,0.3);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 
-    0 4px 12px rgba(70,130,180,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.9);
-  transition: all 0.2s ease;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-  box-shadow: 
-    0 6px 16px rgba(70,130,180,0.35),
-    inset 0 1px 0 rgba(255,255,255,1);
-}
-
-/* noUiSlider customization - General */
-.noUi-target {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.8) 0%, 
-    rgba(220,240,255,0.6) 100%);
-  border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 20px;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-  height: 14px;
-}
-
-.noUi-connect {
-  background: linear-gradient(135deg, 
-    rgba(135,206,235,0.9) 0%, 
-    rgba(70,130,180,0.8) 100%);
-  border-radius: 20px;
-  box-shadow: 
-    0 2px 8px rgba(70,130,180,0.2),
-    inset 0 1px 0 rgba(255,255,255,0.3);
-}
-
-.noUi-handle {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,1) 0%, 
-    rgba(240,248,255,0.9) 100%);
-  border: 2px solid rgba(70,130,180,0.3);
-  border-radius: 50%;
-  box-shadow: 
-    0 4px 12px rgba(70,130,180,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.9);
-  width: 18px;
-  height: 18px;
-  transition: all 0.2s ease;
-}
-
-.noUi-handle:before,
-.noUi-handle:after {
-  display: none;
-}
-
-.noUi-handle:hover {
-  transform: scale(1.1);
-  box-shadow: 
-    0 6px 16px rgba(70,130,180,0.35),
-    inset 0 1px 0 rgba(255,255,255,1);
-}
-
-/* Key and Scale side by side container */
-.key-scale-container {
-  display: flex;
-  gap: 8px;
-  
-}
-
-.key, .scale{
-    width: 0.2rem;
-}
-
-.key-scale-container input {
-  flex: 1;
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.9) 0%, 
-    rgba(240,248,255,0.7) 100%);
-  border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  color: #2c3e50;
-  box-shadow: 
-    inset 0 2px 4px rgba(0,0,0,0.05),
-    0 0 0 1px rgba(255,255,255,0.5);
-  transition: all 0.2s ease;
-  backdrop-filter: blur(10px);
-}
-
-.key-scale-container input:focus {
-  outline: none;
-  border-color: rgba(70,130,180,0.5);
-  box-shadow: 
-    inset 0 2px 4px rgba(0,0,0,0.05),
-    0 0 0 3px rgba(70,130,180,0.1),
-    0 4px 12px rgba(70,130,180,0.15);
-}
-
-.bpm-exact-button{
-  margin-left: 12px
-}
 
 
 
-/* Specific BPM slider styling */
-#bpm-slider .noUi-target {
-  height: 10px;
-  margin-left:12px;
-}
-
-#bpm-slider .noUi-handle {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  margin-top: 0.2rem;
-}
-
-/* BPM controls spacing */
-#bpm-range-controls {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  width: 100%;
-}
-
-#bpm-slider {
-  margin: 8px 0;
-}
-
-#bpm-range-controls label {
-  font-size: 10px;
-  margin-top: 4px;
-  margin-right: 12px;
-  display: inline-block;
-  color: #2c3e50;
-  font-weight: 500;
-  
-}
 
 
-#max-lengtgh-slider {
-  width: 100%;
-}
-
-/* Tooltips */
-.noUi-tooltip {
-    display: none;
-  font-size: px !important;
-  padding: 4px 8px !important;
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.95) 0%, 
-    rgba(240,248,255,0.9) 100%) !important;
-  border: 1px solid rgba(70,130,180,0.2) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
-  backdrop-filter: blur(10px) !important;
-  color: #2c3e50 !important;
-  font-weight: 500 !important;
-}
 
 /* Utility class to hide elements */
 .hidden {

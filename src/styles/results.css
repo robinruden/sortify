@@ -15,8 +15,8 @@
   margin-bottom: 20px;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  height: 18rem;
- 
+  height: 100%;
+  width: 100%;
 }
 
 .results-header {
@@ -46,11 +46,12 @@
 }
 
 .results-content {
-  padding: 16px;
+  padding: 1rem;
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.1) 0%, 
     rgba(240,248,255,0.05) 100%);
-    max-height: 20rem;
+  max-height: 100%;
+  width: 95%;
 }
 
 #output {
