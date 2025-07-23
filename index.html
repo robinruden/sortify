@@ -7,7 +7,7 @@
   <title>Sortify Audio Analyzer</title>
   <!-- noUiSlider CSS -->
   <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
-  <!-- Import your custom styles -->
+  
   <link rel="stylesheet" href="./src/styles/styles.css">
   <link rel="stylesheet" href="./src/styles/hamburger.css">
   <link rel="stylesheet" href="./src/styles/results.css">
@@ -17,7 +17,9 @@
   <link rel="stylesheet" href="./src/styles/progress.css">
 </head>
 <body>
-  <div class="window-frame">
+  <div class="wrapper">
+  
+  <!-- <div class="window-frame"> -->
     <div class="title-bar">
       🎵 Sortify Audio Analyzer v1.0
       <div class="window-controls">
@@ -32,7 +34,7 @@
     </div>
     
 
-    <div class="window-content">
+    <!-- <div class="window-content"> -->
       <div id="filters">
         <input id="search" type="text" placeholder="🔍 Search filename…">  
         <!-- Key and Scale in a container to place them side by side -->
@@ -67,8 +69,8 @@
           <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" class="full-width">
         </div>
       </div>
-    </div>
-    </div>
+    <!-- </div> -->
+    <!-- </div> -->
   
 
   <div id="progress-container" class="window-frame-2" hidden>
@@ -82,14 +84,14 @@
 
   
   
-</div>
 
-<div class="results-container">
+
+<!-- <div class="results-container"> -->
     <div class="results-header"></div>
     <div class="results-content">
       <div id="output"></div>
     </div>
-</div>
+<!-- </div> -->
 
   <!-- Volume toggle and slider -->
   <div id="volume-wrapper">
@@ -99,6 +101,9 @@
       <input id="volume-slider" type="range" min="0" max="100" step="1" value="80" style="width:100%;">
     </div>
   </div>
+  </div>
+
+  
 
 
   <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>

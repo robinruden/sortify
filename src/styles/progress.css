@@ -33,12 +33,12 @@
 
 #progress-container {
   position: relative;
-  width: 100%;
+  /* width: 100%; */
   height: 100%;
 }
 
 #progress-bar {
-  width: 100%;
+  /* width: 100%; */
   height: 20px;
   border-radius: 10px;
   background: linear-gradient(135deg, 

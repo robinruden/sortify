@@ -13,7 +13,8 @@
 #filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  gap: 1rem;
+  padding: 1rem;
   margin-bottom: 16px;
   height: auto; 
   padding: 0.2rem;
@@ -67,7 +68,8 @@
     inset 0 1px 0 rgba(255,255,255,0.9);
   backdrop-filter: blur(15px);
   transition: all 0.3s ease;
-  height: 5rem;
+  height: 100%;/* 
+   */width: 100%;
 }
 
 .filter-section-2 {
@@ -129,9 +131,9 @@
   
 }
 
-.key, .scale{
+/* .key, .scale{
     width: 0.2rem;
-}
+} */
 
 .key-scale-container input {
   flex: 1;
@@ -183,7 +185,7 @@
 #bpm-range-controls {
   margin-top: 8px;
   margin-bottom: 8px;
-  width: 100%;
+ /*  width: 100%; */
 }
 
 #bpm-slider {
@@ -201,9 +203,9 @@
 }
 
 
-#max-lengtgh-slider {
+/* #max-lengtgh-slider {
   width: 100%;
-}
+} */
 
 input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.1);
@@ -227,6 +229,21 @@ input[type="range"]::-webkit-slider-thumb {
     inset 0 1px 0 rgba(255,255,255,0.9);
   transition: all 0.2s ease;
 }
+
+/* Range sliders - General styling */
+input[type="range"] {
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.8) 0%, 
+    rgba(220,240,255,0.6) 100%);
+  border: 1px solid rgba(70,130,180,0.2);
+  border-radius: 20px;
+  height: 20px;
+  /* width: 100%; */
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
 
 /* noUiSlider customization - General */
 .noUi-target {
