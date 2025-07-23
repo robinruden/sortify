@@ -3,19 +3,6 @@ const { ipcRenderer } = require('electron');
 const PreviewPlayer   = require('./src/previewPlayer.js');
 const { getFilters, matches } = require('./src/filters.js');
 
-
-// Toggle hamburger menu on click
-  document.addEventListener('DOMContentLoaded', () => {
-    const links = document.getElementById('myLinks');
-    function toggleMenu() {
-      links.style.display = links.style.display === 'block' ? 'none' : 'block';
-    }
-    document.querySelectorAll('.icon, #hamburger-toggle').forEach(btn =>
-      btn.addEventListener('click', toggleMenu)
-    );
-  });
-
-
 let allAnalyzedFiles = [];
 const player = new PreviewPlayer();
 
@@ -69,6 +56,33 @@ function applyFilter() {
 }
 
 window.applyFilter = applyFilter;
+
+// Toggle hamburger menu on click
+document.addEventListener('DOMContentLoaded', () => {
+  const hamburgerToggle = document.getElementById('hamburger-toggle');
+  const menuDropdown = document.getElementById('myLinks');
+
+   hamburgerToggle.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    menuDropdown.classList.toggle('hidden');
+  });
+
+   document.addEventListener('click', (e) => {
+    if (!hamburgerToggle.contains(e.target) && !menuDropdown.contains(e.target)) {
+      menuDropdown.classList.add('hidden');
+    }
+  });
+
+  const links = document.getElementById('myLinks');
+  function toggleMenu() {
+    links.classList.toggle('hidden');
+  }
+  document.querySelectorAll('.icon, #hamburger-toggle').forEach(btn =>
+    btn.addEventListener('click', toggleMenu)
+  );
+  });
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const output        = document.getElementById('output');

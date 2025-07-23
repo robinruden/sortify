@@ -1,8 +1,7 @@
 
 .hamburger-menu {
   position: relative;
-  overflow: visible !important;
-  z-index: 99999;
+  overflow: visible;
 }
 
 .hamburger-toggle {
@@ -18,15 +17,21 @@
   justify-content: center;
   transition: all 0.2s ease;
   position: relative;
-  z-index: 10000;
+  
 
+}
+
+.hamburger-toggle:hover {
+  background: linear-gradient(135deg, rgba(220,240,255,0.95), rgba(200,230,255,0.9));
+  transform: scale(1.05);
 }
 
 .menu-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   right: 0;
   background: rgba(255,255,255,0.95);
+  border: 1px solid rgba(255,255,255,0.3);
   border-radius: 12px;
   padding: 8px;
   min-width: 150px;
@@ -36,7 +41,7 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  z-index: 10001 !important;
+  
 }
 
 .menu-dropdown:not(.hidden) {
@@ -45,3 +50,21 @@
   visibility: visible;
 }
 
+.menu-dropdown button {
+  background: linear-gradient(135deg, rgba(70,130,180,0.1), rgba(135,206,235,0.1));
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 2px 0;
+  width: 100%;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #2c3e50;
+}
+
+.menu-dropdown button:hover {
+  background: linear-gradient(135deg, rgba(70,130,180,0.2), rgba(135,206,235,0.2));
+  transform: translateX(2px);
+}
