@@ -20,8 +20,8 @@ body {
   color: #2c3e50;
 }
 
-/* Frutiger Aero Window Frame */
-.window-frame-1 {
+
+.window-frame {
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.9) 0%, 
     rgba(240,248,255,0.8) 30%, 
@@ -36,8 +36,8 @@ body {
   -webkit-backdrop-filter: blur(20px);
   padding: 0;
   margin-bottom: 20px;
-  overflow: scroll;
-  height: 25rem;
+  overflow: hidden;
+  height: 27rem;
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
  
 }
@@ -66,6 +66,13 @@ body {
   height: 50%;
   background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
   border-radius: 16px 16px 0 0;
+}
+
+/* Frutiger Aero window controls */
+.window-controls {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.3rem
 }
 
 /* .window-frame-2 {
@@ -121,7 +128,9 @@ body {
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.1) 0%, 
     rgba(240,248,255,0.05) 100%);
-    max-height: 20rem;
+  max-height: 100%;
+  border: 2px solid pink;
+ 
 }
 
 
@@ -167,116 +176,8 @@ body {
     inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Input Fields */
-#filters {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 16px;
-  height: auto; 
-  padding: 0.2rem;
-}
-
-#filters input[type="text"],
-#filters input[type="number"] {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.9) 0%, 
-    rgba(240,248,255,0.7) 100%);
-  border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  color: #2c3e50;
-  box-shadow: 
-    inset 0 2px 4px rgba(0,0,0,0.05),
-    0 0 0 1px rgba(255,255,255,0.5);
-  transition: all 0.2s ease;
-  backdrop-filter: blur(10px);
-}
-
-#filters input[type="text"]:focus,
-#filters input[type="number"]:focus {
-  outline: none;
-  border-color: rgba(70,130,180,0.5);
-  box-shadow: 
-    inset 0 2px 4px rgba(0,0,0,0.05),
-    0 0 0 3px rgba(70,130,180,0.1),
-    0 4px 12px rgba(70,130,180,0.15);
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,1) 0%, 
-    rgba(245,250,255,0.8) 100%);
-}
-
-.filter-section-1 {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.8) 0%, 
-    rgba(240,248,255,0.6) 50%, 
-    rgba(220,240,255,0.8) 100%);
-  border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 16px;
-  padding: 16px;
-  font-size: 11px;
-  font-weight: 600;
-  box-shadow: 
-    0 4px 20px rgba(70,130,180,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.9);
-  backdrop-filter: blur(15px);
-  transition: all 0.3s ease;
-  height: 5rem;
-}
-
-.filter-section-2 {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.8) 0%, 
-    rgba(240,248,255,0.6) 50%, 
-    rgba(220,240,255,0.8) 100%);
-  border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 16px;
-  padding: 16px;
-  font-size: 11px;
-  font-weight: 600;
-  box-shadow: 
-    0 4px 20px rgba(70,130,180,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.9);
-  backdrop-filter: blur(15px);
-  transition: all 0.3s ease;
-  height: 5rem;
-}
-
-.filter-section-3 {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.8) 0%, 
-    rgba(240,248,255,0.6) 50%, 
-    rgba(220,240,255,0.8) 100%);
-  border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 16px;
-  padding: 16px;
-  font-size: 11px;
-  font-weight: 600;
-  box-shadow: 
-    0 4px 20px rgba(70,130,180,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.9);
-  backdrop-filter: blur(15px);
-  transition: all 0.3s ease;
-  height: 4rem;
-}
 
 
-
-/* .filter-section:hover {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.9) 0%, 
-    rgba(245,250,255,0.7) 50%, 
-    rgba(230,245,255,0.9) 100%);
-  transform: translateY(-1px);
-} */
-
-.filter-section strong {
-  color: #1e3c72;
-  font-size: 11px;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.8);
-}
 
 /* Radio buttons */
 input[type="radio"] {
@@ -457,9 +358,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
   
 }
 
-#energy-slider {
-  width: 100%;
-}
 
 #max-lengtgh-slider {
   width: 100%;
@@ -486,75 +384,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
   display: none !important;
 }
 
-/* Progress bar */
-/* #progress-container {
-  margin-bottom: 20px;
-  
-} */
-
-/* progress {
-  width: 100%;
-  height: 20px;
-  border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 20px;
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.8) 0%, 
-    rgba(240,248,255,0.6) 100%);
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  overflow: hidden;
-} */
-
-/* progress::-webkit-progress-bar {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.8) 0%, 
-    rgba(240,248,255,0.6) 100%);
-  border-radius: 20px;
-} */
-
-/* progress::-webkit-progress-value {
-  background: linear-gradient(135deg, 
-    rgba(135,206,235,0.9) 0%, 
-    rgba(70,130,180,0.8) 100%);
-  border-radius: 20px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
-} */
-
-/* progress::-moz-progress-bar {
-  background: linear-gradient(135deg, 
-    rgba(135,206,235,0.9) 0%, 
-    rgba(70,130,180,0.8) 100%);
-  border-radius: 20px;
-} */
-
-/* #progress-text {
-  font-size: 12px;
-  margin-top: 8px;
-  font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-  color: #2c3e50;
-  font-weight: 500;
-} */
-
-/* #processed-list {
-  max-height: 120px;
-  overflow: auto;
-  margin-top: 12px;
-  font-size: 11px;
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.8) 0%, 
-    rgba(240,248,255,0.6) 100%);
-  border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 12px;
-  padding: 8px;
-  backdrop-filter: blur(10px);
-} */
-
-/* #processed-list li {
-  padding: 4px 0;
-  border-bottom: 1px solid rgba(70,130,180,0.1);
-  color: #2c3e50;
-} */
 
 /* File list */
 .file-item {
@@ -633,12 +462,7 @@ strong {
   background: transparent;
 }
 
-/* Frutiger Aero window controls */
-.window-controls {
-  position: absolute;
-  right: 12px;
-  top: 8px;
-}
+
 
 .control-btn {
   width: 20px;
@@ -659,12 +483,7 @@ strong {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* .control-btn:hover {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,1) 0%, 
-    rgba(240,248,255,0.9) 100%);
-  transform: scale(1.1);
-} */
+
 
 .control-btn:active {
   transform: scale(0.95);

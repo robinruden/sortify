@@ -8,12 +8,13 @@
   <!-- noUiSlider CSS -->
   <link href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css" rel="stylesheet">
   <!-- Import your custom styles -->
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="hamburger.css">
-  <link rel="stylesheet" href="results.css">
+  <link rel="stylesheet" href="./src/styles/styles.css">
+  <link rel="stylesheet" href="./src/styles/hamburger.css">
+  <link rel="stylesheet" href="./src/styles/results.css">
+  <link rel="stylesheet" href="./src/styles/filters.css">
 </head>
 <body>
-  <div class="window-frame-1">
+  <div class="window-frame">
     <div class="title-bar">
       🎵 Sortify Audio Analyzer v1.0
       <div class="window-controls">
@@ -26,13 +27,11 @@
         </div>
       </div>
     </div>
+    
 
     <div class="window-content">
       <div id="filters">
-        <input id="search" type="text" placeholder="🔍 Search filename…">
-        <!-- <button id="reset-filters" type="button" title="Reset all filters">Återställ</button> -->
-       <!--  <button id="clear-db" type="button" title="Clear database">Rensa DB</button> -->
-        
+        <input id="search" type="text" placeholder="🔍 Search filename…">  
         <!-- Key and Scale in a container to place them side by side -->
         <div class="key-scale-container">
           <input class="key" id="key" type="text" placeholder="Key (C)">
@@ -66,6 +65,7 @@
         </div>
       </div>
     </div>
+    </div>
   
 
   <div id="progress-container" class="window-frame-2" hidden>
@@ -78,7 +78,7 @@
   </div>
 
   
-  </div>
+  
 </div>
 
 <div class="results-container">
