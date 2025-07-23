@@ -724,7 +724,7 @@ strong {
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 2px solid pink;
+  /* border: 2px solid pink; */
  
 }
 
