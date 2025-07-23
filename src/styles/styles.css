@@ -511,11 +511,4 @@ strong {
   color: #2c3e50;
 }
 
-#volume-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  /* border: 2px solid pink; */
- 
-}
 

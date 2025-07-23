@@ -1,0 +1,26 @@
+#volume-wrapper {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 8px;
+    height: 2rem;
+
+   /*  border: 2px solid pink; */
+ 
+}
+
+#volume-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+    
+}
+
+#volume-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    background: transparent;
+}
