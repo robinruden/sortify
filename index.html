@@ -19,7 +19,7 @@
 <body>
   <div class="wrapper">
   
-  <!-- <div class="window-frame"> -->
+  <div class="window-frame">
     <div class="title-bar">
       🎵 Sortify Audio Analyzer v1.0
       <div class="window-controls">
@@ -69,11 +69,11 @@
           <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" class="full-width">
         </div>
       </div>
-    <!-- </div> -->
+    </div>
     <!-- </div> -->
   
 
-  <div id="progress-container" class="window-frame-2" hidden>
+  <div id="progress-container" class="window-frame-2" style="display:none;">
     <!-- <div class="title-bar">📊 Processing...</div> -->
     <div class="window-content-2">
       <progress id="progress-bar" value="0" max="100"></progress>
@@ -82,16 +82,14 @@
     </div>
   </div>
 
-  
-  
 
 
-<!-- <div class="results-container"> -->
+<div class="window-frame">
     <div class="results-header"></div>
-    <div class="results-content">
+    <!-- <div class="results-content"> -->
       <div id="output"></div>
-    </div>
-<!-- </div> -->
+    <!-- </div> -->
+</div>
 
   <!-- Volume toggle and slider -->
   <div id="volume-wrapper">
