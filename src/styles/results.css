@@ -12,14 +12,18 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   padding: 0;
-  /* overflow: hidden; */
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  height: 100%;
-  /* width: 100%; */
-  /* margin-bottom: 30rem; */
-
-  border-color: pink
-
+  margin: 1rem 0;
+  
+  /* Responsive container sizing */
+  width: 100%;
+  max-width: 100%;
+  min-height: 200px;
+  height: auto;
+  
+  /* Flexbox for better content flow */
+  display: flex;
+  flex-direction: column;
 }
 
 .results-header {
@@ -28,13 +32,14 @@
     rgba(70,130,180,0.8) 50%, 
     rgba(30,60,114,0.9) 100%);
   color: white;
-  padding: 0.5rem 0.1rem;
+  padding: 0.75rem 1rem;
   font-weight: 600;
-  font-size: 13px;
+  font-size: clamp(12px, 2vw, 14px); /* Responsive font size */
   border-radius: 16px 16px 0 0;
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
   position: relative;
   backdrop-filter: blur(10px);
+  flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .results-header::before {
@@ -46,16 +51,18 @@
   height: 100%;
   background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
   border-radius: 16px 16px 0 0;
+  pointer-events: none;
 }
 
 .results-content {
-  padding: 1rem;
+  padding: clamp(0.5rem, 2vw, 1rem);
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.1) 0%, 
     rgba(240,248,255,0.05) 100%);
-  /* min-height: 2rem; */
-  /* height: 100%; */
-  /* width: 95%; */
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Allow shrinking below content size */
 }
 
 #output {
@@ -63,13 +70,144 @@
     rgba(255,255,255,0.8) 0%, 
     rgba(240,248,255,0.6) 100%);
   border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 16px;
-  padding: 0.1rem;
-  /* max-height: 100%; */
-  /* height: auto; */
-  height: auto;
-  gap: 0.5rem;
+  border-radius: 12px;
+  padding: clamp(0.5rem, 1.5vw, 1rem);
+  
+  /* Responsive height and scrolling */
+  flex: 1;
+  min-height: 150px;
+  max-height: 60vh; /* Limit height to 60% of viewport */
+  
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   backdrop-filter: blur(15px);
+  
+  /* Better scrollbar on mobile */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(70,130,180,0.3) transparent;
+}
+
+/* Webkit scrollbar styling for better mobile experience */
+#output::-webkit-scrollbar {
+  width: 8px;
+}
+
+#output::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+
+#output::-webkit-scrollbar-thumb {
+  background: rgba(70,130,180,0.3);
+  border-radius: 4px;
+}
+
+#output::-webkit-scrollbar-thumb:hover {
+  background: rgba(70,130,180,0.5);
+}
+
+/* File item responsive styling */
+.file-item {
+  padding: clamp(0.5rem, 1.5vw, 0.75rem);
+  margin-bottom: 0.5rem;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(70,130,180,0.1);
+  border-radius: 8px;
+  font-size: clamp(11px, 1.8vw, 13px);
+  line-height: 1.4;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.file-item:hover {
+  background: rgba(255,255,255,0.8);
+  border-color: rgba(70,130,180,0.3);
+  transform: translateY(-1px);
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .results-container {
+    margin: 0.5rem 0;
+    border-radius: 12px;
+  }
+  
+  .results-header {
+    padding: 0.5rem 0.75rem;
+    border-radius: 12px 12px 0 0;
+  }
+  
+  .results-content {
+    padding: 0.5rem;
+  }
+  
+  #output {
+    min-height: 120px;
+    max-height: 50vh; /* Smaller on mobile */
+    border-radius: 8px;
+    padding: 0.5rem;
+  }
+  
+  .file-item {
+    padding: 0.5rem;
+    margin-bottom: 0.25rem;
+    border-radius: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-container {
+    margin: 0.25rem 0;
+    border-radius: 8px;
+  }
+  
+  .results-header {
+    padding: 0.4rem 0.5rem;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  #output {
+    min-height: 100px;
+    max-height: 59vh;
+    padding: 0.4rem;
+  }
+  
+  .file-item {
+    padding: 0.4rem;
+    font-size: 11px;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+  #output {
+    max-height: 30vh;
+    min-height: 80px;
+  }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1200px) {
+  .results-container {
+    max-width: 1200px;
+    margin: 1.5rem auto;
+  }
+  
+  #output {
+    max-height: 70vh;
+    min-height: 200px;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .results-header {
+    text-shadow: 0 0.5px 1px rgba(0,0,0,0.3);
+  }
+  
+  .file-item {
+    border-width: 0.5px;
+  }
 }
