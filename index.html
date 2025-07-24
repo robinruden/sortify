@@ -43,10 +43,12 @@
           <input class="scale" id="scale" type="text" placeholder="Scale">
         </div>
 
-        <div class="filter-section-1">
+        <div class="filter-section-bpm">
           <strong>🎵 BPM CONTROLS</strong><br>
-          <label><input type="radio" name="bpm-mode" value="range" checked> Range</label>
+          <div class="bpm-controls">
+          <label class="bpm-range-button"><input type="radio" name="bpm-mode" value="range" checked> Range</label>
           <label class="bpm-exact-button"><input type="radio" name="bpm-mode" value="exact"> Exact</label>
+          </div>
           <!-- Range slider -->
          
           <div id="bpm-range-controls">
@@ -63,7 +65,7 @@
 
      
 
-        <div class="filter-section-3">
+        <div class="filter-section-length">
           <strong>⏱️ LENGTH</strong><br>
           <label for="max-length-slider">Max (s): <span id="length-max-val">∞</span></label><br>
           <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" class="full-width">
