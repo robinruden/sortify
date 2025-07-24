@@ -20,9 +20,9 @@ function getFilters(DOM) {
 function matches(file, { name, key, scale, bpmRange, exactBpm, lengthMax }) {
   // lowercase the filename
   const filename = file.path.split(/[/\\]/).pop().toLowerCase();
-  
+
   // case‐insensitive search
-  if (name && !filename.includes(name)) return false;
+  if (!filename.includes(name)) return false;
 
   // key/scale also case‐insensitive
   if (key && (file.key?.toLowerCase() !== key)) return false;
