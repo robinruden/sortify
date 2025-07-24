@@ -42,31 +42,8 @@ function initResultsNavigation(player, volumeSlider) {
   const output = document.getElementById('output');
   if (!output) return;
 
-  // 1) Context‐menu / right‐click to toggle preview
-  output.addEventListener('contextmenu', e => {
-    const item = e.target.closest('.file-item');
-    if (!item) return;
-    e.preventDefault();
-    const vol = volumeSlider
-      ? parseInt(volumeSlider.value, 10) / 100
-      : 1;
-    player.toggle(item.dataset.path, item, vol);
-  });
-
-   // Left-click to start/stop preview
-  output.addEventListener('click', e => {
-    const item = e.target.closest('.file-item');
-    if (!item) return;
-    const vol = volumeSlider
-      ? parseInt(volumeSlider.value, 10) / 100
-      : 1;
-    player.toggle(item.dataset.path, item, vol);
-  });
-
-  // 2) Keyboard navigation (ArrowUp, ArrowDown, Space)
   let selectedIndex = -1;
   function updateSelection(items) {
-    
     items.forEach((el, idx) =>
       el.classList.toggle('selected', idx === selectedIndex)
     );
@@ -74,6 +51,46 @@ function initResultsNavigation(player, volumeSlider) {
       items[selectedIndex].scrollIntoView({ block: 'nearest' });
     }
   }
+
+     // Left-click to start/stop preview
+ output.addEventListener('click', e => {
+    const item = e.target.closest('.file-item');
+    if (!item) return;
+
+      // 1) update selectedIndex
+    const items = Array.from(output.querySelectorAll('.file-item'));
+    selectedIndex = items.indexOf(item);
+    updateSelection(items);
+ 
+   const vol = volumeSlider
+      ? parseInt(volumeSlider.value, 10) / 100
+      : 1;
+    player.toggle(item.dataset.path, item, vol);
+  });
+  
+  // 1) Context‐menu / right‐click to toggle preview
+  output.addEventListener('contextmenu', e => {
+    const item = e.target.closest('.file-item');
+    if (!item) return;
+
+  // 2) Keyboard navigation (ArrowUp, ArrowDown, Space)
+
+   
+
+  e.preventDefault();
+    const vol = volumeSlider
+      ? parseInt(volumeSlider.value, 10) / 100
+      : 1;
+    player.toggle(item.dataset.path, item, vol);
+  });
+
+  
+
+
+    
+
+
+
 
   document.addEventListener('keydown', e => {
     const items = Array.from(output.querySelectorAll('.file-item'));
