@@ -3,12 +3,13 @@ const { ipcRenderer } = require('electron');
 const PreviewPlayer   = require('./src/previewPlayer.js');
 const { getFilters, matches } = require('./src/filters.js');
 const { initHamburger } = require('./src/hamburger.js');
+const { renderFileList, initResultsNavigation } = require ('./src/results.js');
 
 let allAnalyzedFiles = [];
 const player = new PreviewPlayer();
 
 // Render a list of files
-function renderFileList(files) {
+/* function renderFileList(files) {
   const output = document.getElementById('output');
   output.innerHTML = '';
 
@@ -34,7 +35,7 @@ function renderFileList(files) {
 
     output.appendChild(el);
   });
-}
+} */
 
 // Load from DB and then filter
 async function loadAllTracks() {
@@ -51,9 +52,9 @@ function applyFilter() {
     bpmSlider:    document.getElementById('bpm-slider'),
     bpmExact:     document.getElementById('bpmExact'),
     lengthSlider: document.getElementById('max-length-slider'),
-  });
+  }); 
   const filtered = allAnalyzedFiles.filter(f => matches(f, filters));
-  renderFileList(filtered);
+  renderFileList(filtered, player);
 }
 
 window.applyFilter = applyFilter;
@@ -61,7 +62,7 @@ window.applyFilter = applyFilter;
 // Toggle hamburger menu on click
 document.addEventListener('DOMContentLoaded', () => {
   initHamburger({ toggleId: 'hamburger-toggle', menuId: 'myLinks' });
-
+  initResultsNavigation(player);
   // Other initialization code can go here
   // For example, setting up event listeners, loading initial data, etc.
   

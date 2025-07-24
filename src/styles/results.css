@@ -127,6 +127,24 @@
   transform: translateY(-1px);
 }
 
+.file-item {
+  /* …your existing file-item styles… */
+  position: relative;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* highlight the “selected” row */
+.file-item.selected {
+  background: linear-gradient(
+    135deg,
+    rgba(200, 230, 255, 0.9) 0%,
+    rgba(180, 220, 240, 0.8) 100%
+  );
+  color: #1e3c72;
+  outline: 2px solid rgba(70, 130, 180, 0.7);
+  z-index: 1;
+}
+
 /* Responsive breakpoints */
 @media (max-width: 768px) {
   .results-container {
