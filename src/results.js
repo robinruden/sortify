@@ -53,6 +53,16 @@ function initResultsNavigation(player, volumeSlider) {
     player.toggle(item.dataset.path, item, vol);
   });
 
+   // Left-click to start/stop preview
+  output.addEventListener('click', e => {
+    const item = e.target.closest('.file-item');
+    if (!item) return;
+    const vol = volumeSlider
+      ? parseInt(volumeSlider.value, 10) / 100
+      : 1;
+    player.toggle(item.dataset.path, item, vol);
+  });
+
   // 2) Keyboard navigation (ArrowUp, ArrowDown, Space)
   let selectedIndex = -1;
   function updateSelection(items) {
