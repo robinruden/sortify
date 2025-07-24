@@ -1,4 +1,31 @@
+.window-frame-results{
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,0.9) 0%, 
+    rgba(240,248,255,0.8) 30%, 
+    rgba(220,240,255,0.7) 100%);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 16px;
+  box-shadow: 
+    0 8px 32px rgba(0,0,0,0.15),
+    0 0 0 1px rgba(255,255,255,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 0;
+  /* margin-bottom: 20px; */
+  overflow: hidden;
+  /* height: auto; */
+  /* width: 23rem; */
+  width: 100%;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+ 
+}
+
+
+
+
 .results-container {
+  
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.9) 0%, 
     rgba(240,248,255,0.8) 30%, 
@@ -18,7 +45,8 @@
   /* Responsive container sizing */
   width: 100%;
   max-width: 100%;
-  min-height: 200px;
+  /* min-height: 200px; */
+  min-height: 0;
   height: auto;
   
   /* Flexbox for better content flow */
@@ -52,6 +80,7 @@
   background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
   border-radius: 16px 16px 0 0;
   pointer-events: none;
+  
 }
 
 .results-content {
@@ -72,12 +101,14 @@
   border: 1px solid rgba(70,130,180,0.2);
   border-radius: 12px;
   padding: clamp(0.5rem, 1.5vw, 1rem);
+  padding-bottom: 4rem; 
+  box-sizing: border-box;
   
-  /* Responsive height and scrolling */
   flex: 1;
-  min-height: 150px;
-  max-height: 60vh; /* Limit height to 60% of viewport */
-  
+  max-height: 52vh;
+  min-height: 0;
+  /* max-height: calc(100vh - 240px); */
+  /* height: auto; */
   overflow-x: hidden;
   overflow-y: auto;
   backdrop-filter: blur(15px);
@@ -145,37 +176,21 @@
   z-index: 1;
 }
 
-/* Responsive breakpoints */
-@media (max-width: 768px) {
-  .results-container {
-    margin: 0.5rem 0;
-    border-radius: 12px;
-  }
-  
-  .results-header {
-    padding: 0.5rem 0.75rem;
-    border-radius: 12px 12px 0 0;
-  }
-  
-  .results-content {
-    padding: 0.5rem;
-  }
-  
-  #output {
-    min-height: 120px;
-    max-height: 50vh; /* Smaller on mobile */
-    border-radius: 8px;
-    padding: 0.5rem;
-  }
-  
-  .file-item {
-    padding: 0.5rem;
-    margin-bottom: 0.25rem;
-    border-radius: 6px;
-  }
+.window-frame:last-of-type {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
-@media (max-width: 480px) {
+.results-content, #output {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+/* Responsive breakpoints */
+
+
+/* @media (max-width: 480px) {
   .results-container {
     margin: 0.25rem 0;
     border-radius: 8px;
@@ -188,7 +203,7 @@
   
   #output {
     min-height: 100px;
-    max-height: 59vh;
+    max-height: 54vh;
     padding: 0.4rem;
   }
   
@@ -196,18 +211,18 @@
     padding: 0.4rem;
     font-size: 11px;
   }
-}
+} */
 
 /* Landscape mobile optimization */
-@media (max-height: 500px) and (orientation: landscape) {
+/* @media (max-height: 500px) and (orientation: landscape) {
   #output {
     max-height: 30vh;
     min-height: 80px;
   }
 }
-
+ */
 /* Large screen optimizations */
-@media (min-width: 1200px) {
+/* @media (min-width: 1200px) {
   .results-container {
     max-width: 1200px;
     margin: 1.5rem auto;
@@ -217,10 +232,10 @@
     max-height: 70vh;
     min-height: 200px;
   }
-}
+} */
 
 /* High DPI displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+/* @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .results-header {
     text-shadow: 0 0.5px 1px rgba(0,0,0,0.3);
   }
@@ -228,4 +243,42 @@
   .file-item {
     border-width: 0.5px;
   }
+} */
+
+/* @media (min-height: 970px) {
+  #output {
+    max-height: 100vh;
+  }
 }
+
+@media (min-height: 900px) {
+  #output {
+    max-height: 90vh;
+  }
+}
+
+@media (min-height: 800px) {
+  #output {
+    max-height: 55vh;
+  }
+}
+
+@media (min-height: 500px) {
+  #output {
+    max-height: 52vh;
+  }
+}
+
+@media (min-height: 450px) {
+  #output {
+    max-height: 50vh;
+  }
+}
+
+@media (max-height: 300px) {
+  #output {
+    max-height: 85vh;
+  }
+} */
+
+/* Small mobile devices */

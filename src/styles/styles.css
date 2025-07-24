@@ -18,20 +18,27 @@
 
 
 body, html {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  box-sizing: border-box;
  margin: 0;
- padding: 0;
- height: 100%;
- width: 100%;
+ /* padding: 0.7rem; */
+ height: 100vh;
+ width: 100vw;
  overflow: hidden;
+ gap: 0.5rem;
  
 }
 
 body {
+  
   font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
   padding: 0.7rem;
   background: radial-gradient(ellipse at center, #87ceeb 0%, #4682b4 30%, #1e3c72 100%);
   
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
   color: #2c3e50;
 
   /* border: 1px solid #ff9bb3; */
