@@ -21,7 +21,7 @@
   height: auto;
   width: auto;
 
-  border: solid pink;
+  /* border: solid pink; */
 }
 
 #filters input[type="text"],
@@ -81,7 +81,9 @@
 
 .scale{
   width: 3rem;
+  z-index: -1;
 }
+
 .filter-section-1{
   grid-column: 1;
   grid-row: 3;

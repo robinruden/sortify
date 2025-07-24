@@ -2,6 +2,7 @@
 const { ipcRenderer } = require('electron');
 const PreviewPlayer   = require('./src/previewPlayer.js');
 const { getFilters, matches } = require('./src/filters.js');
+const { initHamburger } = require('./src/hamburger.js');
 
 let allAnalyzedFiles = [];
 const player = new PreviewPlayer();
@@ -59,7 +60,15 @@ window.applyFilter = applyFilter;
 
 // Toggle hamburger menu on click
 document.addEventListener('DOMContentLoaded', () => {
-  const hamburgerToggle = document.getElementById('hamburger-toggle');
+  initHamburger({ toggleId: 'hamburger-toggle', menuId: 'myLinks' });
+
+  // Other initialization code can go here
+  // For example, setting up event listeners, loading initial data, etc.
+  
+  // Load all tracks initially
+  
+})
+/*   const hamburgerToggle = document.getElementById('hamburger-toggle');
   const menuDropdown = document.getElementById('myLinks');
 
   if (hamburgerToggle && menuDropdown) {
@@ -75,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
  }
-});
+}); */
 
 document.addEventListener('DOMContentLoaded', () => {
   const output        = document.getElementById('output');
