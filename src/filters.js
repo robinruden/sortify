@@ -5,9 +5,9 @@
  */
 function getFilters(DOM) {
   return {
-    name:     DOM.search.value.toLowerCase(),
-    key:      DOM.key.value.toLowerCase(),
-    scale:    DOM.scale.value.toLowerCase(),
+    name:     DOM.search.value.trim().toLowerCase(),
+    key:      DOM.key.value.trim().toLowerCase(),
+    scale:    DOM.scale.value.trim().toLowerCase(),
     bpmRange: DOM.bpmSlider.noUiSlider.get().map(v => parseInt(v, 10)),
     exactBpm: parseInt(DOM.bpmExact.value, 10),
     lengthMax: parseFloat(DOM.lengthSlider.value),
@@ -18,8 +18,13 @@ function getFilters(DOM) {
  * Return true if `file` passes all of the given filters.
  */
 function matches(file, { name, key, scale, bpmRange, exactBpm, lengthMax }) {
+  // lowercase the filename
   const filename = file.path.split(/[/\\]/).pop().toLowerCase();
+  
+  // case‐insensitive search
   if (name && !filename.includes(name)) return false;
+
+  // key/scale also case‐insensitive
   if (key && (file.key?.toLowerCase() !== key)) return false;
   if (scale && (file.scale?.toLowerCase() !== scale)) return false;
 

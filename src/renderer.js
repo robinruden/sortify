@@ -68,23 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load all tracks initially
   
 })
-/*   const hamburgerToggle = document.getElementById('hamburger-toggle');
-  const menuDropdown = document.getElementById('myLinks');
-
-  if (hamburgerToggle && menuDropdown) {
-   hamburgerToggle.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    menuDropdown.classList.toggle('hidden');
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!hamburgerToggle.contains(e.target) && !menuDropdown.contains(e.target)) {
-      menuDropdown.classList.add('hidden');
-    }
-  });
- }
-}); */
 
 document.addEventListener('DOMContentLoaded', () => {
   const output        = document.getElementById('output');
@@ -259,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 4) Volume slider
+  // Volume slider
   volumeSlider.addEventListener('input', e => {
     const v = parseInt(e.target.value, 10);
     volumeLabel.textContent = `${v}%`;
