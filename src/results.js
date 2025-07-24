@@ -93,6 +93,16 @@ function initResultsNavigation(player, volumeSlider) {
 
 
   document.addEventListener('keydown', e => {
+    // ── allow typing spaces in any focused input/textarea ──
+    const active = document.activeElement;
+    if (active && (
+        active.tagName === 'INPUT' ||
+        active.tagName === 'TEXTAREA' ||
+        active.isContentEditable
+      )) {
+      return;
+    }
+    
     const items = Array.from(output.querySelectorAll('.file-item'));
     if (!items.length) return;
 

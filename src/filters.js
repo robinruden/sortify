@@ -22,7 +22,14 @@ function matches(file, { name, key, scale, bpmRange, exactBpm, lengthMax }) {
   const filename = file.path.split(/[/\\]/).pop().toLowerCase();
 
   // case‐insensitive search
-  if (!filename.includes(name)) return false;
+ /*  if (!filename.includes(name)) return false; */
+ if (name) {
+   const terms = name.split(/\s+/).filter(t => t.length);
+    if (!terms.every(term => filename.includes(term))) {
+      return false;
+    }
+  }
+  
 
   // key/scale also case‐insensitive
   if (key && (file.key?.toLowerCase() !== key)) return false;
