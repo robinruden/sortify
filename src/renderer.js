@@ -62,27 +62,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const hamburgerToggle = document.getElementById('hamburger-toggle');
   const menuDropdown = document.getElementById('myLinks');
 
+  if (hamburgerToggle && menuDropdown) {
    hamburgerToggle.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
     menuDropdown.classList.toggle('hidden');
   });
 
-   document.addEventListener('click', (e) => {
+  document.addEventListener('click', (e) => {
     if (!hamburgerToggle.contains(e.target) && !menuDropdown.contains(e.target)) {
       menuDropdown.classList.add('hidden');
     }
   });
-
-  const links = document.getElementById('myLinks');
-  function toggleMenu() {
-    links.classList.toggle('hidden');
-  }
-  document.querySelectorAll('.icon, #hamburger-toggle').forEach(btn =>
-    btn.addEventListener('click', toggleMenu)
-  );
-  });
-
+ }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   const output        = document.getElementById('output');
