@@ -110,10 +110,19 @@ document.addEventListener('DOMContentLoaded', () => {
   bpmExact.addEventListener('input', applyFilter);
 
   lengthSlider.addEventListener('input', e => {
-    const v = parseFloat(e.target.value);
-    lengthLabel.textContent = (v === parseFloat(lengthSlider.max)) ? '∞' : v.toFixed(1);
-    applyFilter();
-  });
+  const raw         = +e.target.value;
+  const max         = +lengthSlider.max;
+  const ratio       = raw / max;
+  const exponent    = 5;      
+  const mapped      = (Math.exp(exponent * ratio) -1) / (Math.exp(exponent) -1);               // ← your “curve” factor
+  const actual      = mapped * max;
+
+  console.log({ raw, actual }); 
+            // ← make sure these numbers look curved
+  lengthLabel.textContent = raw === max ? '∞' : actual.toFixed(2);
+  
+  applyFilter();
+});
   ['search','key','scale'].forEach(id =>
     document.getElementById(id).addEventListener('input', applyFilter)
   );

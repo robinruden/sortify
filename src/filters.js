@@ -4,13 +4,17 @@
  * Read all the UI controls and return a “filters” object.
  */
 function getFilters(DOM) {
+  const raw = parseFloat(DOM.lengthSlider.value);
+  const max = parseFloat(DOM.lengthSlider.max);
+  const lengthMax = Math.pow(raw / max, 2) * max; // square to make it more sensitive at lower values
+
   return {
     name:     DOM.search.value.trim().toLowerCase(),
     key:      DOM.key.value.trim().toLowerCase(),
     scale:    DOM.scale.value.trim().toLowerCase(),
     bpmRange: DOM.bpmSlider.noUiSlider.get().map(v => parseInt(v, 10)),
     exactBpm: parseInt(DOM.bpmExact.value, 10),
-    lengthMax: parseFloat(DOM.lengthSlider.value),
+    lengthMax
   };
 }
 
