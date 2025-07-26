@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
   lengthSlider.addEventListener('input', e => {
   const raw         = +e.target.value;
   const max         = +lengthSlider.max;            
-  const actual      = mapLength * max;
+  const actual      = mapLength(raw, max, 5); // Use the mapLength function to apply the curve
 
   console.log({ raw, actual }); 
             
