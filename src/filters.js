@@ -7,7 +7,7 @@ const { mapLength } = require('./utils/lengthMapper.js');
 function getFilters(DOM) {
   const raw = parseFloat(DOM.lengthSlider.value);
   const max = parseFloat(DOM.lengthSlider.max);
-  const lengthMax = mapLength(raw, max, 5)
+  const lengthMax = mapLength(raw, max, 12)
 
   return {
     name:     DOM.search.value.trim().toLowerCase(),

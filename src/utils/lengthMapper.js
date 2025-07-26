@@ -5,7 +5,7 @@
  * @param {number} exponent   curve exponent (>=1). Higher → flatter left side
  * @returns {number} actual length
  */
-function mapLength(raw, max, exponent = 2) {
+function mapLength(raw, max, exponent = 12) {
   const t      = raw / max;
   const factor = (Math.exp(exponent * t) - 1) / (Math.exp(exponent) - 1);
   return factor * max;
