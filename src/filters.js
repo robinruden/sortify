@@ -1,4 +1,5 @@
 // src/filters.js
+const { mapLength } = require('./utils/lengthMapper.js');
 
 /**
  * Read all the UI controls and return a “filters” object.
@@ -6,7 +7,7 @@
 function getFilters(DOM) {
   const raw = parseFloat(DOM.lengthSlider.value);
   const max = parseFloat(DOM.lengthSlider.max);
-  const lengthMax = Math.pow(raw / max, 2) * max; // square to make it more sensitive at lower values
+  const lengthMax = mapLength(raw, max, 5)
 
   return {
     name:     DOM.search.value.trim().toLowerCase(),

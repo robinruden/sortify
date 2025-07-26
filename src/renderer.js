@@ -4,6 +4,7 @@ const PreviewPlayer   = require('./src/previewPlayer.js');
 const { getFilters, matches } = require('./src/filters.js');
 const { initHamburger } = require('./src/hamburger.js');
 const { renderFileList, initResultsNavigation } = require ('./src/results.js');
+const { mapLength } = require('./src/utils/lengthMapper.js'); // Assuming you have a lengthMapper.js for length mapping
 
 let allAnalyzedFiles = [];
 const player = new PreviewPlayer();
@@ -111,14 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   lengthSlider.addEventListener('input', e => {
   const raw         = +e.target.value;
-  const max         = +lengthSlider.max;
-  const ratio       = raw / max;
-  const exponent    = 5;      
-  const mapped      = (Math.exp(exponent * ratio) -1) / (Math.exp(exponent) -1);               // ← your “curve” factor
-  const actual      = mapped * max;
+  const max         = +lengthSlider.max;            
+  const actual      = mapLength * max;
 
   console.log({ raw, actual }); 
-            // ← make sure these numbers look curved
+            
   lengthLabel.textContent = raw === max ? '∞' : actual.toFixed(2);
   
   applyFilter();
