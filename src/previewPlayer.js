@@ -1,13 +1,15 @@
 // src/previewPlayer.js
+const { type } = require('os');
 const { pathToFileURL } = require('url');
 
 class PreviewPlayer {
   constructor() {
     this.audio = null;
     this.currentEl = null;
+    this.volume = 0.8; // Default to 80%
   }
 
-  toggle(filePath, element, volume = 1) {
+  toggle(filePath, element, volume) {
     const url = pathToFileURL(filePath).href;
 
     // If clicking the same file, stop
@@ -16,10 +18,15 @@ class PreviewPlayer {
     }
     // Otherwise stop any existing and start new
     this.stop();
-    this.audio = new Audio(url);
-    this.audio.volume = volume;
-    this.currentEl = element;
 
+    // Use passed-in volume if given, otherwise use stored this.volume
+    const vol = (typeof volume === 'number') ? volume : this.volume;
+
+    this.audio = new Audio(url);
+    this.audio.volume = vol;
+    this.volume = vol;   // Remember for next toggle
+
+    this.currentEl = element;
     const icon = document.createElement('span');
     icon.textContent = '🔊 ';
     icon.className = 'preview-icon';
@@ -39,7 +46,8 @@ class PreviewPlayer {
     this.audio = null;
   }
 
-   setVolume(volume) {
+  setVolume(volume) {
+    this.volume = volume;
     if (this.audio) this.audio.volume = volume;
   }
 }

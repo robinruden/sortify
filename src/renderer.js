@@ -1,10 +1,10 @@
 // src/renderer.js
 const { ipcRenderer } = require('electron');
-const PreviewPlayer   = require('./src/previewPlayer.js');
-const { getFilters, matches } = require('./src/filters.js');
-const { initHamburger } = require('./src/hamburger.js');
-const { renderFileList, initResultsNavigation } = require ('./src/results.js');
-const { mapLength } = require('./src/utils/lengthMapper.js'); // Assuming you have a lengthMapper.js for length mapping
+const PreviewPlayer   = require('./previewPlayer.js');
+const { getFilters, matches } = require('./filters.js');
+const { initHamburger } = require('./hamburger.js');
+const { renderFileList, initResultsNavigation } = require ('./results.js');
+const { mapLength } = require('./utils/lengthMapper.js');
 
 let allAnalyzedFiles = [];
 const player = new PreviewPlayer();
