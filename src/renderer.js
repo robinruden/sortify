@@ -9,35 +9,6 @@ const { mapLength } = require('./utils/lengthMapper.js');
 let allAnalyzedFiles = [];
 const player = new PreviewPlayer();
 
-// Render a list of files
-/* function renderFileList(files) {
-  const output = document.getElementById('output');
-  output.innerHTML = '';
-
-  files.forEach(file => {
-    const filename = file.path.split(/[/\\]/).pop();
-    const durText  = file.duration != null
-      ? `${file.duration.toFixed(1)} s`
-      : '–';
-
-    const el = document.createElement('div');
-    el.className    = 'file-item';
-    el.dataset.path = file.path;
-    el.textContent  =
-      `${filename} — Längd: ${durText}, BPM: ${file.bpm?.toFixed(1) ?? '–'}, ` +
-      `${file.key ?? '–'} ${file.scale ?? ''}`;
-    el.draggable = true;
-
-    // Drag to reveal in Finder/Explorer
-    el.addEventListener('dragstart', e => {
-      e.preventDefault();
-      ipcRenderer.invoke('ondragstart', file.path);
-    });
-
-    output.appendChild(el);
-  });
-} */
-
 // Load from DB and then filter
 async function loadAllTracks() {
   allAnalyzedFiles = await ipcRenderer.invoke('get-all-tracks');

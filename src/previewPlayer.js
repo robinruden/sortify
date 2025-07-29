@@ -6,7 +6,7 @@ class PreviewPlayer {
   constructor() {
     this.audio = null;
     this.currentEl = null;
-    this.volume = 0.8; // Default to 80%
+    this.volume = 0.2; // Default to 80%
   }
 
   toggle(filePath, element, volume) {
