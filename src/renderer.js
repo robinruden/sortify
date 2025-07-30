@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const processedList = document.getElementById('processed-list');
   const volumeSlider  = document.getElementById('volume-slider');
   const volumeLabel   = document.getElementById('volume-val');
+  const volumeVal     = document.getElementById('volume-val')
  
   // 1) Slider & filter UI hookups
   noUiSlider.create(bpmSlider, {
@@ -86,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const max         = +lengthSlider.max;            
   const actual      = mapLength(raw, max, 12); // Use the mapLength function to apply the curve
 
-  console.log({ raw, actual }); 
+  /* console.log({ raw, actual });  */
             
   lengthLabel.textContent = raw === max ? '∞' : actual.toFixed(2);
   
@@ -223,13 +224,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Volume slider
   volumeSlider.addEventListener('input', e => {
-    const v = parseInt(e.target.value, 10);
-    volumeLabel.textContent = `${v}%`;
-    player.setVolume(v / 100);
+    const v = parseInt(volumeSlider.value, 10) / 100;
+    volumeVal.textContent = volumeSlider.value + '%';
+    player.setVolume(v);
   });
 
   // Initial load
   loadAllTracks();
-
-
 });
