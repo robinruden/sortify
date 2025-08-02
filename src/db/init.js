@@ -1,7 +1,12 @@
 //init.js
-
+const { app} = require('electron');
+const path = require('path');
 const Database = require('better-sqlite3');
-const db = new Database('audio_analysis.db');
+
+const userDataDir = app.getPath('userData');
+const dbFile = path.join(userDataDir, 'audio_analysis.db');
+
+const db = new Database(dbFile);
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS tracks (
