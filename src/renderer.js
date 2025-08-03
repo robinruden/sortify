@@ -31,7 +31,7 @@ function applyFilter() {
 
 window.applyFilter = applyFilter;
 
-// Toggle hamburger menu on click
+// Toggle hamburger menu on clickeydown
 document.addEventListener('DOMContentLoaded', () => {
   initHamburger({ toggleId: 'hamburger-toggle', menuId: 'myLinks' });
   initResultsNavigation(player);

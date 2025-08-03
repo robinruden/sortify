@@ -112,12 +112,28 @@ function initResultsNavigation(player, volumeSlider) {
         selectedIndex =
           selectedIndex < items.length - 1 ? selectedIndex + 1 : 0;
         updateSelection(items);
+          // auto-play the newly selected file
+        {
+          const item = items[selectedIndex];
+          const vol  = volumeSlider
+                     ? parseInt(volumeSlider.value, 10) / 100
+                     : 1;
+          player.toggle(item.dataset.path, item, vol);
+        }
         break;
       case 'ArrowUp':
         e.preventDefault();
         selectedIndex =
           selectedIndex > 0 ? selectedIndex - 1 : items.length - 1;
         updateSelection(items);
+          // auto-play the newly selected file
+        {
+          const item = items[selectedIndex];
+          const vol  = volumeSlider
+                     ? parseInt(volumeSlider.value, 10) / 100
+                     : 1;
+          player.toggle(item.dataset.path, item, vol);
+        }
         break;
       case ' ':
       case 'Spacebar':
