@@ -59,7 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const volumeSlider  = document.getElementById('volume-slider');
   const volumeLabel   = document.getElementById('volume-val');
   const volumeVal     = document.getElementById('volume-val')
- 
+  const resultsFrame      = document.getElementById('results-frame');
+  const startupPlaceholder= document.getElementById('startup-placeholder');
+
+   function showPlaceholder() {
+    resultsFrame.classList.add('hidden');
+    startupPlaceholder.classList.remove('hidden');
+  }
+  function showResults() {
+    startupPlaceholder.classList.add('hidden');
+    resultsFrame.classList.remove('hidden');
+  }
+
   // 1) Slider & filter UI hookups
   noUiSlider.create(bpmSlider, {
     start: [0,300], connect: true,
@@ -111,8 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   clearDb.addEventListener('click', async () => {
     const res = await ipcRenderer.invoke('clear-database');
-    if (!res.error) loadAllTracks();
-  });
+   if (!res.error) {
+    // remove the “ran before” flag so that
+    // on next reload you’ll see the placeholder
+    localStorage.removeItem('hasRunBefore');
+    // and swap to the “please drag files” UI
+    showPlaceholder();
+  }
+});
 
   // 2) Delegate preview toggle
   output.addEventListener('contextmenu', e => {
@@ -222,6 +239,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  
+
+
   // Volume slider
   volumeSlider.addEventListener('input', e => {
     const v = parseInt(volumeSlider.value, 10) / 100;
@@ -229,6 +249,29 @@ document.addEventListener('DOMContentLoaded', () => {
     player.setVolume(v);
   });
 
-  // Initial load
-  loadAllTracks();
+  // on first run (no flag in localStorage) show the placeholder
+  if (!localStorage.getItem('hasRunBefore')) {
+    showPlaceholder();
+  } else {
+    showResults();
+    loadAllTracks();
+  }
+    // hook into the drop handler you already have:
+  window.addEventListener('drop', e => {
+    e.preventDefault();
+
+    // mark that we've now run once
+    localStorage.setItem('hasRunBefore', 'true');
+    showResults();
+
+    // then continue your existing logic…
+    showSpinnerOverlay(0);
+    const folderPaths = Array.from(e.dataTransfer.files)
+                             .map(f => f.path);
+    ipcRenderer.invoke('drop-and-analyze-folders-with-progress', folderPaths)
+      .then(({ analyzed }) => {
+        loadAllTracks();
+        showDoneOverlay(analyzed.length);
+      });
+  });
 });
