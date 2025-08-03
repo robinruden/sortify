@@ -36,7 +36,7 @@ function createWindow() {
   });
 
   // Open DevTools so you can see any errors in packaged mode
-  mainWindow.webContents.openDevTools({ mode: 'detach' });
+  // mainWindow.webContents.openDevTools({ mode: 'detach' });
 
   // Load your UI
   mainWindow.loadFile(path.join(__dirname, 'index.html'))
