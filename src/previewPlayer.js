@@ -1,30 +1,29 @@
 // src/previewPlayer.js
-const { type } = require('os');
+/* const { type } = require('os'); */
 const { pathToFileURL } = require('url');
+
+
 
 class PreviewPlayer {
   constructor() {
-    this.audio = null;
-    this.currentEl = null;
-    this.volume = 0.7; 
+    this.audio      = null;
+    this.currentEl  = null;
+    this.volume     = 0.7; 
+    /* console.log('PreviewPlayer initialized with default volume:', this.volume); */
   }
 
   toggle(filePath, element, volume) {
     const url = pathToFileURL(filePath).href;
-
-    // If clicking the same file, stop
-    if (this.audio && this.audio.src === url) {
-      return this.stop();
-    }
-    // Otherwise stop any existing and start new
+    if (this.audio && this.audio.src === url) return this.stop();
     this.stop();
 
-    // Use passed-in volume if given, otherwise use stored this.volume
-    const vol = (typeof volume === 'number') ? volume : this.volume;
+    if (typeof volume === 'number') this.volume = volume;
 
     this.audio = new Audio(url);
-    this.audio.volume = vol;
-    this.volume = vol;   // Remember for next toggle
+    this.audio.volume = this.volume
+
+    console.log(`🔊 Playing preview: ${filePath} at volume ${this.volume}`);
+   
 
     this.currentEl = element;
     const icon = document.createElement('span');
@@ -32,7 +31,7 @@ class PreviewPlayer {
     icon.className = 'preview-icon';
     element.prepend(icon);
 
-    this.audio.play().catch(err => console.error('Preview failed:', err));
+    this.audio.play().catch(console.error);
   }
 
   stop() {
@@ -46,10 +45,11 @@ class PreviewPlayer {
     this.audio = null;
   }
 
-  setVolume(volume) {
-    this.volume = volume;
-    if (this.audio) this.audio.volume = volume;
+   setVolume(vol) {
+    this.volume = vol;
+    console.log(`🔊 Volume set to ${vol}`);
+    if (this.audio) this.audio.volume = vol;
   }
-}
 
+}
 module.exports = PreviewPlayer;
