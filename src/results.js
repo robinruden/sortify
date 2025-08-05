@@ -103,8 +103,12 @@ function initResultsNavigation(player, volumeSlider) {
       return;
     }
     
-    const items = Array.from(output.querySelectorAll('.file-item'));
+    const items = Array.from(
+      document.getElementById('output').querySelectorAll('.file-item')
+    );
     if (!items.length) return;
+
+    /* const vol = parseInt(volumeSlider.value, 10) / 100; */
 
     switch (e.key) {
       case 'ArrowDown':
@@ -121,6 +125,7 @@ function initResultsNavigation(player, volumeSlider) {
           player.toggle(item.dataset.path, item, vol);
         }
         break;
+
       case 'ArrowUp':
         e.preventDefault();
         selectedIndex =
