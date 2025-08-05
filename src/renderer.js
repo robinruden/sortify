@@ -75,6 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
   initHamburger({ toggleId: 'hamburger-toggle', menuId: 'myLinks' });
   initResultsNavigation(player, volumeSlider);
 
+   // on first run (no flag in localStorage) show the placeholder
+  if (!localStorage.getItem('hasRunBefore')) {
+    showPlaceholder();
+  } else {
+    showResults();
+    loadAllTracks();
+  }
+
 
   // 1) Slider & filter UI hookups
   noUiSlider.create(bpmSlider, {
@@ -247,13 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  // on first run (no flag in localStorage) show the placeholder
-  if (!localStorage.getItem('hasRunBefore')) {
-    showPlaceholder();
-  } else {
-    showResults();
-    loadAllTracks();
-  }
+ 
     // hook into the drop handler you already have:
   window.addEventListener('drop', e => {
     e.preventDefault();
