@@ -62,10 +62,7 @@ function initResultsNavigation(player, volumeSlider) {
     selectedIndex = items.indexOf(item);
     updateSelection(items);
  
-   const vol = volumeSlider
-      ? parseInt(volumeSlider.value, 10) / 100
-      : 1;
-    player.toggle(item.dataset.path, item, vol);
+   const vol = parseInt(volumeSlider.value, 10) / 100;
   });
   
   // 1) Context‐menu / right‐click to toggle preview
@@ -73,7 +70,7 @@ function initResultsNavigation(player, volumeSlider) {
     const item = e.target.closest('.file-item');
     if (!item) return;
 
-  // 2) Keyboard navigation (ArrowUp, ArrowDown, Space)
+  
 
    
 
@@ -103,52 +100,36 @@ function initResultsNavigation(player, volumeSlider) {
       return;
     }
     
-    const items = Array.from(
-      document.getElementById('output').querySelectorAll('.file-item')
-    );
+     const items = Array.from(output.querySelectorAll('.file-item'));
+    
     if (!items.length) return;
 
-    /* const vol = parseInt(volumeSlider.value, 10) / 100; */
+    const vol = parseInt(volumeSlider.value, 10) / 100;
 
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        selectedIndex =
-          selectedIndex < items.length - 1 ? selectedIndex + 1 : 0;
-        updateSelection(items);
-          // auto-play the newly selected file
-        {
-          const item = items[selectedIndex];
-          const vol  = volumeSlider
-                     ? parseInt(volumeSlider.value, 10) / 100
-                     : 1;
-          player.toggle(item.dataset.path, item, vol);
-        }
+        // …update selectedIndex…
+        player.toggle(items[selectedIndex].dataset.path,
+                      items[selectedIndex],
+                      vol);
         break;
 
       case 'ArrowUp':
         e.preventDefault();
-        selectedIndex =
-          selectedIndex > 0 ? selectedIndex - 1 : items.length - 1;
-        updateSelection(items);
-          // auto-play the newly selected file
-        {
-          const item = items[selectedIndex];
-          const vol  = volumeSlider
-                     ? parseInt(volumeSlider.value, 10) / 100
-                     : 1;
-          player.toggle(item.dataset.path, item, vol);
-        }
+        // …update selectedIndex…
+        player.toggle(items[selectedIndex].dataset.path,
+                      items[selectedIndex],
+                      vol);
         break;
+
       case ' ':
       case 'Spacebar':
         e.preventDefault();
         if (selectedIndex >= 0) {
-          const item = items[selectedIndex];
-          const vol = volumeSlider
-            ? parseInt(volumeSlider.value, 10) / 100
-            : 1;
-          player.toggle(item.dataset.path, item, vol);
+          player.toggle(items[selectedIndex].dataset.path,
+                        items[selectedIndex],
+                        vol);
         }
         break;
     }

@@ -30,17 +30,7 @@ function applyFilter() {
 }
 
 window.applyFilter = applyFilter;
-
 // Toggle hamburger menu on clickeydown
-document.addEventListener('DOMContentLoaded', () => {
-  initHamburger({ toggleId: 'hamburger-toggle', menuId: 'myLinks' });
-  initResultsNavigation(player);
-  // Other initialization code can go here
-  // For example, setting up event listeners, loading initial data, etc.
-  
-  // Load all tracks initially
-  
-})
 
 document.addEventListener('DOMContentLoaded', () => {
   const output        = document.getElementById('output');
@@ -61,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const volumeVal     = document.getElementById('volume-val')
   const resultsFrame      = document.getElementById('results-frame');
   const startupPlaceholder= document.getElementById('startup-placeholder');
+  const volumeToggle = document.getElementById('volume-toggle');
+  const volumeContainer = document.getElementById('volume-container');
+
+  
 
    function showPlaceholder() {
     resultsFrame.classList.add('hidden');
@@ -70,6 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
     startupPlaceholder.classList.add('hidden');
     resultsFrame.classList.remove('hidden');
   }
+
+    // Volume slider
+  volumeSlider.addEventListener('input', e => {
+    const v = parseInt(volumeSlider.value, 10) / 100;
+    volumeVal.textContent = volumeSlider.value + '%';
+    player.setVolume(v);
+  });
+
+  initHamburger({ toggleId: 'hamburger-toggle', menuId: 'myLinks' });
+  initResultsNavigation(player, volumeSlider);
+
 
   // 1) Slider & filter UI hookups
   noUiSlider.create(bpmSlider, {
@@ -141,8 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Volume toggle at bottom: show/hide fader
-  const volumeToggle = document.getElementById('volume-toggle');
-  const volumeContainer = document.getElementById('volume-container');
+  
   volumeToggle.addEventListener('click', () => {
     volumeContainer.classList.toggle('hidden');
   });
@@ -242,12 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
 
-  // Volume slider
-  volumeSlider.addEventListener('input', e => {
-    const v = parseInt(volumeSlider.value, 10) / 100;
-    volumeVal.textContent = volumeSlider.value + '%';
-    player.setVolume(v);
-  });
 
   // on first run (no flag in localStorage) show the placeholder
   if (!localStorage.getItem('hasRunBefore')) {
@@ -275,3 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 });
+
+
+
+
+
+
