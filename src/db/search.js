@@ -1,6 +1,6 @@
 //search.js
 
-const db = require('./init'); // or wherever your DB connection is
+const db = require('./init'); //DB connection
 
 function searchTracks({ bpmMin, bpmMax, key, format, tags }) {
   let query = 'SELECT * FROM tracks WHERE 1=1';
