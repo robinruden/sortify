@@ -74,6 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   volumeSlider.addEventListener('keydown', (event) => {
+   
+      event.preventDefault(); // Prevent all key input (arrows, space, etc.)
+    }
+  );
+
+  volumeVal.addEventListener('keydown', (event) => {
+    event.preventDefault(); // Prevent all key input (arrows, space, etc.)
+  });
+
+
+  volumeToggle.addEventListener('keydown', (event) => {
     event.preventDefault(); // Prevent all key input (arrows, space, etc.)
   });
 

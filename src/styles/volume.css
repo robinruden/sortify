@@ -37,6 +37,10 @@
     background: transparent;
 } */
 
+#volume-slider {
+    outline: none;
+}
+
 #volume-val{
     display: none;
 }
