@@ -1,5 +1,10 @@
+/** 
+*@param {Function} applyFilter 
+*/
+
 class MusicKeySelector {
-            constructor() {
+            constructor(applyFilter){
+                this.applyFilter = applyFilter;
                 this.selectedNote = null;
                 this.selectedMode = null;
                 this.init();
@@ -36,8 +41,8 @@ class MusicKeySelector {
                 // Add selection to clicked button
                 button.classList.add('selected');
                 this.selectedNote = button.dataset.note;
-
                 this.updateDisplay();
+                if(this.applyFilter) this.applyFilter();
             }
 
             selectMode(button) {
@@ -49,8 +54,8 @@ class MusicKeySelector {
                 // Add selection to clicked button
                 button.classList.add('selected');
                 this.selectedMode = button.dataset.mode;
-
                 this.updateDisplay();
+                if(this.applyFilter) this.applyFilter();
             }
 
             updateDisplay() {
@@ -66,6 +71,9 @@ class MusicKeySelector {
         }
 
         // Initialize the music key selector when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
+       /*  document.addEventListener('DOMContentLoaded', () => {
             new MusicKeySelector();
-        });
+        }); */
+
+
+        module.exports = { MusicKeySelector };

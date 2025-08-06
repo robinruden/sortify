@@ -1,20 +1,25 @@
 // src/filters.js
 const { mapLength } = require('./utils/lengthMapper.js');
 
+
 /**
  * Read all the UI controls and return a “filters” object.
  */
-function getFilters(DOM) {
-  const raw = parseFloat(DOM.lengthSlider.value);
-  const max = parseFloat(DOM.lengthSlider.max);
+function getFilters({ search, bpmSlider, bpmExact, lengthSlider }) {
+  const keyBtn = document.querySelector('.note-button.selected');
+  const scaleBtn = document.querySelector('.mode-button.selected');
+  const raw = parseFloat(lengthSlider.value);
+  const max = parseFloat(lengthSlider.max);
   const lengthMax = mapLength(raw, max, 12)
 
   return {
-    name:     DOM.search.value.trim().toLowerCase(),
-    key:      DOM.key.value.trim().toLowerCase(),
-    scale:    DOM.scale.value.trim().toLowerCase(),
-    bpmRange: DOM.bpmSlider.noUiSlider.get().map(v => parseInt(v, 10)),
-    exactBpm: parseInt(DOM.bpmExact.value, 10),
+    name:     search.value.trim().toLowerCase(),
+    key:     keyBtn ? keyBtn.dataset.note : null,
+    scale:   scaleBtn ? scaleBtn.dataset.mode : null,
+   /*  key:      key.value.trim().toLowerCase(), */
+    /* scale:    scale.value.trim().toLowerCase(), */
+    bpmRange: bpmSlider.noUiSlider.get().map(v => parseInt(v, 10)),
+    exactBpm: parseInt(bpmExact.value, 10),
     lengthMax
   };
 }

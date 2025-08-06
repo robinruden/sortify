@@ -1,13 +1,15 @@
 // src/renderer.js
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, app } = require('electron');
 const PreviewPlayer   = require('./previewPlayer.js');
 const { getFilters, matches } = require('./filters.js');
 const { initHamburger } = require('./hamburger.js');
 const { renderFileList, initResultsNavigation } = require ('./results.js');
 const { mapLength } = require('./utils/lengthMapper.js');
+const { MusicKeySelector } = require('./keySelector.js');
 
 let allAnalyzedFiles = [];
 const player = new PreviewPlayer();
+/* const keySelector = new MusicKeySelector(); */
 
 // Load from DB and then filter
 async function loadAllTracks() {
@@ -53,6 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const volumeToggle = document.getElementById('volume-toggle');
   const volumeContainer = document.getElementById('volume-container');
 
+
+  new MusicKeySelector(applyFilter)
   // Volume slider: set initial value
   function showPlaceholder() {
     resultsFrame.classList.add('hidden');
