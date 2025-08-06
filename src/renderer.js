@@ -70,6 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const v = parseInt(volumeSlider.value, 10) / 100;
     volumeVal.textContent = volumeSlider.value + '%';
     player.setVolume(v);
+    
+  });
+
+  volumeSlider.addEventListener('keydown', (event) => {
+    event.preventDefault(); // Prevent all key input (arrows, space, etc.)
   });
 
   initHamburger({ toggleId: 'hamburger-toggle', menuId: 'myLinks' });
