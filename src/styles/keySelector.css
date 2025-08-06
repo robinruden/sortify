@@ -1,0 +1,89 @@
+.key-scale-container {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .note-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .mode-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .note-button {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background-color: #f9fafb;
+            color: #374151;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .note-button:hover {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .note-button.selected {
+            background-color: #dbeafe;
+            border-color: #93c5fd;
+            color: #1e40af;
+        }
+
+        .mode-button {
+            flex: 1;
+            height: 48px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background-color: #f9fafb;
+            color: #374151;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mode-button:hover {
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .mode-button.selected {
+            background-color: #dbeafe;
+            border-color: #93c5fd;
+            color: #1e40af;
+        }
+
+        .selected-key {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .selected-key.visible {
+            opacity: 1;
+        }
