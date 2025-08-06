@@ -54,9 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const volumeToggle = document.getElementById('volume-toggle');
   const volumeContainer = document.getElementById('volume-container');
 
-  
-
-   function showPlaceholder() {
+  // Volume slider: set initial value
+  function showPlaceholder() {
     resultsFrame.classList.add('hidden');
     startupPlaceholder.classList.remove('hidden');
   }
@@ -65,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resultsFrame.classList.remove('hidden');
   }
 
-    // Volume slider
+  // Volume slider
   volumeSlider.addEventListener('input', e => {
     const v = parseInt(volumeSlider.value, 10) / 100;
     volumeVal.textContent = volumeSlider.value + '%';
@@ -73,20 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
   });
 
+  //Prevent all key input on the volume slider
   volumeSlider.addEventListener('keydown', (event) => {
-   
-      event.preventDefault(); // Prevent all key input (arrows, space, etc.)
-    }
-  );
-
-  volumeVal.addEventListener('keydown', (event) => {
     event.preventDefault(); // Prevent all key input (arrows, space, etc.)
   });
 
-
-  volumeToggle.addEventListener('keydown', (event) => {
-    event.preventDefault(); // Prevent all key input (arrows, space, etc.)
-  });
 
   initHamburger({ toggleId: 'hamburger-toggle', menuId: 'myLinks' });
   initResultsNavigation(player, volumeSlider);
@@ -266,14 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
       showSpinnerOverlay(percent);
     }
   });
-
   
 
-
-
- 
     // hook into the drop handler you already have:
-  window.addEventListener('drop', e => {
+    window.addEventListener('drop', e => {
     e.preventDefault();
 
     // mark that we've now run once
