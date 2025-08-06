@@ -1,5 +1,5 @@
 // src/renderer.js
-const { ipcRenderer, app } = require('electron');
+const { ipcRenderer} = require('electron');
 const PreviewPlayer   = require('./previewPlayer.js');
 const { getFilters, matches } = require('./filters.js');
 const { initHamburger } = require('./hamburger.js');
@@ -21,8 +21,8 @@ async function loadAllTracks() {
 function applyFilter() {
   const filters  = getFilters({
     search:       document.getElementById('search'),
-    key:          document.getElementById('key'),
-    scale:        document.getElementById('scale'),
+    /* key:          document.getElementById('key'), */
+    /* scale:        document.getElementById('scale'), */
     bpmSlider:    document.getElementById('bpm-slider'),
     bpmExact:     document.getElementById('bpmExact'),
     lengthSlider: document.getElementById('max-length-slider'),
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const volumeContainer = document.getElementById('volume-container');
 
 
-  new MusicKeySelector(applyFilter)
+  
   // Volume slider: set initial value
   function showPlaceholder() {
     resultsFrame.classList.add('hidden');
@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initHamburger({ toggleId: 'hamburger-toggle', menuId: 'myLinks' });
   initResultsNavigation(player, volumeSlider);
+  new MusicKeySelector(applyFilter);
 
    // on first run (no flag in localStorage) show the placeholder
   if (!localStorage.getItem('hasRunBefore')) {
@@ -126,13 +127,20 @@ document.addEventListener('DOMContentLoaded', () => {
   
   applyFilter();
 });
-  ['search','key','scale'].forEach(id =>
+  /* ['search'].forEach(id =>
     document.getElementById(id).addEventListener('input', applyFilter)
-  );
+  ); */
+  document.getElementById('search')
+    .addEventListener('input', applyFilter);
+  
   resetFilters.addEventListener('click', () => {
-    document.getElementById('search').value = '';
-    document.getElementById('key').value    = '';
-    document.getElementById('scale').value  = '';
+    /* document.getElementById('search').value = ''; */
+    /* document.getElementById('scale').value  = ''; */
+
+document.querySelectorAll('.note-button.selected')
+   .forEach(btn => btn.classList.remove('selected'));
+ document.querySelectorAll('.mode-button.selected')
+   .forEach(btn => btn.classList.remove('selected'));
     bpmSlider.noUiSlider.set([0,300]);
     bpmExact.value = '';
     document.querySelector('input[name="bpm-mode"][value="range"]').checked = true;
@@ -262,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
 
     // hook into the drop handler you already have:
-    window.addEventListener('drop', e => {
+  /*   window.addEventListener('drop', e => {
     e.preventDefault();
 
     // mark that we've now run once
@@ -278,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadAllTracks();
         showDoneOverlay(analyzed.length);
       });
-  });
+  }); */
 });
 
 

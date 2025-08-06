@@ -1,5 +1,5 @@
 /** 
-*@param {Function} applyFilter 
+* @param {Function} applyFilter 
 */
 
 class MusicKeySelector {
@@ -34,6 +34,7 @@ class MusicKeySelector {
 
             selectNote(button) {
                 // Remove previous selection
+                console.log('🎵 Note selected:', button.dataset.note);
                 document.querySelectorAll('.note-button').forEach(btn => {
                     btn.classList.remove('selected');
                 });
@@ -42,10 +43,14 @@ class MusicKeySelector {
                 button.classList.add('selected');
                 this.selectedNote = button.dataset.note;
                 this.updateDisplay();
-                if(this.applyFilter) this.applyFilter();
+                if(this.applyFilter) {
+                    console.log('🔄 Calling applyFilter...'); 
+                    this.applyFilter();
+                }
             }
 
             selectMode(button) {
+                console.log('🎼 Mode selected:', button.dataset.mode); 
                 // Remove previous selection
                 document.querySelectorAll('.mode-button').forEach(btn => {
                     btn.classList.remove('selected');
@@ -55,7 +60,10 @@ class MusicKeySelector {
                 button.classList.add('selected');
                 this.selectedMode = button.dataset.mode;
                 this.updateDisplay();
-                if(this.applyFilter) this.applyFilter();
+                if(this.applyFilter) {
+                    console.log('🔄 Calling applyFilter...');
+                    this.applyFilter();
+                }
             }
 
             updateDisplay() {
@@ -69,11 +77,6 @@ class MusicKeySelector {
                 }
             }
         }
-
-        // Initialize the music key selector when the page loads
-       /*  document.addEventListener('DOMContentLoaded', () => {
-            new MusicKeySelector();
-        }); */
 
 
         module.exports = { MusicKeySelector };
