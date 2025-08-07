@@ -270,7 +270,7 @@ document.querySelectorAll('.note-button.selected')
   
 
     // hook into the drop handler you already have:
-  /*   window.addEventListener('drop', e => {
+    window.addEventListener('drop', e => {
     e.preventDefault();
 
     // mark that we've now run once
@@ -286,7 +286,7 @@ document.querySelectorAll('.note-button.selected')
         loadAllTracks();
         showDoneOverlay(analyzed.length);
       });
-  }); */
+  });
 });
 
 

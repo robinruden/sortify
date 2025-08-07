@@ -8,6 +8,10 @@ const { mapLength } = require('./utils/lengthMapper.js');
 function getFilters({ search, bpmSlider, bpmExact, lengthSlider }) {
   const keyBtn = document.querySelector('.note-button.selected');
   /* console.log('🔍 Key button:', keyBtn); */
+   const keyValues = keyBtn
+    ? keyBtn.dataset.note.split(',').map(s => s.trim())
+    : [];
+    
   const scaleBtn = document.querySelector('.mode-button.selected');
 
   /* console.log('🔍 Filter debug:', {
@@ -23,7 +27,8 @@ function getFilters({ search, bpmSlider, bpmExact, lengthSlider }) {
 
   return {
     name:     search.value.trim().toLowerCase(),
-    key:     keyBtn ? keyBtn.dataset.note : null,
+    /* key:     keyValues ? keyValues.dataset.note : null, */
+    keyValues,
     scale:   scaleBtn ? scaleBtn.dataset.mode : null,
    /*  key:      key.value.trim().toLowerCase(), */
     /* scale:    scale.value.trim().toLowerCase(), */
@@ -36,12 +41,21 @@ function getFilters({ search, bpmSlider, bpmExact, lengthSlider }) {
 /**
  * Return true if `file` passes all of the given filters.
  */
-function matches(file, { name, key, scale, bpmRange, exactBpm, lengthMax }) {
+function matches(file, filters) {
+
+const {
+  name, 
+  keyValues, 
+  scale, 
+  bpmRange, 
+  exactBpm, 
+  lengthMax
+} = filters;
+
   // lowercase the filename
   const filename = file.path.split(/[/\\]/).pop().toLowerCase();
 
   // case‐insensitive search
- /*  if (!filename.includes(name)) return false; */
  if (name) {
    const terms = name.split(/\s+/).filter(t => t.length);
     if (!terms.every(term => filename.includes(term))) {
@@ -51,16 +65,23 @@ function matches(file, { name, key, scale, bpmRange, exactBpm, lengthMax }) {
   
 
   // key/scale also case‐insensitive
-  if (key && (file.key?.toLowerCase() !== key)) return false;
+ /*  if (key && (file.key?.toLowerCase() !== key)) return false; */
+  if (keyValues.length) {
+    const fileKey = file.key.toLowerCase();
+    if (!keyValues.includes(fileKey)) {
+      return false;
+    }
+  }
   if (scale && (file.scale?.toLowerCase() !== scale)) return false;
 
+  // BPM filtering
   const [bpmMin, bpmMax] = bpmRange;
   if (!isNaN(exactBpm)) {
     if (file.bpm == null || Math.round(file.bpm) !== exactBpm) return false;
   } else {
     if (file.bpm != null && (file.bpm < bpmMin || file.bpm > bpmMax)) return false;
   }
-
+  // length filtering
   if (file.duration != null && file.duration > lengthMax) return false;
 
   return true;

@@ -19,7 +19,7 @@ function extractKey(audioVector, essentia) {
   try {
     // Run Essentia key extraction
     const result = essentia.KeyExtractor(audioVector);
-    /* console.log('🔍 KeyExtractor raw result:', result); */
+    console.log('🔍 KeyExtractor raw result:', result);
 
     // Prepare outputs
     let keyIndex = null;
@@ -29,10 +29,10 @@ function extractKey(audioVector, essentia) {
     // If Essentia returns a string key
     if (typeof result.key === 'string') {
       noteName = result.key;
-      // Match against NOTE_NAMES (use only the first part before slash)
       keyIndex = NOTE_NAMES.findIndex(name => name.split('/')[0] === noteName);
       if (keyIndex === -1) keyIndex = null;
     }
+   
     // Else if it returns a vector/array, find the max index
     else {
       let keyArray = [];
@@ -52,6 +52,7 @@ function extractKey(audioVector, essentia) {
       }
     }
 
+   
     return { keyIndex, scale, noteName };
   } catch (err) {
     console.warn('KeyExtractor failed:', err);

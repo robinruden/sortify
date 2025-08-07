@@ -22,7 +22,7 @@ class PreviewPlayer {
     this.audio = new Audio(url);
     this.audio.volume = this.volume
 
-    console.log(`🔊 Playing preview: ${filePath} at volume ${this.volume}`);
+    /* console.log(`🔊 Playing preview: ${filePath} at volume ${this.volume}`); */
    
 
     this.currentEl = element;
@@ -47,7 +47,7 @@ class PreviewPlayer {
 
    setVolume(vol) {
     this.volume = vol;
-    console.log(`🔊 Volume set to ${vol}`);
+    /* console.log(`🔊 Volume set to ${vol}`); */
     if (this.audio) this.audio.volume = vol;
   }
 

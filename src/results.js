@@ -19,7 +19,7 @@ function renderFileList(files) {
     el.className    = 'file-item';
     el.dataset.path = file.path;
     el.textContent  =
-      `${filename} — Längd: ${durText}, BPM: ${file.bpm?.toFixed(1) ?? '–'}, ` +
+      `${filename} — Length: ${durText}, BPM: ${file.bpm?.toFixed(1) ?? '–'}, ` +
       `${file.key ?? '–'} ${file.scale ?? ''}`;
     el.draggable = true;
 
