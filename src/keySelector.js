@@ -34,37 +34,44 @@ class MusicKeySelector {
 
             selectNote(button) {
                 // Remove previous selection
-                console.log('🎵 Note selected:', button.dataset.note);
-                document.querySelectorAll('.note-button').forEach(btn => {
-                    btn.classList.remove('selected');
-                });
+                /* console.log('🎵 Note selected:', button.dataset.note); */
+                const noteButtons = document.querySelectorAll('.note-button');
+                const already = button.classList.contains('selected');
 
-                // Add selection to clicked button
-                button.classList.add('selected');
-                this.selectedNote = button.dataset.note;
-                this.updateDisplay();
-                if(this.applyFilter) {
-                    console.log('🔄 Calling applyFilter...'); 
-                    this.applyFilter();
+                // clear any previous selection
+                noteButtons.forEach(btn => btn.classList.remove('selected'));
+
+                if (!already) {
+                    // select & store
+                    button.classList.add('selected');
+                    this.selectedNote = button.dataset.note;
+                    } else {
+                    // deselect & clear
+                    this.selectedNote = null;
                 }
+
+                this.updateDisplay();
+                if (this.applyFilter) this.applyFilter();
             }
 
             selectMode(button) {
-                console.log('🎼 Mode selected:', button.dataset.mode); 
+                /* console.log('🎼 Mode selected:', button.dataset.mode);  */
                 // Remove previous selection
-                document.querySelectorAll('.mode-button').forEach(btn => {
-                    btn.classList.remove('selected');
-                });
+                const modeButtons = document.querySelectorAll('.mode-button');
+                const already = button.classList.contains('selected');
 
-                // Add selection to clicked button
+                modeButtons.forEach(btn => btn.classList.remove('selected'));
+
+              if (!already) {
                 button.classList.add('selected');
                 this.selectedMode = button.dataset.mode;
-                this.updateDisplay();
-                if(this.applyFilter) {
-                    console.log('🔄 Calling applyFilter...');
-                    this.applyFilter();
-                }
+            } else {
+                this.selectedMode = null;
             }
+
+                this.updateDisplay();
+                if (this.applyFilter) this.applyFilter();
+    }         
 
             updateDisplay() {
                 const selectedKeyElement = document.getElementById('selected-key');
