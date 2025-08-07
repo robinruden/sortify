@@ -151,6 +151,16 @@ function initResultsNavigation(player, volumeSlider) {
           player.toggle(item.dataset.path, item, vol);
         }
         break;
+         case 'ArrowLeft':
+        e.preventDefault();
+        if (selectedIndex >= 0) {
+          const item = items[selectedIndex];
+          const vol = volumeSlider
+            ? parseInt(volumeSlider.value, 10) / 100
+            : 1;
+          player.toggle(item.dataset.path, item, vol);
+        }
+        break;
     }
   });
 }

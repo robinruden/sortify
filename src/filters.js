@@ -7,14 +7,15 @@ const { mapLength } = require('./utils/lengthMapper.js');
  */
 function getFilters({ search, bpmSlider, bpmExact, lengthSlider }) {
   const keyBtn = document.querySelector('.note-button.selected');
+  /* console.log('🔍 Key button:', keyBtn); */
   const scaleBtn = document.querySelector('.mode-button.selected');
 
-  console.log('🔍 Filter debug:', {
+  /* console.log('🔍 Filter debug:', {
     keyBtn: keyBtn?.dataset.note,
     scaleBtn: scaleBtn?.dataset.mode,
     keyBtnElement: keyBtn,
     scaleBtnElement: scaleBtn
-  });
+  }); */
   
   const raw = parseFloat(lengthSlider.value);
   const max = parseFloat(lengthSlider.max);
