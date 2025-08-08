@@ -51,6 +51,21 @@
     transform: scale(1.1);
 }
 
+.piano-button {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.1s ease, color 0.2s ease;
+}
+
+.piano-button:hover {
+  transform: scale(1.1);
+  color: #3b82f6;
+}
+
 .note-row {
     display: flex;
     gap: 8px;

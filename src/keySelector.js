@@ -13,6 +13,7 @@ class MusicKeySelector {
             init() {
                 this.bindEvents();
                 this.bindClose()
+                this.bindOpen();
             }
 
             bindEvents() {
@@ -40,6 +41,13 @@ class MusicKeySelector {
                     if (container) {
                     container.classList.add('hidden');
                     }
+                });
+            }
+            bindOpen() {
+                const btn = document.getElementById('open-key-modal');
+                if (!btn) return;
+                btn.addEventListener('click', () => {
+                    document.querySelector('.key-scale-container')?.classList.remove('hidden');
                 });
             }
             selectNote(button) {
