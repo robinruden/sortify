@@ -1,4 +1,4 @@
-.window-frame-2 {
+/* .window-frame-2 {
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.9) 0%, 
     rgba(240,248,255,0.8) 30%, 
@@ -16,7 +16,7 @@
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
  
-}
+} */
 
 .window-content-2 {
   padding: 16px;

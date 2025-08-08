@@ -6,7 +6,7 @@
     transform: translate(-50%, -50%);
     margin-top: 0;
     z-index: 9999;
-    width: 18rem;
+    width: 16rem;
     /* grid-column: 1 / span 1; */
    /*  grid-row: 1; */
     background: rgba(255, 255, 255, 0.951);
@@ -65,10 +65,14 @@
   font-size: 1.6rem;
   cursor: pointer;
   transition: transform 0.1s ease;
+
+    /* right: 35%; */
+    position: absolute;
+    z-index: 0;
 }
 
 .piano-button:hover {
-  transform: scale(1.1);
+  transform: scale(1.2);
   
 
 }

@@ -2,7 +2,7 @@
 .hamburger-menu {
   position: relative;
   overflow: visible;
-  z-index: 100000;
+  z-index: 10000000;
 }
 
 .hamburger-toggle {
@@ -57,7 +57,7 @@
   border-radius: 8px;
   padding: 8px 16px;
   margin: 2px 0;
-  width: 100%;
+  /* width: 100%; */
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;

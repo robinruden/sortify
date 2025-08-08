@@ -5,28 +5,29 @@
 #filters {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr;
-  flex-direction: column;
+  /* grid-template-columns: 1fr 1fr 1fr 1; */
+ /*  flex-direction: column; */
   align-items: center;  
   justify-content: center;
+  justify-items: center;
   gap: 0.5rem;
-  padding: 0.5rem;
+  padding: 1.5rem;
   /* justify-items: center; */
   /* align-items: center; */
-  /* height: auto; */
-  width: 3rem;
+  height: 12rem;
+  width: 23rem;
 
   /* border: solid pink; */
 }
 
-/* #filters input[type="text"],
+#filters input[type="text"],
 #filters input[type="number"] {
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.9) 0%, 
     rgba(240,248,255,0.7) 100%);
   border: 1px solid rgba(70,130,180,0.2);
   border-radius: 12px;
-  padding: 10px 14px;
+  padding: 0.3rem 0.9rem;
   font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
   font-size: 12px;
   color: #2c3e50;
@@ -35,23 +36,33 @@
     0 0 0 1px rgba(255,255,255,0.5);
   transition: all 0.2s ease;
  
-} */
-
-.search-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
+/* .search-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: solid pink;
+} */
+
 #search{
-  position: absolute;
+  /* position: absolute; */
   grid-column: 1;
   grid-row: 1;
-  width: 15rem;
-  height: 1.5rem;
+  width: 10rem;
+  height: 1.8rem;
+  margin-left: 1rem;
 
   /* border: solid pink; */
 }
+
+/* #search{
+  grid-column: 1 / span 2;
+  grid-row: 1;
+  width: 19rem;
+  height: 1.5rem;
+} */
 
 #search:focus{
   outline: none;    
@@ -81,7 +92,7 @@
     rgba(220,240,255,0.8) 100%);
   border: 1px solid rgba(70,130,180,0.2);
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 1.3rem;
   font-size: 11px;
   font-weight: 600;
   box-shadow: 
@@ -91,6 +102,10 @@
   transition: all 0.3s ease;
   width: 8rem;
   height: 5rem;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* justify-items: center; */
 }
 
 .filter-section strong {
@@ -115,7 +130,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  /* width: 100%; */
   margin-bottom: 0.5rem;
 
 }
