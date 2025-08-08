@@ -262,10 +262,15 @@ document.querySelectorAll('.note-button.selected')
     }
     if (percent === 100) setTimeout(() => progressCnt.classList.add('hidden'), 1500);
 
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
+    
     // also update overlay %
     if (overlay.style.opacity === '1' && percent < 100) {
       showSpinnerOverlay(percent);
     }
+    
   });
   
 
@@ -285,6 +290,7 @@ document.querySelectorAll('.note-button.selected')
       .then(({ analyzed }) => {
         loadAllTracks();
         showDoneOverlay(analyzed.length);
+        
       });
   });
 });
