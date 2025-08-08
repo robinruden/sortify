@@ -21,6 +21,8 @@
     
   margin: 0 auto;
 
+  z-index: -2;
+
   /* border: solid pink; */
 }
 
@@ -58,7 +60,7 @@
    max-width: 300px; 
   height: 1.8rem;
     justify-self: stretch;
-  z-index: 0;
+  
 
   /* border: solid pink; */
 }
