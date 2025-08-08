@@ -15,8 +15,8 @@
   /* margin-bottom: 20px; */
   /* overflow: hidden; */
   /* height: auto; */
-  height: 100%;
-  /* width: 100%; */
+  height: 56vh;
+  width: 23rem;
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
  
 }
@@ -24,7 +24,7 @@
 
 
 
-.results-container {
+/* .results-container {
   
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.9) 0%, 
@@ -42,18 +42,13 @@
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   margin: 1rem 0;
   
-  /* Responsive container sizing */
- /*  width: 100%; */
- /*  max-width: 100%; */
-  /* min-height: 200px; */
-  /* min-height: 0; */
-  /* height: auto; */
+ 
   height: 100%;
-  /* Flexbox for better content flow */
+  
   display: flex;
   flex-direction: column;
-}
-
+} */
+/* The header of the results container */
 .results-header {
   background: linear-gradient(135deg, 
     rgba(135,206,235,0.9) 0%, 
@@ -68,6 +63,7 @@
   position: relative;
   backdrop-filter: blur(10px);
   flex-shrink: 0; /* Prevent header from shrinking */
+  height: 1rem;
 }
 
 .results-header::before {
@@ -83,16 +79,16 @@
   
 }
 
-.results-content {
+/* .results-content {
   padding: clamp(0.5rem, 2vw, 1rem);
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.1) 0%, 
     rgba(240,248,255,0.05) 100%);
-  flex: 1; /* Take remaining space */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Allow shrinking below content size */
-}
+  min-height: 0;
+} */
 
 #output {
   background: linear-gradient(135deg, 
@@ -103,10 +99,10 @@
   padding: clamp(0.5rem, 1.5vw, 1rem);
   padding-bottom: 4rem; 
   box-sizing: border-box;
-  
+  /* height: 56vh; */
   flex: 1;
-  max-height: 52vh;
-  min-height: 0;
+  max-height: 51vh;
+  /* min-height: 0; */
   /* max-height: calc(100vh - 240px); */
   /* height: auto; */
   overflow-x: hidden;
@@ -166,6 +162,13 @@
 
 /* highlight the “selected” row */
 .file-item.selected {
+  display: flex;
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* align-items:first baseline; */
+  justify-items: flex-start;
+  overflow-x: hidden;
+  padding: 0.5rem;
   background: linear-gradient(
     135deg,
     rgba(200, 230, 255, 0.9) 0%,
@@ -174,6 +177,7 @@
   color: #1e3c72;
   outline: 2px solid rgba(70, 130, 180, 0.7);
   z-index: 1;
+  height: 3vh;
 }
 
 /* .window-frame-filters:last-of-type {
