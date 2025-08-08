@@ -47,6 +47,9 @@
         <input id="search" type="text" placeholder="🔍 Search filename…">  
         <!-- Key and Scale in a container to place them side by side -->
         <div class="key-scale-container">
+          <div class="modal-close-wrapper">
+            <button id="close-key-modal" class="modal-close-button" title="Close">×</button>
+          </div>
            <!-- Flat Notes Row -->
         <div class="note-row" id="flat-notes">
             <!-- <button class="note-button" data-note="db">D♭</button> -->
@@ -79,8 +82,8 @@
         </div>
 
         <!-- Selected Key Display -->
-        <div class="selected-key" id="selected-key">
-            Selected: C Major
+        <div class="selected-key" id="selected-key" hidden>
+            <!-- Selected: C Major -->
         </div>
           <!-- <input class="key" id="key" type="text" placeholder="Key (C)"> -->
           <!-- <input class="scale" id="scale" type="text" placeholder="Scale (Major)"> -->
