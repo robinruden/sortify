@@ -59,7 +59,7 @@
           <!-- <input class="scale" id="scale" type="text" placeholder="Scale (Major)"> -->
         
         
-
+        <div class="bpm-length-row">
         <div class="filter-section-bpm">
           <strong>🎵 BPM CONTROLS</strong><br>
           <div class="bpm-controls">
@@ -87,24 +87,25 @@
           <label for="max-length-slider">Max (s): <span id="length-max-val">∞</span></label><br>
           <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" class="full-width">
         </div>
-      
+        </div>
       <div class="key-scale-container hidden">
           <div class="modal-close-wrapper">
             <button id="close-key-modal" class="modal-close-button" title="Close">×</button>
           </div>
            <!-- Flat Notes Row -->
-        <div class="note-row" id="flat-notes">
-            <!-- <button class="note-button" data-note="db">D♭</button> -->
-            <button class="note-button" data-note="c#,db">C#</button>
-            <!-- <button class="note-button" data-note="eb">E♭</button> -->
-            <button class="note-button" data-note="d#,eb">D#</button>
-            <!-- <button class="note-button" data-note="gb">G♭</button> -->
-            <button class="note-button" data-note="f#,gb">F#</button>
-            <!-- <button class="note-button" data-note="ab">A♭</button> -->
-            <button class="note-button" data-note="g#,ab">G#</button>
-            <!-- <button class="note-button" data-note="ab">B♭</button> -->
-            <button class="note-button" data-note="a#,bb">A#</button>
+        <div class="flat-notes-row">
+        <div class="note-row" id="flat-notes-1">
+            
+          <button class="note-button" data-note="c#,db">C#</button>  
+          <button class="note-button" data-note="d#,eb">D#</button>
         </div>
+        <div class="note-row" id="flat-notes-2" >
+          
+          <button class="note-button" data-note="f#,gb">F#</button>
+          <button class="note-button" data-note="g#,ab">G#</button>
+          <button class="note-button" data-note="a#,bb">A#</button>
+        </div>
+        </div>    
 
         <!-- Natural Notes Row -->
         <div class="note-row" id="natural-notes">

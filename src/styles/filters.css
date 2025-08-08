@@ -4,18 +4,22 @@
 
 #filters {
   position: relative;
-  display: grid;
-  /* grid-template-columns: 1fr 1fr 1fr 1; */
+  display: flex;
+  /* grid-template-columns: 1fr auto; */
+ /*  grid-template-rows: auto auto auto;  */
  /*  flex-direction: column; */
+   flex-direction: column;
   align-items: center;  
   justify-content: center;
-  justify-items: center;
-  gap: 0.5rem;
-  padding: 1.5rem;
+  /* justify-items: center; */
+  gap: 1rem;
+  padding: 1.2rem;
   /* justify-items: center; */
   /* align-items: center; */
-  height: 12rem;
+  height: auto;
   width: auto;
+    
+  margin: 0 auto;
 
   /* border: solid pink; */
 }
@@ -38,21 +42,23 @@
  
 }
 
-/* .search-row {
+.search-row {
   display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border: solid pink;
-} */
+  flex-direction: row;
+  width: 100%;
+ /*  border: solid pink; */
+} 
 
 #search{
   /* position: absolute; */
-  grid-column: 1;
+  /*  */
+  /* grid-column: 1; */
   grid-row: 1;
-  width: 10rem;
+  width: 100%;
+   max-width: 300px; 
   height: 1.8rem;
-  margin-left: 1rem;
+    justify-self: stretch;
+  z-index: 0;
 
   /* border: solid pink; */
 }
@@ -69,19 +75,47 @@
 }
 
 
+.piano-button {
+    grid-column: 2; 
+    grid-row: 1;
+    justify-self: center;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    /* position: absolute; */
+    padding: 0 0.5rem; 
+    margin-left: 1rem;;
+    
+    
+}
 
+.piano-button:hover {
+  transform: scale(1.2);
+  
 
+}
+
+.bpm-length-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  
+  gap: 1rem;
+
+  /* border: solid pink; */
+}
 .filter-section-bpm{
-  grid-column: 1;
-  grid-row: 3;
-  /* width: 100%; */
+  
+  width: 8rem;          
+  
  
 }
 
 .filter-section-length{
-  grid-column: 2;
-  grid-row: 3;
-  /* width: 100%; */
+  width: 8rem;    
 }
 
 .filter-section-bpm,
@@ -92,7 +126,7 @@
     rgba(220,240,255,0.8) 100%);
   border: 1px solid rgba(70,130,180,0.2);
   border-radius: 16px;
-  padding: 1.3rem;
+  padding: 1rem;
   font-size: 11px;
   font-weight: 600;
   box-shadow: 
@@ -100,9 +134,9 @@
     inset 0 1px 0 rgba(255,255,255,0.9);
   backdrop-filter: blur(15px);
   transition: all 0.3s ease;
-  width: 8rem;
-  height: 5rem;
-  /* display: flex; */
+  /* width: 31vw; */
+  height: auto; 
+  min-height: 6rem; /* display: flex; */
   /* justify-content: center; */
   /* align-items: center; */
   /* justify-items: center; */
