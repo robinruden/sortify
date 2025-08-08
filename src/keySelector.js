@@ -12,6 +12,7 @@ class MusicKeySelector {
 
             init() {
                 this.bindEvents();
+                this.bindClose()
             }
 
             bindEvents() {
@@ -31,7 +32,16 @@ class MusicKeySelector {
                     });
                 });
             }
-
+            bindClose() {
+                const btn = document.getElementById('close-key-modal');
+                if (!btn) return;
+                btn.addEventListener('click', () => {
+                    const container = document.querySelector('.key-scale-container');
+                    if (container) {
+                    container.classList.add('hidden');
+                    }
+                });
+            }
             selectNote(button) {
                 // Remove previous selection
                 /* console.log('🎵 Note selected:', button.dataset.note); */
