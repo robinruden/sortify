@@ -45,36 +45,32 @@ class MusicKeySelector {
                     });
                 });
             }
-          bindOpen() {
-    if (!this.openBtn) return;
-    this.openBtn.addEventListener('click', () => {
-      this.container.classList.remove('hidden');
-    });
-  }
+            bindOpen() {
+                if (!this.openBtn) return;
+                this.openBtn.addEventListener('click', () => {
+                this.container.classList.remove('hidden');
+                });
+            }
 
-  bindClose() {
-    const closeBtn = document.getElementById('close-key-modal');
-    if (!closeBtn) return;
-    closeBtn.addEventListener('click', () => {
-      this.container.classList.add('hidden');
-    });
-  }
-  onModalClick(e) {
-    const ignore = e.target.closest('.note-button, .mode-button, #close-key-modal');
-    if (!ignore) {
-      this.container.classList.add('hidden');
-    }
-  }
-             onDocClick(e) {
-    // if modal hidden, nothing to do
-    if (!this.container || this.container.classList.contains('hidden')) return;
-
-    // if click was on the open-btn or inside the modal, do nothing
-    if (this.openBtn.contains(e.target) || this.container.contains(e.target)) return;
-
-    // otherwise it was outside: hide the modal
-    this.container.classList.add('hidden');
-  }
+            bindClose() {
+                const closeBtn = document.getElementById('close-key-modal');
+                if (!closeBtn) return;
+                closeBtn.addEventListener('click', () => {
+                this.container.classList.add('hidden');
+                });
+            }
+            onModalClick(e) {
+                const ignore = e.target.closest('.note-button, .mode-button, #close-key-modal');
+                if (!ignore) {
+                this.container.classList.add('hidden');
+                }
+            }
+            onDocClick(e) {
+                
+                if (!this.container || this.container.classList.contains('hidden')) return;
+                if (this.openBtn.contains(e.target) || this.container.contains(e.target)) return;
+                this.container.classList.add('hidden');
+            }
             selectNote(button) {
                 // Remove previous selection
                 /* console.log('🎵 Note selected:', button.dataset.note); */
@@ -114,7 +110,7 @@ class MusicKeySelector {
 
                 this.updateDisplay();
                 if (this.applyFilter) this.applyFilter();
-    }         
+            }         
 
             updateDisplay() {
                 const selectedKeyElement = document.getElementById('selected-key');
