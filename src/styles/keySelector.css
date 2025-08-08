@@ -1,8 +1,10 @@
 .key-scale-container {
     position: absolute;
     /* top: 1%; */
-    right: 0;
-    margin-top: 0.5rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-top: 0;
     z-index: 9999;
     width: 18rem;
     /* grid-column: 1 / span 1; */
@@ -11,7 +13,7 @@
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    max-width: 17rem;
+    /* max-width: 17rem; */
     
     height: 10rem;
    
@@ -61,15 +63,14 @@
   background: none;
   border: none;
   font-size: 1.6rem;
-  line-height: 1;
-  margin-left: 0.5rem;
   cursor: pointer;
-  transition: transform 0.1s ease, color 0.2s ease;
+  transition: transform 0.1s ease;
 }
 
 .piano-button:hover {
   transform: scale(1.1);
-  color: #3b82f6;
+  
+
 }
 
 .note-row {

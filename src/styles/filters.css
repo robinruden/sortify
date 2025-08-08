@@ -5,19 +5,21 @@
 #filters {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto auto;
+  grid-template-columns: 1fr;
+  flex-direction: column;
+  align-items: center;  
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.5rem;
   /* justify-items: center; */
   /* align-items: center; */
-  height: auto;
-  width: auto;
+  /* height: auto; */
+  width: 3rem;
 
-  border: solid pink;
+  /* border: solid pink; */
 }
 
-#filters input[type="text"],
+/* #filters input[type="text"],
 #filters input[type="number"] {
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.9) 0%, 
@@ -32,16 +34,23 @@
     inset 0 2px 4px rgba(0,0,0,0.05),
     0 0 0 1px rgba(255,255,255,0.5);
   transition: all 0.2s ease;
-  /* backdrop-filter: blur(10px); */
+ 
+} */
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-
-
 #search{
+  position: absolute;
   grid-column: 1;
   grid-row: 1;
   width: 15rem;
   height: 1.5rem;
+
+  /* border: solid pink; */
 }
 
 #search:focus{

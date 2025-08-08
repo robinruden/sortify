@@ -44,10 +44,51 @@
 
     <!-- <div class="window-content"> -->
       <div id="filters">
+        <div class="search-row">
         <input id="search" type="text" placeholder="🔍 Search filename…">  
         <button id="open-key-modal" class="piano-button" title="Select Key">🎹</button>
+        </div>
         <!-- Key and Scale in a container to place them side by side -->
-        <div class="key-scale-container hidden">
+        
+
+        <!-- Selected Key Display -->
+        <div class="selected-key" id="selected-key" hidden>
+            <!-- Selected: C Major -->
+        </div>
+          <!-- <input class="key" id="key" type="text" placeholder="Key (C)"> -->
+          <!-- <input class="scale" id="scale" type="text" placeholder="Scale (Major)"> -->
+        
+        
+
+        <div class="filter-section-bpm">
+          <strong>🎵 BPM CONTROLS</strong><br>
+          <div class="bpm-controls">
+          <label class="bpm-range-button"><input type="radio" name="bpm-mode" value="range" checked> Range</label>
+          <label class="bpm-exact-button"><input type="radio" name="bpm-mode" value="exact"> Exact</label>
+          </div>
+          <!-- Range slider -->
+         
+          <div id="bpm-range-controls">
+            <div id="bpm-slider"></div>
+            <label>Min: <span id="bpm-min-val">0</span></label>
+            <label >Max: <span id="bpm-max-val">300</span></label>
+          </div>
+          <!-- Exact input -->
+          <div id="bpm-exact-controls" class="hidden">
+            <label>Exact BPM:</label>
+            <input id="bpmExact" type="number" min="0" max="300" step="1" placeholder="128">
+          </div>
+        </div>
+
+     
+
+        <div class="filter-section-length">
+          <strong>⏱️ LENGTH</strong><br>
+          <label for="max-length-slider">Max (s): <span id="length-max-val">∞</span></label><br>
+          <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" class="full-width">
+        </div>
+      </div>
+      <div class="key-scale-container hidden">
           <div class="modal-close-wrapper">
             <button id="close-key-modal" class="modal-close-button" title="Close">×</button>
           </div>
@@ -81,43 +122,6 @@
             <button class="mode-button" data-mode="major">Major</button>
             <button class="mode-button" data-mode="minor">Minor</button>
         </div>
-
-        <!-- Selected Key Display -->
-        <div class="selected-key" id="selected-key" hidden>
-            <!-- Selected: C Major -->
-        </div>
-          <!-- <input class="key" id="key" type="text" placeholder="Key (C)"> -->
-          <!-- <input class="scale" id="scale" type="text" placeholder="Scale (Major)"> -->
-        </div>
-
-        <div class="filter-section-bpm">
-          <strong>🎵 BPM CONTROLS</strong><br>
-          <div class="bpm-controls">
-          <label class="bpm-range-button"><input type="radio" name="bpm-mode" value="range" checked> Range</label>
-          <label class="bpm-exact-button"><input type="radio" name="bpm-mode" value="exact"> Exact</label>
-          </div>
-          <!-- Range slider -->
-         
-          <div id="bpm-range-controls">
-            <div id="bpm-slider"></div>
-            <label>Min: <span id="bpm-min-val">0</span></label>
-            <label >Max: <span id="bpm-max-val">300</span></label>
-          </div>
-          <!-- Exact input -->
-          <div id="bpm-exact-controls" class="hidden">
-            <label>Exact BPM:</label>
-            <input id="bpmExact" type="number" min="0" max="300" step="1" placeholder="128">
-          </div>
-        </div>
-
-     
-
-        <div class="filter-section-length">
-          <strong>⏱️ LENGTH</strong><br>
-          <label for="max-length-slider">Max (s): <span id="length-max-val">∞</span></label><br>
-          <input id="max-length-slider" type="range" min="0" max="600" step="0.1" value="600" class="full-width">
-        </div>
-      </div>
     </div>
     <!-- </div> -->
   

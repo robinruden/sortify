@@ -3,17 +3,17 @@
 }
 
 
-.full-width {
+/* .full-width {
   width: 100%;
-}
+} */
 
-.wrapper {
+/* .wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   
-}
+} */
 
 
 
@@ -24,11 +24,11 @@ body, html {
   
   box-sizing: border-box;
  margin: 0;
- /* padding: 0.7rem; */
+
  height: 100vh;
  width: 100vw;
  overflow: hidden;
- gap: 0.5rem;
+ gap: 1rem;
  
 }
 
@@ -38,10 +38,10 @@ body {
   padding: 0.7rem;
   background: radial-gradient(ellipse at center, #87ceeb 0%, #4682b4 30%, #1e3c72 100%);
   
-  /* box-sizing: border-box; */
+  
   color: #2c3e50;
 
-  /* border: 1px solid #ff9bb3; */
+
 }
 
 
@@ -59,13 +59,12 @@ body {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   padding: 0;
-  /* margin-bottom: 20px; */
+  
   overflow: hidden;
   height: auto;
   width: 23rem;
   width: 100%;
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
- 
 }
 
 
@@ -119,15 +118,6 @@ input[type="radio"] {
 
 
 
-
-
-
-
-
-
-
-
-
 /* Utility class to hide elements */
 .hidden {
   display: none !important;
@@ -164,7 +154,6 @@ input[type="radio"] {
 .file-item:active {
   transform: translateX(2px);
 }
-
 
 
 /* Labels */
@@ -210,7 +199,6 @@ strong {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
-
 
 
 .control-btn {
