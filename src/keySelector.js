@@ -5,8 +5,13 @@
 class MusicKeySelector {
             constructor(applyFilter){
                 this.applyFilter = applyFilter;
+                this.container   = document.querySelector('.key-scale-container');
+                this.openBtn     = document.getElementById('open-key-modal');
                 this.selectedNote = null;
                 this.selectedMode = null;
+                this.onDocClick  = this.onDocClick.bind(this);
+                this.onModalClick = this.onModalClick.bind(this);
+
                 this.init();
             }
 
@@ -14,6 +19,13 @@ class MusicKeySelector {
                 this.bindEvents();
                 this.bindClose()
                 this.bindOpen();
+
+                document.addEventListener('click', this.onDocClick);
+
+                // catch clicks inside the modal
+    if (this.container) {
+      this.container.addEventListener('click', this.onModalClick);
+    }
             }
 
             bindEvents() {
@@ -33,23 +45,36 @@ class MusicKeySelector {
                     });
                 });
             }
-            bindClose() {
-                const btn = document.getElementById('close-key-modal');
-                if (!btn) return;
-                btn.addEventListener('click', () => {
-                    const container = document.querySelector('.key-scale-container');
-                    if (container) {
-                    container.classList.add('hidden');
-                    }
-                });
-            }
-            bindOpen() {
-                const btn = document.getElementById('open-key-modal');
-                if (!btn) return;
-                btn.addEventListener('click', () => {
-                    document.querySelector('.key-scale-container')?.classList.remove('hidden');
-                });
-            }
+          bindOpen() {
+    if (!this.openBtn) return;
+    this.openBtn.addEventListener('click', () => {
+      this.container.classList.remove('hidden');
+    });
+  }
+
+  bindClose() {
+    const closeBtn = document.getElementById('close-key-modal');
+    if (!closeBtn) return;
+    closeBtn.addEventListener('click', () => {
+      this.container.classList.add('hidden');
+    });
+  }
+  onModalClick(e) {
+    const ignore = e.target.closest('.note-button, .mode-button, #close-key-modal');
+    if (!ignore) {
+      this.container.classList.add('hidden');
+    }
+  }
+             onDocClick(e) {
+    // if modal hidden, nothing to do
+    if (!this.container || this.container.classList.contains('hidden')) return;
+
+    // if click was on the open-btn or inside the modal, do nothing
+    if (this.openBtn.contains(e.target) || this.container.contains(e.target)) return;
+
+    // otherwise it was outside: hide the modal
+    this.container.classList.add('hidden');
+  }
             selectNote(button) {
                 // Remove previous selection
                 /* console.log('🎵 Note selected:', button.dataset.note); */

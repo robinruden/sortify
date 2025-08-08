@@ -1,14 +1,20 @@
 .key-scale-container {
-    position: relative;
-    grid-column: 1 / span 1;
-    grid-row: 1;
-    background: white;
+    position: absolute;
+    /* top: 1%; */
+    right: 0;
+    margin-top: 0.5rem;
+    z-index: 9999;
+    width: 18rem;
+    /* grid-column: 1 / span 1; */
+   /*  grid-row: 1; */
+    background: rgba(255, 255, 255, 0.951);
     border-radius: 12px;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     max-width: 17rem;
-    width: auto;
+    
     height: 10rem;
+   
    
 }
 
