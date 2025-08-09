@@ -128,35 +128,11 @@ input[type="radio"] {
 
 
 /* File list */
-.file-item {
-  padding: 8px 12px;
-  font-size: 12px;
-  font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.8) 0%, 
-    rgba(240,248,255,0.6) 100%);
-  margin-bottom: 2px;
-  cursor: pointer;
-  user-select: none;
-  border: 1px solid rgba(70,130,180,0.1);
-  border-radius: 12px;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(10px);
-}
 
-.file-item:hover {
-  background: linear-gradient(135deg, 
-    rgba(135,206,235,0.4) 0%, 
-    rgba(70,130,180,0.3) 100%);
-  color: #1e3c72;
-  transform: translateX(4px);
-  border-color: rgba(70,130,180,0.3);
-  box-shadow: 0 4px 12px rgba(70,130,180,0.15);
-}
 
-.file-item:active {
-  transform: translateX(2px);
-}
+
+
+
 
 
 /* Labels */
@@ -172,36 +148,6 @@ strong {
   font-weight: 600;
 }
 
-/* Frutiger Aero scrollbars */
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.8) 0%, 
-    rgba(240,248,255,0.6) 100%);
-  border-radius: 20px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, 
-    rgba(135,206,235,0.8) 0%, 
-    rgba(70,130,180,0.6) 100%);
-  border-radius: 20px;
-  border: 2px solid rgba(255,255,255,0.2);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, 
-    rgba(135,206,235,1) 0%, 
-    rgba(70,130,180,0.8) 100%);
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
 
 
 .control-btn {

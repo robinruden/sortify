@@ -32,7 +32,7 @@
     rgba(255,255,255,0.9) 0%, 
     rgba(240,248,255,0.7) 100%);
   border: 1px solid rgba(70,130,180,0.2);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 0.3rem 0.9rem;
   font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
   font-size: 12px;
