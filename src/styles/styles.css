@@ -48,30 +48,10 @@ body {
 }
 
 
-.window-frame-filters {
-  background: linear-gradient(135deg, 
-    rgba(255,255,255,0.9) 0%, 
-    rgba(240,248,255,0.8) 30%, 
-    rgba(220,240,255,0.7) 100%);
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 16px;
-  box-shadow: 
-    0 8px 32px rgba(0,0,0,0.15),
-    0 0 0 1px rgba(255,255,255,0.2),
-    inset 0 1px 0 rgba(255,255,255,0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  padding: 0;
-  width: 23rem;
-  /* overflow: hidden; */
-  /* height: auto; */
-  /* width: 100%; */
-  /* width: 100%; */
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-}
 
 
-.button-xp {
+
+/* .button-xp {
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.9) 0%, 
     rgba(220,240,255,0.8) 50%, 
@@ -88,10 +68,10 @@ body {
     0 4px 16px rgba(70,130,180,0.15),
     inset 0 1px 0 rgba(255,255,255,0.8);
   transition: all 0.2s ease;
-}
+} */
 
 
-.button-xp:hover {
+/* .button-xp:hover {
   background: linear-gradient(135deg, 
     rgba(255,255,255,1) 0%, 
     rgba(230,245,255,0.9) 50%, 
@@ -100,14 +80,14 @@ body {
   box-shadow: 
     0 6px 20px rgba(70,130,180,0.25),
     inset 0 1px 0 rgba(255,255,255,1);
-}
+} */
 
-.button-xp:active {
+/* .button-xp:active {
   transform: translateY(0);
   box-shadow: 
     0 2px 8px rgba(70,130,180,0.2),
     inset 0 2px 4px rgba(0,0,0,0.1);
-}
+} */
 
 
 
@@ -127,13 +107,6 @@ input[type="radio"] {
 }
 
 
-/* File list */
-
-
-
-
-
-
 
 /* Labels */
 label {
@@ -150,7 +123,7 @@ strong {
 
 
 
-.control-btn {
+/* .control-btn {
   width: 20px;
   height: 20px;
   background: linear-gradient(135deg, 
@@ -168,24 +141,17 @@ strong {
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+ */
 
 
-
-.control-btn:active {
+/* .control-btn:active {
   transform: scale(0.95);
-}
+} */
 
-/* Speaker icon when previewing audio */
-.preview-icon {
-  display: inline;
-  color: #4682b4;
-  font-weight: bold;
-  text-shadow: 0 1px 2px rgba(255,255,255,0.8);
-  margin-right: 0.3rem;
-}
+
 
 /* Tooltip styling */
-.tooltip {
+/* .tooltip {
   position: relative;
   background: linear-gradient(135deg, 
     rgba(255,255,255,0.95) 0%, 
@@ -197,6 +163,6 @@ strong {
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   backdrop-filter: blur(15px);
   color: #2c3e50;
-}
+} */
 
 
