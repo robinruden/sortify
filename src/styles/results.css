@@ -13,9 +13,7 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   padding: 0rem;
-  /* margin-bottom: 20px; */
-  /* overflow: hidden; */
-  /* height: auto; */
+ 
   height: 28.7rem;
   width: 23rem;
   /* transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); */
