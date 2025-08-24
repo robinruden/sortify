@@ -12,7 +12,7 @@ const {
 } = require('electron');
 
 if (process.platform === 'darwin') {
-  app.dock.setIcon(path.join(__dirname,'assets','img','sortify-icon-1.png'));
+  app.dock.setIcon(path.join(__dirname,'assets','img','sortify-icon-4.png'));
 }
 // Only reload in dev
 if (!app.isPackaged) {
