@@ -19,8 +19,14 @@
   margin-right: 8px;
   margin-bottom: 5px;
   width: 1.7rem;
-  /* border: 1px solid pink; */
-} 
+  filter: drop-shadow(0 4px 8px rgba(21, 188, 254, 0.532)) 
+          brightness(1.1) 
+          saturate(1.2);
+  transform: perspective(100px) rotateX(5deg);
+  border-radius: 4px;
+ 
+  
+}
 
 .title-bar::before {
   content: '';
