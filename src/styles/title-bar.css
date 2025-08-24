@@ -21,7 +21,7 @@
   width: 1.7rem;
   filter: drop-shadow(0 4px 8px rgba(21, 188, 254, 0.532)) 
           brightness(1.1) 
-          saturate(1.2);
+          saturate(0.9);
   transform: perspective(100px) rotateX(5deg);
   border-radius: 4px;
  
