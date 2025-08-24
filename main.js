@@ -11,6 +11,9 @@ const {
   dialog
 } = require('electron');
 
+if (process.platform === 'darwin') {
+  app.dock.setIcon(path.join(__dirname,'assets','img','sortify-icon-1.png'));
+}
 // Only reload in dev
 if (!app.isPackaged) {
   require('electron-reload')(__dirname, {
@@ -29,6 +32,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 400,
     height: 820,
+    icon: path.join(__dirname, 'assets', 'img', 'sortify-icon-1.png'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
