@@ -32,7 +32,7 @@
 .title-bar:hover img {
   filter: drop-shadow(0 2px 4px rgba(45, 195, 255, 0.604)) 
           brightness(1.05) 
-          saturate(2);
+          saturate(1.9);
   transform: perspective(100px) rotateX(10deg) scale(1.05);
   transition: all 0.3s ease;
   cursor: pointer;
